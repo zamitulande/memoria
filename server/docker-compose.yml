@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    image: mysql:8.0.1
+    container_name: db_oral
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=oral_db
+        - MYSQL_USER=root
+        - MYSQL_PASSWORD=root
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - app-network
+
+  app:
+    depends_on:
+      - mysqldb
+    build: .
+    container_name: oral
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - "6868:8080"
+    volumes:
+      - .m2:/root/.m2
+    networks:
+      - app-network
+
+
+#phpMyAdmin Service
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadminOral
+      ports:
+        - "8081:80"
+      environment:
+        PMA_HOST: mysqldb
+        PMA_PORT: 3306
+        MYSQL_ROOT_PASSWORD: root
+      networks:
+        - app-network
+
+volumes:
+  db:
+
+networks:
+  app-network:
+    driver: bridge
+
+
+
