@@ -15,8 +15,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,7 +49,12 @@ public class User implements UserDetails{
     private String email;
 
     @NotBlank
+    @Size(min = 6, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
+
+    @Transient
+    @Size(min = 6, message = "La contraseña debe tener al menos 8 caracteres")
+    private String confirmPassword;
 
     @Enumerated(EnumType.ORDINAL)
     private Role role;
@@ -55,6 +62,7 @@ public class User implements UserDetails{
     private boolean accountLocked;
 
     private boolean enabled;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
