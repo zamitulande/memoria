@@ -2,12 +2,17 @@ package com.v1.server.services.impl;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.v1.server.dtos.user.AuthResponseDTO;
 import com.v1.server.dtos.user.AuthenticationRequestDTO;
@@ -78,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
        var token = Token.builder()
                     .token(generateToken)
                     .createAt(LocalDateTime.now())
-                    .expirateAt(LocalDateTime.now().plusDays(3))
+                    .expirateAt(LocalDateTime.now().plusDays(8))
                     .user(user)
                     .build();
         
@@ -99,15 +104,39 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO authenticate(AuthenticationRequestDTO request) {
-
-       authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 request.getEmail(), 
                 request.getPassword()));
+        User userDetails = (User) authentication.getPrincipal();
+        String roles = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(""));
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
-        return AuthResponseDTO.builder().token(jwtToken).build();
+        AuthResponseDTO responseDTO = AuthResponseDTO.builder()
+                            .token(jwtToken)
+                            .role(roles)
+                            .build();
+        return responseDTO;
 
     }
+
+    @Transactional
+    public void activateAccount(String token) throws MessagingException {
+        Token savedToken = tokenRepository.findByToken(token).orElseThrow(()-> new RuntimeException("invalid Token"));
+        if (LocalDateTime.now().isAfter(savedToken.getExpirateAt())) {
+            sendValidationEmail(savedToken.getUser());
+            throw new RuntimeException("La activacion del token ha expirado, regitrese de nuevo para un nuevo token");
+        }
+        var user = userRepository.findById(savedToken.getUser().getUserId())
+                                            .orElseThrow(()->new UsernameNotFoundException("Usuario no encontrado"));
+
+        user.setEnabled(true);
+        userRepository.save(user);
+        savedToken.setValidateAt(LocalDateTime.now());
+        tokenRepository.save(savedToken);
+    }
+    
 
 }

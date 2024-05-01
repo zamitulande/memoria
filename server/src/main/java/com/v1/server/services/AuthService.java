@@ -12,4 +12,6 @@ public interface AuthService {
     
     AuthResponseDTO authenticate(AuthenticationRequestDTO request);
 
+    void activateAccount (String token) throws MessagingException;
+
 }
