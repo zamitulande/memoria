@@ -40,7 +40,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
 
-
     @Value("${activation-url:activationUrl}")
     private String activationUrl;
 
@@ -48,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
     public User register(RegisterRequestDTO request) throws MessagingException {
 
         var user = User.builder()
+                .userId(request.getUserId())
                 .name(request.getName())
                 .lastname(request.getLastname())
                 .identification(request.getIdentification())
@@ -57,57 +57,59 @@ public class AuthServiceImpl implements AuthService {
                 .enabled(false)
                 .role(request.getRole())
                 .build();
-        
+
         User savedUser = userRepository.save(user);
         sendValidationEmail(savedUser);
         return savedUser;
+
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
-       var newToken = generateAndSaveActivationToken(user);
-       //send email
+        var newToken = generateAndSaveActivationToken(user);
+        // send email
 
-       emailService.sendEmail(
-                    user.getEmail(),
-                    user.getUsername(),
-                    EmailTemplateName.activate_account,
-                    activationUrl,
-                    newToken,
-                    "Account activation");
+        emailService.sendEmail(
+                user.getEmail(),
+                user.getUsername(),
+                EmailTemplateName.activate_account,
+                activationUrl,
+                newToken,
+                "Account activation");
 
     }
 
     private String generateAndSaveActivationToken(User user) {
-       //generate token
-       String generateToken = generateActivationCode(6);
-       var token = Token.builder()
-                    .token(generateToken)
-                    .createAt(LocalDateTime.now())
-                    .expirateAt(LocalDateTime.now().plusDays(8))
-                    .user(user)
-                    .build();
-        
-       tokenRepository.save(token);
-       return generateToken;
+        // generate token
+        String generateToken = generateActivationCode(6);
+        var token = Token.builder()
+                .token(generateToken)
+                .createAt(LocalDateTime.now())
+                .expirateAt(LocalDateTime.now().plusDays(8))
+                .user(user)
+                .build();
+
+        tokenRepository.save(token);
+        return generateToken;
     }
 
     private String generateActivationCode(int length) {
-       String characters = "0123456789";
-       StringBuilder codebBuilder = new StringBuilder();
-       SecureRandom secureRandom = new SecureRandom();
-       for(int i=0; i<length; i++){
-        int randomIndex = secureRandom.nextInt(characters.length());
-        codebBuilder.append(characters.charAt(randomIndex));
-       }
-       return codebBuilder.toString();
+        String characters = "0123456789";
+        StringBuilder codebBuilder = new StringBuilder();
+        SecureRandom secureRandom = new SecureRandom();
+        for (int i = 0; i < length; i++) {
+            int randomIndex = secureRandom.nextInt(characters.length());
+            codebBuilder.append(characters.charAt(randomIndex));
+        }
+        return codebBuilder.toString();
     }
 
     @Override
     public AuthResponseDTO authenticate(AuthenticationRequestDTO request) {
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.getEmail(), 
-                request.getPassword()));
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()));
+                        
         User userDetails = (User) authentication.getPrincipal();
         String roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -115,28 +117,28 @@ public class AuthServiceImpl implements AuthService {
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         AuthResponseDTO responseDTO = AuthResponseDTO.builder()
-                            .token(jwtToken)
-                            .role(roles)
-                            .build();
+                .token(jwtToken)
+                .role(roles) // Agregar los roles al DTO
+                .build();
+
         return responseDTO;
 
     }
 
     @Transactional
     public void activateAccount(String token) throws MessagingException {
-        Token savedToken = tokenRepository.findByToken(token).orElseThrow(()-> new RuntimeException("invalid Token"));
+        Token savedToken = tokenRepository.findByToken(token).orElseThrow(() -> new RuntimeException("invalid Token"));
         if (LocalDateTime.now().isAfter(savedToken.getExpirateAt())) {
             sendValidationEmail(savedToken.getUser());
             throw new RuntimeException("La activacion del token ha expirado, regitrese de nuevo para un nuevo token");
         }
         var user = userRepository.findById(savedToken.getUser().getUserId())
-                                            .orElseThrow(()->new UsernameNotFoundException("Usuario no encontrado"));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         user.setEnabled(true);
         userRepository.save(user);
         savedToken.setValidateAt(LocalDateTime.now());
         tokenRepository.save(savedToken);
     }
-    
 
 }

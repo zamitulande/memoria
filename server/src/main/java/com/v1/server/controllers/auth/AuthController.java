@@ -40,18 +40,20 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                 .body(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), errorMessage));
         }
-        // try {
-        //     authService.register(request);
-        //     return ResponseEntity.ok().build();
-        // } catch (MessagingException e) {
-        //     // Maneja cualquier excepción de mensajería aquí
-        //     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        // }
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO request){
-        return ResponseEntity.ok(authService.authenticate(request));
+    public ResponseEntity<Object> authenticate(@RequestBody AuthenticationRequestDTO request){
+        AuthResponseDTO authResponse = authService.authenticate(request);
+        if (authResponse != null) {
+            String message = "Autenticación exitosa";
+            ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(), message, authResponse);
+            return ResponseEntity.ok(apiResponse);
+        } else {
+            String errorMessage = "Error al autenticar el usuario";
+            ApiResponse apiResponse = new ApiResponse(HttpStatus.UNAUTHORIZED.value(), errorMessage);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+        }
     }
 
     @GetMapping("/activate-account")
