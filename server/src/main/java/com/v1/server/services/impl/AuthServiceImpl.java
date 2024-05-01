@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     private String activationUrl;
 
     @Override
-    public void register(RegisterRequestDTO request) throws MessagingException {
+    public User register(RegisterRequestDTO request) throws MessagingException {
 
         var user = User.builder()
                 .name(request.getName())
@@ -57,10 +57,10 @@ public class AuthServiceImpl implements AuthService {
                 .enabled(false)
                 .role(request.getRole())
                 .build();
-
-        userRepository.save(user);
-        sendValidationEmail(user);
-
+        
+        User savedUser = userRepository.save(user);
+        sendValidationEmail(savedUser);
+        return savedUser;
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
