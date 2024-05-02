@@ -34,7 +34,7 @@ public class AuthController {
         if (user != null) {
             String message = "usuario creado axitosamente, por favor revisa tu correo para activar tu cuenta";
             return ResponseEntity.status(HttpStatus.CREATED)
-                                .body(new ApiResponse(HttpStatus.CREATED.value(), message, user));
+                                .body(new ApiResponse(HttpStatus.CREATED.value(), message));
         }else{
             String errorMessage = "error al crear el usuario";
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

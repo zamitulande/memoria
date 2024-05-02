@@ -29,4 +29,9 @@ public class ApiExceptionHandler {
         }
         return new ResponseEntity<>(new ErrorsMessages(transformedError, HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<ErrorMessage> handleForbiddenRequest(HttpServletRequest request, Exception exception){
+        return new ResponseEntity<>(new ErrorMessage(exception.getMessage(), HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN, request.getRequestURI()), HttpStatus.FORBIDDEN);
+    }
 }
