@@ -21,7 +21,7 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -46,9 +46,7 @@ public class AuthController {
     public ResponseEntity<Object> authenticate(@RequestBody AuthenticationRequestDTO request){
         AuthResponseDTO authResponse = authService.authenticate(request);
         if (authResponse != null) {
-            String message = "Autenticación exitosa";
-            ApiResponse apiResponse = new ApiResponse(HttpStatus.OK.value(), message, authResponse);
-            return ResponseEntity.ok(apiResponse);
+            return ResponseEntity.ok(authResponse);
         } else {
             String errorMessage = "Error al autenticar el usuario";
             ApiResponse apiResponse = new ApiResponse(HttpStatus.UNAUTHORIZED.value(), errorMessage);

@@ -40,9 +40,9 @@ public class SecurityConfig {
 
     private RequestMatcher publicEndpoints() {
         return new OrRequestMatcher(
-                new AntPathRequestMatcher("/api/auth/authenticate"),
-                new AntPathRequestMatcher("/api/auth/register"),
-                new AntPathRequestMatcher("/api/auth/activate-account")
+                new AntPathRequestMatcher("/api/v1/auth/authenticate"),
+                new AntPathRequestMatcher("/api/v1/auth/register"),
+                new AntPathRequestMatcher("/api/v1/auth/activate-account")
         );
     }
 }

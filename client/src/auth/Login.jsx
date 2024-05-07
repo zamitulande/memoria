@@ -6,14 +6,20 @@ import {
     InputLabel,
     TextField,
     IconButton,
-    DialogContent
+    InputAdornment,
 } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Cancel';
-import LoginIcon from '@mui/icons-material/Login';
+import Swal from 'sweetalert2';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axiosClient from '../config/Axios';
+import { useDispatch } from 'react-redux';
+import { setLogin, setRole, setToken } from '../redux/features/userSlice';
 
 const Login = ({ open, setOpen }) => {
+
+    const dispatch = useDispatch();
 
     const [user, setUser] = useState({
         email: '',
@@ -23,14 +29,26 @@ const Login = ({ open, setOpen }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const postUser = async () => {
+        const postLogin = async () => {
             try {
-                console.log('enviando')
+                const response = await axiosClient.post('/auth/authenticate', user);
+                if (response.data.token && response.data.role && response.status == "200") {
+                    dispatch(setLogin(true));
+                    dispatch(setToken(response.data.token));
+                    dispatch(setRole(response.data.role));
+                }
             } catch (error) {
-                console.log(error)
+                Swal.fire({
+                    icon: "error",
+                    title: "Error...",
+                    text: error.response.data.message,
+                    customClass: {
+                        container: 'my-swal'
+                    },
+                });
             }
         }
-        postUser();
+        postLogin();
     }
 
     const handleOnChange = (e) => {
@@ -88,7 +106,8 @@ const Login = ({ open, setOpen }) => {
                             fullWidth
                             margin="normal"
                             size="small"
-                            required />
+                            required
+                        />
                     </FormControl>
                     <FormControl
                         variant="standard"
@@ -99,23 +118,34 @@ const Login = ({ open, setOpen }) => {
                         </InputLabel>
                         <TextField sx={{ border: 2, borderRadius: 1 }}
                             name='password'
-                            type='password'
+                            type={showPassword ? 'text' : 'password'}
                             placeholder="Escribe aquí tu contraseña"
                             value={user.password}
                             onChange={handleOnChange}
                             fullWidth
                             margin="normal"
                             size="small"
-                            required />
+                            required
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
                     </FormControl>
-                    <IconButton
+                    <Button
                         sx={{
-                            left: '40%',
-                        }}
-                    >
-                        <LoginIcon />
-                    </IconButton>
-                    <Box sx={{mt:4}}>
+                            left: '35%',
+                        }} type="submit"
+                    >Ingresar</Button>
+                    <Box sx={{ mt: 4 }}>
                         <Link>¿Olvidó su contraseña?</Link>
                     </Box>
                     <p>

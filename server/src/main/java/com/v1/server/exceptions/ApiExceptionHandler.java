@@ -32,6 +32,6 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<ErrorMessage> handleForbiddenRequest(HttpServletRequest request, Exception exception){
-        return new ResponseEntity<>(new ErrorMessage(exception.getMessage(), HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN, request.getRequestURI()), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(new ErrorMessage("Usuario o contraseña no validos", HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN, request.getRequestURI()), HttpStatus.FORBIDDEN);
     }
 }
