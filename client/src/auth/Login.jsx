@@ -7,6 +7,7 @@ import {
     TextField,
     IconButton,
     InputAdornment,
+    Grid,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Cancel';
@@ -14,12 +15,27 @@ import Swal from 'sweetalert2';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosClient from '../config/Axios';
-import { useDispatch } from 'react-redux';
-import { setLogin, setRole, setToken } from '../redux/features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { setActiveAccount, setLogin, setRole, setToken } from '../redux/features/userSlice';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '80%',
+    maxWidth: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    px: 2,
+};
 
 const Login = ({ open, setOpen }) => {
 
     const dispatch = useDispatch();
+
+    const getActiveAccount = useSelector((state)=>state.user.activeAccount)
 
     const [user, setUser] = useState({
         email: '',
@@ -36,6 +52,11 @@ const Login = ({ open, setOpen }) => {
                     dispatch(setLogin(true));
                     dispatch(setToken(response.data.token));
                     dispatch(setRole(response.data.role));
+                    setUser({
+                        email: '',
+                        password: ''
+                    })
+                    console.log(response.data)
                 }
             } catch (error) {
                 Swal.fire({
@@ -46,6 +67,10 @@ const Login = ({ open, setOpen }) => {
                         container: 'my-swal'
                     },
                 });
+                setUser({
+                    email: '',
+                    password: ''
+                })
             }
         }
         postLogin();
@@ -59,30 +84,22 @@ const Login = ({ open, setOpen }) => {
         }));
     }
 
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '80%',
-        maxWidth: 400,
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        px: 2,
-    };
+    const handleCloseModal = ()=>{
+        setOpen(false)
+        dispatch(setActiveAccount(false))
+    }
 
     return (
         <Modal
-            open={open}
-            onClose={(e) => setOpen(false)}
+            open={open || getActiveAccount}
+            onClose={handleCloseModal}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
                 <IconButton
                     aria-label="close"
-                    onClick={(e) => setOpen(false)}
+                    onClick={handleCloseModal}
                     sx={{
                         left: '90%',
                     }}
@@ -95,7 +112,7 @@ const Login = ({ open, setOpen }) => {
                         fullWidth
                         style={{ paddingTop: 10 }}>
                         <InputLabel shrink htmlFor="bootstrap-input">
-                            Usuario
+                            Correo electronico
                         </InputLabel>
                         <TextField sx={{ border: 2, borderRadius: 1 }}
                             name="email"
@@ -140,16 +157,35 @@ const Login = ({ open, setOpen }) => {
                             }}
                         />
                     </FormControl>
-                    <Button
-                        sx={{
-                            left: '35%',
-                        }} type="submit"
-                    >Ingresar</Button>
-                    <Box sx={{ mt: 4 }}>
-                        <Link>¿Olvidó su contraseña?</Link>
-                    </Box>
+                    <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                            <Box
+                                sx={{
+                                    mt: 4,
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <Link>
+                                    ¿Olvidó su contraseña?
+                                </Link>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                sx={{
+                                    height: '100%'
+                                }}
+                            >
+                                Ingresar
+                            </Button>
+                        </Grid>                       
+                    </Grid>
                     <p>
-                        ¿No tiene una cuenta de usuario?, haga <Link to='usuarios/registrar' onClick={(e) => setOpen(false)}>click aquí</Link> para registrarse.
+                        ¿No tiene una cuenta de usuario?, haga <Link to='usuarios/registrar' onClick={handleCloseModal}>click aquí</Link> para registrarse.
                     </p>
                 </form>
             </Box>

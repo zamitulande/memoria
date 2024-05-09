@@ -41,12 +41,12 @@
 </head>
 <body>
 <div class="container">
-    <h1>Account Activation</h1>
-    <p class="greeting" th:text="'Hello ' + ${username} + ','"></p>
-    <p>Thank you for signing up! Please use the following activation code to activate your account:</p>
+    <h1>Activacion de Cuenta</h1>
+    <p style="font-size: 24px;" th:text="'Hola ' + ${name} + ','"></p>
+    <p style="font-size: 24px;">Gracias por registrarse en nuestra plataforma Memoria Oral, a continuacion ha recibido un codigo, haga click en el boton Activar Tu Cuenta e ingrese el codigo:</p>
     <div class="activation-code"><span th:text="${activation_code}"></span></div>
-    <div class="activation-link">
-        <a th:href="${confirmationUrl}" target="_blank">Activate your account</a>
+    <div class="activation-link" style="font-size: 24px;">
+        <a th:href="${confirmationUrl}" target="_blank">Activar Tu Cuenta</a>
     </div>
 </div>
 </body>

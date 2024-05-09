@@ -1,15 +1,16 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createSlice} from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 
 const guardarTokenJWT = (token) => {
-    localStorage.setItem('jwtToken', token);
+    Cookies.set('jwtToken', token, { expires: 0.125 }); //la cookie expirará en 3 horas
 };
 
 const obtenerTokenJWT = () => {
-    return localStorage.getItem('jwtToken');
+    return Cookies.get('jwtToken');
 };
 
 const eliminarTokenJWT = () => {
-    localStorage.removeItem('jwtToken');
+    Cookies.remove('jwtToken');
 };
 
 export const userSlice = createSlice({
@@ -17,7 +18,8 @@ export const userSlice = createSlice({
     initialState:{
         token : obtenerTokenJWT() || "",
         login: false,
-        role: ""
+        role: "",
+        activeAccount: false
     },
     reducers:{
         setToken: (state, action)=>{
@@ -29,10 +31,13 @@ export const userSlice = createSlice({
         },
         setRole: (state, action)=>{
             state.role = action.payload;
+        },
+        setActiveAccount: (state, action)=>{
+            state.activeAccount = action.payload;
         }
     }
 });
 
-export const {setToken, setLogin, setRole} = userSlice.actions;
+export const {setToken, setLogin, setRole, setActiveAccount} = userSlice.actions;
 
 export default userSlice.reducer;

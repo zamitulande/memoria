@@ -43,6 +43,9 @@ public class AuthServiceImpl implements AuthService {
     @Value("${activation-url:activationUrl}")
     private String activationUrl;
 
+    @Value("${characters-token:characters}")
+    private String characters;
+
     @Override
     public User register(RegisterRequestDTO request) throws MessagingException {
 
@@ -75,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
         emailService.sendEmail(
                 user.getEmail(),
                 user.getUsername(),
+                user.getName(),
                 EmailTemplateName.activate_account,
                 activationUrl,
                 newToken,
@@ -97,7 +101,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private String generateActivationCode(int length) {
-        String characters = "0123456789";
         StringBuilder codebBuilder = new StringBuilder();
         SecureRandom secureRandom = new SecureRandom();
         for (int i = 0; i < length; i++) {
@@ -134,7 +137,7 @@ public class AuthServiceImpl implements AuthService {
         Token savedToken = tokenRepository.findByToken(token).orElseThrow(() -> new RuntimeException("invalid Token"));
         if (LocalDateTime.now().isAfter(savedToken.getExpirateAt())) {
             sendValidationEmail(savedToken.getUser());
-            throw new RuntimeException("La activacion del token ha expirado, regitrese de nuevo para un nuevo token");
+            throw new RuntimeException("La activacion del token ha expirado, registrate de nuevo para un nuevo token");
         }
         var user = userRepository.findById(savedToken.getUser().getUserId())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));

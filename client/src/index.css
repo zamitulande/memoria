@@ -1,3 +1,56 @@
+/* sobreposicion de alerta error en modal login  */
 .my-swal {
-    z-index: 10000;
+  z-index: 10000;
+}
+
+
+/* -------------------------------------------------------*/
+/* caja para ingreso de token active-account */
+.character {
+  border: none;
+  font-size: 20px;
+  border-radius: 8px;
+  color: #272729;
+  background-color: #f6f5fa;
+  box-shadow: 0 2px 0 #e4e2f5;
+  color: #fff;
+  background-color: #222;
+  box-shadow: 0 2px 0 #444;
+}
+
+.character--selected {
+  position: relative;
+}
+
+.character--selected:not(.character--filled) {
+  color: transparent;
+}
+
+.container{
+  width: 100%;
+  margin-top: 15px;
+}
+
+.character--selected:not(.character--filled)::after {
+  content: "";
+  width: 1px;
+  height: 25px;
+  background-color: #333;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: blink 1s infinite step-end;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
   }
+
+  50% {
+    opacity: 0;
+  }
+}
+/* -------------------------------------------------------*/
