@@ -17,19 +17,27 @@ public class MailConfig {
     @Value("${password.sender}")
     private String password;
 
+    @Value("${email-host}")
+    private String host;
+
+    @Value("${email-port}")
+    private int port;
+
+    @Value("${email-mailer}")
+    private String mailer;
 
     @Bean
     public JavaMailSender getJavaMailSender() {
         //enviar correo
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
+        mailSender.setHost(host);
+        mailSender.setPort(port);
         mailSender.setUsername(emailSender);
         mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.transport.protocol", mailer);
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
