@@ -39,7 +39,7 @@ public class User implements UserDetails{
     private String name;
 
     @NotBlank
-    private String lastname;
+    private String lastName;
 
     @NotBlank
     private String identification;

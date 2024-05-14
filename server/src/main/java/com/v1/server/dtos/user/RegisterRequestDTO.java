@@ -17,7 +17,7 @@ public class RegisterRequestDTO {
     
     private String name; 
 
-    private String lastname;
+    private String lastName;
 
     private String identification;
 

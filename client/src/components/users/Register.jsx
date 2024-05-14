@@ -1,8 +1,12 @@
-import React from 'react'
+import { Container, Typography } from "@mui/material"
+import FormUser from "./formData/FormUser"
 
 const Register = () => {
   return (
-    <div>Register</div>
+    <Container sx={{mt:4}}>
+      <Typography variant="h5">Registro de Usuarios</Typography>
+      <FormUser action="register"/>
+    </Container>
   )
 }
 

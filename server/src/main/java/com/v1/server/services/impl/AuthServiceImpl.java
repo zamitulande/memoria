@@ -49,6 +49,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public User register(RegisterRequestDTO request) throws MessagingException {
 
+        System.out.println(request);
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("Las contraseñas no coinciden");
         }
@@ -56,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         var user = User.builder()
                 .userId(request.getUserId())
                 .name(request.getName())
-                .lastname(request.getLastname())
+                .lastName(request.getLastName())
                 .identification(request.getIdentification())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
