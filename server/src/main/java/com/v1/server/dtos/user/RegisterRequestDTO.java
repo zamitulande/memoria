@@ -15,9 +15,13 @@ public class RegisterRequestDTO {
     
     private Long userId;
     
-    private String name; 
+    private String firstName;
 
-    private String lastName;
+    private String secondName;
+
+    private String firstLastName;
+   
+    private String secondLastName;
 
     private String identification;
 

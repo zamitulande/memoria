@@ -36,10 +36,14 @@ public class User implements UserDetails{
     private Long userId;
 
     @NotBlank
-    private String name;
+    private String firstName;
+
+    private String secondName;
 
     @NotBlank
-    private String lastName;
+    private String firstLastName;
+   
+    private String secondLastName;
 
     @NotBlank
     private String identification;

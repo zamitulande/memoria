@@ -56,8 +56,10 @@ public class AuthServiceImpl implements AuthService {
 
         var user = User.builder()
                 .userId(request.getUserId())
-                .name(request.getName())
-                .lastName(request.getLastName())
+                .firstName(request.getFirstName())
+                .secondName(request.getSecondName())
+                .firstLastName(request.getFirstLastName())
+                .secondLastName(request.getSecondLastName())
                 .identification(request.getIdentification())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -79,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
         emailService.sendEmail(
                 user.getEmail(),
                 user.getUsername(),
-                user.getName(),
+                user.getFirstName(),
                 EmailTemplateName.activate_account,
                 activationUrl,
                 newToken,
