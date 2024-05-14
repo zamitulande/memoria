@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.v1.server.enumerate.Role;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -46,11 +47,16 @@ public class User implements UserDetails{
     private String secondLastName;
 
     @NotBlank
+    @Column(unique = true)
     private String identification;
 
     @NotBlank
     @Email
+    @Column(unique = true)
     private String email;
+
+    @Email
+    private String confirmEmail;
 
     @NotBlank
     @Size(min = 6, message = "La contraseña debe tener al menos 8 caracteres")

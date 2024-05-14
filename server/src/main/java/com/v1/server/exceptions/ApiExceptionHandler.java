@@ -3,6 +3,8 @@ package com.v1.server.exceptions;
 import java.util.HashMap;
 import java.util.Map;
 
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,8 +32,8 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(new ErrorsMessages(transformedError, HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<ErrorMessage> handleForbiddenRequest(HttpServletRequest request, Exception exception){
-        return new ResponseEntity<>(new ErrorMessage("Usuario o contraseña no validos", HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN, request.getRequestURI()), HttpStatus.FORBIDDEN);
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorMessage> handleDataIntegrityViolation(HttpServletRequest request, DataIntegrityViolationException exception){
+        return new ResponseEntity<>(new ErrorMessage(exception.getMostSpecificCause().getMessage(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
 }

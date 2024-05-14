@@ -4,7 +4,7 @@ import { red, blue, green } from "@mui/material/colors";
 
 export const getTheme = createTheme({
     palette:{
-        primary: {
+          primary: {
             main: '#FFFFFF'
           },
           secondary: {
@@ -16,6 +16,9 @@ export const getTheme = createTheme({
           bottomNavigation: {
             selected: '#757575', // Color para BottomNavigationAction seleccionado
             unselected: '#212121' // Color para BottomNavigationAction no seleccionado
-        },
+          },
+          textField: {
+            main : '#757575'
+          }
     }
 })

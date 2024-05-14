@@ -27,6 +27,8 @@ public class RegisterRequestDTO {
 
     private String email;
 
+    private String confirmEmail;
+
     private String password;
 
     private String confirmPassword;

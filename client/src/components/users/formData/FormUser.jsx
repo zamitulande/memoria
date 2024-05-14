@@ -1,4 +1,6 @@
-import { Box, Button, FormControl, Grid, InputLabel, TextField } from '@mui/material'
+import { Box, Button, FilledInput, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react'
 import axiosClient from '../../../config/Axios'
 import UseValidation from '../../../helpers/hooks/UseValidation'
@@ -10,24 +12,32 @@ const FormUser = ({ action }) => {
     const { minLength, maxLength } = UseValidation();
 
     const [isLoading, setIsLoading] = useState(false);
-    const [message, setMessage] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     const [user, setUser] = useState({
         identification: '',
         email: '',
+        confirmEmail:'',
         firstName: '',
-        secondName:'',
+        secondName: '',
         firstLastName: '',
+        secondLastName: '',
         password: '',
         confirmPassword: ''
-    });
+    });  
 
-    const resetForm = ()=>{
+    const resetForm = () => {
         setUser({
             identification: '',
             email: '',
-
-            password: ''
+            confirmEmail:'',
+            firstName: '',
+            secondName: '',
+            firstLastName: '',
+            secondLastName: '',
+            password: '',
+            confirmPassword: ''
         })
     }
 
@@ -51,201 +61,181 @@ const FormUser = ({ action }) => {
         setIsLoading(true);
         axiosClient.post('/auth/register', user)
             .then((response) => {
+                const messageResponse = response.data.message;
+                resetForm();
                 setIsLoading(false)
-                setMessage(response.data.message)
                 Swal.fire({
-                    title: message,
-                    
+                    title: messageResponse,
+
                 });
-            }
-            )
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.error('Error:', error);
+            });
     }
     return (
         <Box position="relative">
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                     <Grid item xs={4}>
-                        <FormControl
-                            variant="standard"
+                        <TextField
+                            label="Identificacion"
+                            color='textField'
+                            variant="outlined"
+                            name="identification"
+                            type='number'
+                            value={user.identification}
+                            onChange={handleUserSportsManChange}
                             fullWidth
-                            style={{ paddingTop: 10 }}>
-                            <InputLabel shrink htmlFor="bootstrap-input">
-                                Identificacion
-                            </InputLabel>
-                            <TextField sx={{ border: 2, borderRadius: 1 }}
-                                id="identification"
-                                name="identification"
-                                type='number'
-                                placeholder="Escribe aquí tu identificación"
-                                value={user.identification}
-                                onChange={handleUserSportsManChange}
-                                fullWidth
-                                margin="normal"
-                                size="small"
-                                helperText={
-                                    (!minLength(user.identification, 8) && user.identification)
-                                        ? "El número de identificación debe tener al menos 8 caracteres"
-                                        : (!maxLength(user.identification, 12) && user.identification)
-                                            ? "El número de identificación debe tener como máximo 12 caracteres"
-                                            : ""
-                                }
-                                required />
-                        </FormControl>
+                            size="small"
+                            helperText={
+                                (!minLength(user.identification, 8) && user.identification)
+                                    ? "El número de identificación debe tener al menos 8 caracteres"
+                                    : (!maxLength(user.identification, 12) && user.identification)
+                                        ? "El número de identificación debe tener como máximo 12 caracteres"
+                                        : ""
+                            }
+                            required />
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl
-                            variant="standard"
+                        <TextField 
+                            label="Correo electronico"
+                            color='textField'
+                            variant="outlined"
+                            name="email"
+                            type='email'
+                            value={user.email}
+                            onChange={handleUserSportsManChange}
                             fullWidth
-                            style={{ paddingTop: 10 }}>
-                            <InputLabel shrink htmlFor="bootstrap-input">
-                                Correo electronico
-                            </InputLabel>
-                            <TextField sx={{ border: 2, borderRadius: 1 }}
-                                id="email"
-                                name="email"
-                                type='email'
-                                placeholder="Escribe aquí tu correo electronico"
-                                value={user.email}
-                                onChange={handleUserSportsManChange}
-                                fullWidth
-                                margin="normal"
-                                size="small"
-                                required />
-                        </FormControl>
+                            size="small"
+                            required />
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl
-                            variant="standard"
+                        <TextField 
+                            label="Confirmar correo electronico"
+                            color='textField'
+                            variant="outlined"
+                            name="confirmEmail"
+                            type='email'
+                            value={user.confirmEmail}
+                            onChange={handleUserSportsManChange}
                             fullWidth
-                            style={{ paddingTop: 10 }}>
-                            <InputLabel shrink htmlFor="bootstrap-input">
-                                Primer nombre
-                            </InputLabel>
-                            <TextField sx={{ border: 2, borderRadius: 1 }}
-                                id="name"
-                                name="name"
-                                type='text'
-                                placeholder="Escribe aquí tus nombres"
-                                value={user.firstName}
-                                onChange={handleUserSportsManChange}
-                                fullWidth
-                                margin="normal"
-                                size="small"
-                                required />
-                        </FormControl>
+                            size="small"
+                            required />
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl
-                            variant="standard"
+                        <TextField 
+                            label="Primer nombre"
+                            color='textField'
+                            variant="outlined"
+                            name="firstName"
+                            type='text'
+                            value={user.firstName}
+                            onChange={handleUserSportsManChange}
                             fullWidth
-                            style={{ paddingTop: 10 }}>
-                            <InputLabel shrink htmlFor="bootstrap-input">
-                                Segundo nombre
-                            </InputLabel>
-                            <TextField sx={{ border: 2, borderRadius: 1 }}
-                                id="secondName"
-                                name="secondName"
-                                type='text'
-                                placeholder="Escribe aquí tus nombres"
-                                value={user.secondName}
-                                onChange={handleUserSportsManChange}
-                                fullWidth
-                                margin="normal"
-                                size="small"/>
-                        </FormControl>
+                            size="small"
+                            required />
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl
-                            variant="standard"
+                        <TextField
+                            label="Segundo nombre"
+                            color='textField'
+                            variant="outlined"
+                            name="secondName"
+                            type='text'
+                            value={user.secondName}
+                            onChange={handleUserSportsManChange}
                             fullWidth
-                            style={{ paddingTop: 10 }}>
-                            <InputLabel shrink htmlFor="bootstrap-input">
-                                Primer apellido
-                            </InputLabel>
-                            <TextField sx={{ border: 2, borderRadius: 1 }}
-                                id="firstLastName"
-                                name="firstLastName"
-                                type='text'
-                                placeholder="Escribe aquí tus apellidos"
-                                value={user.firstLastName}
-                                onChange={handleUserSportsManChange}
-                                fullWidth
-                                margin="normal"
-                                size="small"
-                                required />
-                        </FormControl>
+                            size="small" />
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl
-                            variant="standard"
+                        <TextField
+                            label="Primer apellido"
+                            color='textField'
+                            variant="outlined"
+                            name="firstLastName"
+                            type='text'
+                            value={user.firstLastName}
+                            onChange={handleUserSportsManChange}
                             fullWidth
-                            style={{ paddingTop: 10 }}>
-                            <InputLabel shrink htmlFor="bootstrap-input">
-                                Segundo apellido
-                            </InputLabel>
-                            <TextField sx={{ border: 2, borderRadius: 1 }}
-                                id="secondLastName"
-                                name="secondLastName"
-                                type='text'
-                                placeholder="Escribe aquí tus apellidos"
-                                value={user.secondLastName}
-                                onChange={handleUserSportsManChange}
-                                fullWidth
-                                margin="normal"
-                                size="small" />
-                        </FormControl>
+                            size="small"
+                            required />
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl
-                            variant="standard"
+                        <TextField
+                            label="Segundo apellido"
+                            color='textField'
+                            variant="outlined"
+                            name="secondLastName"
+                            type='text'
+                            value={user.secondLastName}
+                            onChange={handleUserSportsManChange}
                             fullWidth
-                            style={{ paddingTop: 10 }}>
-                            <InputLabel shrink htmlFor="bootstrap-input">
-                                Contraseña
-                            </InputLabel>
-                            <TextField sx={{ border: 2, borderRadius: 1 }}
-                                id="password"
-                                name='password'
-                                type='password'
-                                placeholder="Escribe aquí tu contraseña"
+                            size="small" />
+                    </Grid>
+                    <Grid item xs={4}>
+                    <FormControl variant="outlined" color='textField' fullWidth required>
+                            <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+                            <OutlinedInput
+                                type={showPassword ? 'text' : 'password'}
                                 value={user.password}
+                                name='password'
                                 onChange={handleUserSportsManChange}
-                                fullWidth
-                                margin="normal"
-                                size="small"
-                                required />
+                                label="Contraseña"
+                                size='small'
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => setShowPassword((show) => !show)}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                
+                            />
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
-                        <FormControl
-                            variant="standard"
-                            fullWidth
-                            style={{ paddingTop: 10 }}>
-                            <InputLabel shrink htmlFor="bootstrap-input">
-                                Confirmar Contraseña
-                            </InputLabel>
-                            <TextField sx={{ border: 2, borderRadius: 1 }}
-                                id="confirmPassword"
-                                name='confirmPassword'
-                                type='password'
-                                placeholder="Escribe aquí tu contraseña"
+                        <FormControl variant="outlined" color='textField' fullWidth required>
+                            <InputLabel htmlFor="outlined-adornment-password">Confirmar contraseña</InputLabel>
+                            <OutlinedInput
+                                type={showPasswordConfirm ? 'text' : 'password'}
                                 value={user.confirmPassword}
+                                name='confirmPassword'
                                 onChange={handleUserSportsManChange}
-                                fullWidth
-                                margin="normal"
-                                size="small"
-                                required />
+                                label="Confirmar contraseña"
+                                size='small'
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => setShowPasswordConfirm((show) => !show)}
+                                            edge="end"
+                                        >
+                                            {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                
+                            />
                         </FormControl>
                     </Grid>
+
                 </Grid>
                 <Button type="submit" color='secondary' disabled={isDisable()}>register</Button>
             </form>
-            {isLoading && (
-                <Box className="loading-overlay">
-                    <img src={LoadingGif} alt="Loading..." />
-                </Box>
-            )}
-        </Box>
+            {
+                isLoading && (
+                    <Box className="loading-overlay">
+                        <img src={LoadingGif} alt="Loading..." />
+                    </Box>
+                )
+            }
+        </Box >
 
     )
 }
