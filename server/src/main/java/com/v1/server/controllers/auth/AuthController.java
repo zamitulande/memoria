@@ -32,7 +32,7 @@ public class AuthController {
     public ResponseEntity<Object> register(@RequestBody RegisterRequestDTO request) throws MessagingException{
         User user = authService.register(request);
         if (user != null) {
-            String message = "usuario creado axitosamente, por favor revisa tu correo para activar tu cuenta";
+            String message = "usuario registrado, revisa tu correo para activar tu cuenta";
             return ResponseEntity.status(HttpStatus.CREATED)
                                 .body(new ApiResponse(HttpStatus.CREATED.value(), message));
         }else{

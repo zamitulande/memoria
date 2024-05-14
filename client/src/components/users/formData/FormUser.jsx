@@ -15,63 +15,67 @@ const FormUser = ({ action }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
-    const [user, setUser] = useState({
-        identification: '',
-        email: '',
-        confirmEmail:'',
-        firstName: '',
-        secondName: '',
-        firstLastName: '',
-        secondLastName: '',
-        password: '',
-        confirmPassword: ''
-    });  
+    const [identification, setIdentification] = useState("")
+    const [email, setEmail] = useState("")
+    const [confirmEmail, setConfirmEmail] = useState("")
+    const [firstName, setFirstName] = useState("")
+    const [secondName, setSecondName] = useState("")
+    const [firstLastName, setFirstLastName] = useState("")
+    const [secondLastName, setSecondLastName] = useState("")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
 
     const resetForm = () => {
-        setUser({
-            identification: '',
-            email: '',
-            confirmEmail:'',
-            firstName: '',
-            secondName: '',
-            firstLastName: '',
-            secondLastName: '',
-            password: '',
-            confirmPassword: ''
-        })
+        setIdentification("")
+        setEmail("")
+        setConfirmEmail("")
+        setFirstName("")
+        setSecondName("")
+        setFirstLastName("")
+        setSecondLastName("")
+        setPassword("")
+        setConfirmPassword("")
     }
 
     const isDisable = () => {
-        !user.identification ||
-            !minLength(user.identification) ||
-            !maxLength(user.identification)
-    }
-
-    const handleUserSportsManChange = (e) => {
-        e.preventDefault();
-        const { name, value } = e.target;
-        setUser(prevUser => ({
-            ...prevUser,
-            [name]: value
-        }));
+        !identification ||
+            !minLength(identification) ||
+            !maxLength(identification)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
+        const user={
+            identification,
+            email,
+            confirmEmail,
+            firstName,
+            secondName,
+            firstLastName,
+            secondLastName,
+            password,
+            confirmPassword
+        }
         axiosClient.post('/auth/register', user)
             .then((response) => {
                 const messageResponse = response.data.message;
                 resetForm();
                 setIsLoading(false)
                 Swal.fire({
+                    position: "top-end",
+                    icon: "success",
                     title: messageResponse,
-
-                });
+                  });
             })
             .catch((error) => {
+                console.log(error)
                 setIsLoading(false);
-                console.error('Error:', error);
+                const errorMessage = error.response.data.message
+                Swal.fire({
+                    icon: "error",
+                    text: errorMessage,
+                  });
             });
     }
     return (
@@ -85,16 +89,17 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="identification"
                             type='number'
-                            value={user.identification}
-                            onChange={handleUserSportsManChange}
+                            value={identification}
+                            onChange={(e)=>{
+                                const value = e.target.value.slice(0,12);
+                                setIdentification(value)
+                            }}
                             fullWidth
                             size="small"
                             helperText={
-                                (!minLength(user.identification, 8) && user.identification)
+                                (!minLength(identification, 8) && identification)
                                     ? "El número de identificación debe tener al menos 8 caracteres"
-                                    : (!maxLength(user.identification, 12) && user.identification)
-                                        ? "El número de identificación debe tener como máximo 12 caracteres"
-                                        : ""
+                                    : ""
                             }
                             required />
                     </Grid>
@@ -105,8 +110,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="email"
                             type='email'
-                            value={user.email}
-                            onChange={handleUserSportsManChange}
+                            value={email}
+                            onChange={(e)=>setEmail(e.target.value)}
                             fullWidth
                             size="small"
                             required />
@@ -118,8 +123,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="confirmEmail"
                             type='email'
-                            value={user.confirmEmail}
-                            onChange={handleUserSportsManChange}
+                            value={confirmEmail}
+                            onChange={(e)=>setConfirmEmail(e.target.value)}
                             fullWidth
                             size="small"
                             required />
@@ -131,8 +136,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="firstName"
                             type='text'
-                            value={user.firstName}
-                            onChange={handleUserSportsManChange}
+                            value={firstName}
+                            onChange={(e)=>setFirstName(e.target.value)}
                             fullWidth
                             size="small"
                             required />
@@ -144,8 +149,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="secondName"
                             type='text'
-                            value={user.secondName}
-                            onChange={handleUserSportsManChange}
+                            value={secondName}
+                            onChange={(e)=>setSecondName(e.target.value)}
                             fullWidth
                             size="small" />
                     </Grid>
@@ -156,8 +161,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="firstLastName"
                             type='text'
-                            value={user.firstLastName}
-                            onChange={handleUserSportsManChange}
+                            value={firstLastName}
+                            onChange={(e)=>setFirstLastName(e.target.value)}
                             fullWidth
                             size="small"
                             required />
@@ -169,8 +174,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="secondLastName"
                             type='text'
-                            value={user.secondLastName}
-                            onChange={handleUserSportsManChange}
+                            value={secondLastName}
+                            onChange={(e)=>setSecondLastName(e.target.value)}
                             fullWidth
                             size="small" />
                     </Grid>
@@ -179,9 +184,9 @@ const FormUser = ({ action }) => {
                             <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
                             <OutlinedInput
                                 type={showPassword ? 'text' : 'password'}
-                                value={user.password}
+                                value={password}
                                 name='password'
-                                onChange={handleUserSportsManChange}
+                                onChange={(e)=>setPassword(e.target.value)}
                                 label="Contraseña"
                                 size='small'
                                 endAdornment={
@@ -204,9 +209,9 @@ const FormUser = ({ action }) => {
                             <InputLabel htmlFor="outlined-adornment-password">Confirmar contraseña</InputLabel>
                             <OutlinedInput
                                 type={showPasswordConfirm ? 'text' : 'password'}
-                                value={user.confirmPassword}
+                                value={confirmPassword}
                                 name='confirmPassword'
-                                onChange={handleUserSportsManChange}
+                                onChange={(e)=>setConfirmPassword(e.target.value)}
                                 label="Confirmar contraseña"
                                 size='small'
                                 endAdornment={
@@ -219,8 +224,7 @@ const FormUser = ({ action }) => {
                                             {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
-                                }
-                                
+                                }                                
                             />
                         </FormControl>
                     </Grid>

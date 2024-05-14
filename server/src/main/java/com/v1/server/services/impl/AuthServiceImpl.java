@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("Las contraseñas no coinciden");
         }
-        if (!request.getConfirmEmail().equals(request.getConfirmEmail())) {
+        if (!request.getEmail().equals(request.getConfirmEmail())) {
             throw new IllegalArgumentException("Los correos electronicos no coiciden");
         }
 
