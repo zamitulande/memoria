@@ -1,4 +1,4 @@
-import { Box, Button, FilledInput, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import { Box, Button, Checkbox, FilledInput, FormControl, FormControlLabel, Grid, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, TextField } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react'
@@ -6,10 +6,15 @@ import axiosClient from '../../../config/Axios'
 import UseValidation from '../../../helpers/hooks/UseValidation'
 import LoadingGif from '../../../assets/loading/loading.gif'
 import Swal from 'sweetalert2';
+import Recaptcha from '../../../helpers/components/Recaptcha';
+import Conditions from '../../../helpers/components/Conditions';
+
 
 const FormUser = ({ action }) => {
 
-    const { minLength, maxLength } = UseValidation();
+    const { minLength } = UseValidation();
+
+    const [open, setOpen] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +30,10 @@ const FormUser = ({ action }) => {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
 
+    const [recaptchaIsValid, setRecaptchaIsValid] = useState(false)
+    const [conditios, setConditios] = useState(false);
+
+
     const resetForm = () => {
         setIdentification("")
         setEmail("")
@@ -37,16 +46,10 @@ const FormUser = ({ action }) => {
         setConfirmPassword("")
     }
 
-    const isDisable = () => {
-        !identification ||
-            !minLength(identification) ||
-            !maxLength(identification)
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const user={
+        const user = {
             identification,
             email,
             confirmEmail,
@@ -66,7 +69,7 @@ const FormUser = ({ action }) => {
                     position: "top-end",
                     icon: "success",
                     title: messageResponse,
-                  });
+                });
             })
             .catch((error) => {
                 console.log(error)
@@ -75,7 +78,7 @@ const FormUser = ({ action }) => {
                 Swal.fire({
                     icon: "error",
                     text: errorMessage,
-                  });
+                });
             });
     }
     return (
@@ -90,8 +93,8 @@ const FormUser = ({ action }) => {
                             name="identification"
                             type='number'
                             value={identification}
-                            onChange={(e)=>{
-                                const value = e.target.value.slice(0,12);
+                            onChange={(e) => {
+                                const value = e.target.value.slice(0, 12);
                                 setIdentification(value)
                             }}
                             fullWidth
@@ -104,40 +107,40 @@ const FormUser = ({ action }) => {
                             required />
                     </Grid>
                     <Grid item xs={4}>
-                        <TextField 
+                        <TextField
                             label="Correo electronico"
                             color='textField'
                             variant="outlined"
                             name="email"
                             type='email'
                             value={email}
-                            onChange={(e)=>setEmail(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                             fullWidth
                             size="small"
                             required />
                     </Grid>
                     <Grid item xs={4}>
-                        <TextField 
+                        <TextField
                             label="Confirmar correo electronico"
                             color='textField'
                             variant="outlined"
                             name="confirmEmail"
                             type='email'
                             value={confirmEmail}
-                            onChange={(e)=>setConfirmEmail(e.target.value)}
+                            onChange={(e) => setConfirmEmail(e.target.value)}
                             fullWidth
                             size="small"
                             required />
                     </Grid>
                     <Grid item xs={4}>
-                        <TextField 
+                        <TextField
                             label="Primer nombre"
                             color='textField'
                             variant="outlined"
                             name="firstName"
                             type='text'
                             value={firstName}
-                            onChange={(e)=>setFirstName(e.target.value)}
+                            onChange={(e) => setFirstName(e.target.value)}
                             fullWidth
                             size="small"
                             required />
@@ -150,7 +153,7 @@ const FormUser = ({ action }) => {
                             name="secondName"
                             type='text'
                             value={secondName}
-                            onChange={(e)=>setSecondName(e.target.value)}
+                            onChange={(e) => setSecondName(e.target.value)}
                             fullWidth
                             size="small" />
                     </Grid>
@@ -162,7 +165,7 @@ const FormUser = ({ action }) => {
                             name="firstLastName"
                             type='text'
                             value={firstLastName}
-                            onChange={(e)=>setFirstLastName(e.target.value)}
+                            onChange={(e) => setFirstLastName(e.target.value)}
                             fullWidth
                             size="small"
                             required />
@@ -175,18 +178,18 @@ const FormUser = ({ action }) => {
                             name="secondLastName"
                             type='text'
                             value={secondLastName}
-                            onChange={(e)=>setSecondLastName(e.target.value)}
+                            onChange={(e) => setSecondLastName(e.target.value)}
                             fullWidth
                             size="small" />
                     </Grid>
                     <Grid item xs={4}>
-                    <FormControl variant="outlined" color='textField' fullWidth required>
+                        <FormControl variant="outlined" color='textField' fullWidth required>
                             <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
                             <OutlinedInput
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 name='password'
-                                onChange={(e)=>setPassword(e.target.value)}
+                                onChange={(e) => setPassword(e.target.value)}
                                 label="Contraseña"
                                 size='small'
                                 endAdornment={
@@ -200,7 +203,6 @@ const FormUser = ({ action }) => {
                                         </IconButton>
                                     </InputAdornment>
                                 }
-                                
                             />
                         </FormControl>
                     </Grid>
@@ -211,7 +213,7 @@ const FormUser = ({ action }) => {
                                 type={showPasswordConfirm ? 'text' : 'password'}
                                 value={confirmPassword}
                                 name='confirmPassword'
-                                onChange={(e)=>setConfirmPassword(e.target.value)}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                                 label="Confirmar contraseña"
                                 size='small'
                                 endAdornment={
@@ -224,13 +226,39 @@ const FormUser = ({ action }) => {
                                             {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     </InputAdornment>
-                                }                                
+                                }
                             />
                         </FormControl>
                     </Grid>
-
                 </Grid>
-                <Button type="submit" color='secondary' disabled={isDisable()}>register</Button>
+                <Grid
+                    container
+                    mt={6}
+                    direction="column"
+                    justifyContent="space-around"
+                    alignItems="center"
+                >
+                    <Grid>
+                        <FormControlLabel
+                            value="end"
+                            control={<Checkbox color='secondary' onChange={(e)=>setConditios(e.target.checked)}/>}
+                            labelPlacement="end"
+                        />
+                        <Button
+                            color='secondary'
+                            onClick={(e) => { setOpen(true) }}
+                            size="small">
+                            Terminos y condiciones
+                        </Button>
+                        <Conditions open={open} setOpen={setOpen} />
+                    </Grid>
+                    <Grid mt={2}>
+                        <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
+                    </Grid>
+                    <Grid mt={4}>
+                        <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios}>register</Button>
+                    </Grid>
+                </Grid>
             </form>
             {
                 isLoading && (
