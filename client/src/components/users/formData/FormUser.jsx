@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FilledInput, FormControl, FormControlLabel, Grid, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, TextField } from '@mui/material'
+import { Box, Button, Checkbox, FilledInput, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, TextField } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react'
@@ -8,11 +8,13 @@ import LoadingGif from '../../../assets/loading/loading.gif'
 import Swal from 'sweetalert2';
 import Recaptcha from '../../../helpers/components/Recaptcha';
 import Conditions from '../../../helpers/components/Conditions';
+import SelectDepartment from '../../../helpers/components/SelectDepartment';
+import SelectCity from '../../../helpers/components/SelectCity';
 
 
 const FormUser = ({ action }) => {
 
-    const { minLength } = UseValidation();
+    const { minLength, isCellPhone, passwordValid } = UseValidation();
 
     const [open, setOpen] = useState(false);
 
@@ -27,12 +29,20 @@ const FormUser = ({ action }) => {
     const [secondName, setSecondName] = useState("")
     const [firstLastName, setFirstLastName] = useState("")
     const [secondLastName, setSecondLastName] = useState("")
+    const [department, setDepartment] = useState("");
+    const [contactNumber, setContactNumber] = useState("");
+    const [city, setCity] = useState("");
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
 
     const [recaptchaIsValid, setRecaptchaIsValid] = useState(false)
     const [conditios, setConditios] = useState(false);
 
+    let municipio;
+    if (city) {
+        const { name } = city;
+        municipio = name;
+    }
 
     const resetForm = () => {
         setIdentification("")
@@ -45,27 +55,28 @@ const FormUser = ({ action }) => {
         setPassword("")
         setConfirmPassword("")
         setConditios(false)
+        setCity("")
+        setDepartment("")
+        setContactNumber("")
     }
-    
-    const isDisable = ()=>{
-        return(
+
+    const isDisable = () => {
+        return (
             !identification ||
             !minLength(identification, 8) ||
             !firstName ||
             !minLength(firstName, 3) ||
-            !minLength(secondName, 3) ||
             !firstLastName ||
             !minLength(firstLastName, 3) ||
-            !minLength(secondLastName, 3) ||
-            !secondName ||
-            !minLength(secondName, 3) ||
             !password ||
             !minLength(password, 8) ||
+            !city ||
+            !department ||
+            !contactNumber ||
             !confirmPassword ||
             !minLength(confirmPassword, 8)
         )
     }
-
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -77,6 +88,9 @@ const FormUser = ({ action }) => {
             secondName,
             firstLastName,
             secondLastName,
+            contactNumber,
+            department,
+            municipio,
             password,
             confirmPassword
         }
@@ -118,12 +132,12 @@ const FormUser = ({ action }) => {
                                 setIdentification(value)
                             }}
                             fullWidth
-                            size="small"
                             helperText={
                                 (!minLength(identification, 8) && identification)
                                     ? "Este campo debe tener al menos 8 caracteres"
                                     : ""
                             }
+                            FormHelperTextProps={{ sx: { color: "error.main" } }}
                             required />
                     </Grid>
                     <Grid item xs={4}>
@@ -136,7 +150,6 @@ const FormUser = ({ action }) => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             fullWidth
-                            size="small"
                             required />
                     </Grid>
                     <Grid item xs={4}>
@@ -149,7 +162,6 @@ const FormUser = ({ action }) => {
                             value={confirmEmail}
                             onChange={(e) => setConfirmEmail(e.target.value)}
                             fullWidth
-                            size="small"
                             required />
                     </Grid>
                     <Grid item xs={4}>
@@ -162,13 +174,14 @@ const FormUser = ({ action }) => {
                             value={firstName}
                             onChange={(e) => setFirstName(e.target.value)}
                             fullWidth
-                            size="small"
                             required
                             helperText={
                                 (!minLength(firstName, 3) && firstName)
                                     ? "Este campo debe tener al menos 3 caracteres"
                                     : ""
-                            } />
+                            }
+                            FormHelperTextProps={{ sx: { color: "error.main" } }}
+                        />
                     </Grid>
                     <Grid item xs={4}>
                         <TextField
@@ -180,7 +193,6 @@ const FormUser = ({ action }) => {
                             value={secondName}
                             onChange={(e) => setSecondName(e.target.value)}
                             fullWidth
-                            size="small" 
                             helperText={
                                 (!minLength(secondName, 3) && secondName)
                                     ? "Este campo debe tener al menos 3 caracteres"
@@ -197,13 +209,14 @@ const FormUser = ({ action }) => {
                             value={firstLastName}
                             onChange={(e) => setFirstLastName(e.target.value)}
                             fullWidth
-                            size="small"
                             required
                             helperText={
                                 (!minLength(firstLastName, 3) && firstLastName)
                                     ? "Este campo debe tener al menos 3 caracteres"
                                     : ""
-                            } />
+                            }
+                            FormHelperTextProps={{ sx: { color: "error.main" } }}
+                        />
                     </Grid>
                     <Grid item xs={4}>
                         <TextField
@@ -215,12 +228,47 @@ const FormUser = ({ action }) => {
                             value={secondLastName}
                             onChange={(e) => setSecondLastName(e.target.value)}
                             fullWidth
-                            size="small" 
                             helperText={
                                 (!minLength(secondLastName, 3) && secondLastName)
                                     ? "Este campo debe tener al menos 3 caracteres"
                                     : ""
                             } />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <SelectDepartment
+                            value={department}
+                            onChange={(e, item) => {
+                                setDepartment(e.target.value);
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <SelectCity
+                            value={city}
+                            setCity={setCity}
+                            department={department}
+                        />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <TextField
+                            label="Celular"
+                            color='textField'
+                            type='text'
+                            variant="outlined"
+                            value={contactNumber}
+                            onChange={(e) => {
+                                const value = e.target.value.slice(0, 10);
+                                setContactNumber(value)
+                            }}
+                            fullWidth
+                            helperText={
+                                !isCellPhone(contactNumber) && contactNumber
+                                    ? "Número de celular incorrecto"
+                                    : ""
+                            }
+                            FormHelperTextProps={{ sx: { color: "error.main" } }}
+                            required
+                        />
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl variant="outlined" color='textField' fullWidth required>
@@ -231,7 +279,6 @@ const FormUser = ({ action }) => {
                                 name='password'
                                 onChange={(e) => setPassword(e.target.value)}
                                 label="Contraseña"
-                                size='small'
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
@@ -244,6 +291,11 @@ const FormUser = ({ action }) => {
                                     </InputAdornment>
                                 }
                             />
+                            <FormHelperText error>
+                                {!passwordValid(password) && password
+                                    ? "La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un carácter especial."
+                                    : ""}
+                            </FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
@@ -255,7 +307,6 @@ const FormUser = ({ action }) => {
                                 name='confirmPassword'
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 label="Confirmar contraseña"
-                                size='small'
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
@@ -281,7 +332,7 @@ const FormUser = ({ action }) => {
                     <Grid>
                         <FormControlLabel
                             value="end"
-                            control={<Checkbox color='secondary' checked={conditios} onChange={(e)=>setConditios(e.target.checked)}/>}
+                            control={<Checkbox color='secondary' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}
                             labelPlacement="end"
                         />
                         <Button

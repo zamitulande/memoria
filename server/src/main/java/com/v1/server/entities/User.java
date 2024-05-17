@@ -47,6 +47,16 @@ public class User implements UserDetails{
     private String secondLastName;
 
     @NotBlank
+    @Size(min = 8, message = "La numero de celular debe tener 10 caracteres")
+    private String contactNumber;
+
+    @NotBlank
+    private String department;
+
+    @NotBlank
+    private String municipio;
+
+    @NotBlank
     @Column(unique = true)
     private String identification;
 

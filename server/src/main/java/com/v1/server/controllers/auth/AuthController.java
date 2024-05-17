@@ -30,6 +30,8 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody RegisterRequestDTO request) throws MessagingException{
+       
+       System.out.println(request);
         User user = authService.register(request);
         if (user != null) {
             String message = "usuario registrado, revisa tu correo para activar tu cuenta";

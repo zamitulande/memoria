@@ -24,6 +24,12 @@ public class RegisterRequestDTO {
     private String secondLastName;
 
     private String identification;
+    
+    private String contactNumber;
+  
+    private String department;
+    
+    private String municipio;
 
     private String email;
 
