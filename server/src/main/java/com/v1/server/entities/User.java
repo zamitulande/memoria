@@ -55,15 +55,16 @@ public class User implements UserDetails{
     @Column(unique = true)
     private String email;
 
+    @Transient
     @Email
     private String confirmEmail;
 
     @NotBlank
-    @Size(min = 6, message = "La contraseña debe tener al menos 8 caracteres")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String password;
 
     @Transient
-    @Size(min = 6, message = "La contraseña debe tener al menos 8 caracteres")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     private String confirmPassword;
 
     @Enumerated(EnumType.ORDINAL)

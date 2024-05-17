@@ -44,6 +44,26 @@ const FormUser = ({ action }) => {
         setSecondLastName("")
         setPassword("")
         setConfirmPassword("")
+        setConditios(false)
+    }
+    
+    const isDisable = ()=>{
+        return(
+            !identification ||
+            !minLength(identification, 8) ||
+            !firstName ||
+            !minLength(firstName, 3) ||
+            !minLength(secondName, 3) ||
+            !firstLastName ||
+            !minLength(firstLastName, 3) ||
+            !minLength(secondLastName, 3) ||
+            !secondName ||
+            !minLength(secondName, 3) ||
+            !password ||
+            !minLength(password, 8) ||
+            !confirmPassword ||
+            !minLength(confirmPassword, 8)
+        )
     }
 
     const handleSubmit = (e) => {
@@ -101,7 +121,7 @@ const FormUser = ({ action }) => {
                             size="small"
                             helperText={
                                 (!minLength(identification, 8) && identification)
-                                    ? "El número de identificación debe tener al menos 8 caracteres"
+                                    ? "Este campo debe tener al menos 8 caracteres"
                                     : ""
                             }
                             required />
@@ -143,7 +163,12 @@ const FormUser = ({ action }) => {
                             onChange={(e) => setFirstName(e.target.value)}
                             fullWidth
                             size="small"
-                            required />
+                            required
+                            helperText={
+                                (!minLength(firstName, 3) && firstName)
+                                    ? "Este campo debe tener al menos 3 caracteres"
+                                    : ""
+                            } />
                     </Grid>
                     <Grid item xs={4}>
                         <TextField
@@ -155,7 +180,12 @@ const FormUser = ({ action }) => {
                             value={secondName}
                             onChange={(e) => setSecondName(e.target.value)}
                             fullWidth
-                            size="small" />
+                            size="small" 
+                            helperText={
+                                (!minLength(secondName, 3) && secondName)
+                                    ? "Este campo debe tener al menos 3 caracteres"
+                                    : ""
+                            } />
                     </Grid>
                     <Grid item xs={4}>
                         <TextField
@@ -168,7 +198,12 @@ const FormUser = ({ action }) => {
                             onChange={(e) => setFirstLastName(e.target.value)}
                             fullWidth
                             size="small"
-                            required />
+                            required
+                            helperText={
+                                (!minLength(firstLastName, 3) && firstLastName)
+                                    ? "Este campo debe tener al menos 3 caracteres"
+                                    : ""
+                            } />
                     </Grid>
                     <Grid item xs={4}>
                         <TextField
@@ -180,7 +215,12 @@ const FormUser = ({ action }) => {
                             value={secondLastName}
                             onChange={(e) => setSecondLastName(e.target.value)}
                             fullWidth
-                            size="small" />
+                            size="small" 
+                            helperText={
+                                (!minLength(secondLastName, 3) && secondLastName)
+                                    ? "Este campo debe tener al menos 3 caracteres"
+                                    : ""
+                            } />
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl variant="outlined" color='textField' fullWidth required>
@@ -241,7 +281,7 @@ const FormUser = ({ action }) => {
                     <Grid>
                         <FormControlLabel
                             value="end"
-                            control={<Checkbox color='secondary' onChange={(e)=>setConditios(e.target.checked)}/>}
+                            control={<Checkbox color='secondary' checked={conditios} onChange={(e)=>setConditios(e.target.checked)}/>}
                             labelPlacement="end"
                         />
                         <Button
@@ -256,7 +296,7 @@ const FormUser = ({ action }) => {
                         <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
                     </Grid>
                     <Grid mt={4}>
-                        <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios}>register</Button>
+                        <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios || isDisable()}>register</Button>
                     </Grid>
                 </Grid>
             </form>
