@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import axiosClient from '../config/Axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveAccount, setLogin, setRole, setToken } from '../redux/features/userSlice';
+import ForgetPassword from './ForgetPassword';
 
 const style = {
     position: 'absolute',
@@ -42,6 +43,7 @@ const Login = ({ open, setOpen }) => {
         password: ''
     })
     const [showPassword, setShowPassword] = useState(false);
+    const [openModalForget, setOpenModalForget] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -59,6 +61,7 @@ const Login = ({ open, setOpen }) => {
                     console.log(response.data)
                 }
             } catch (error) {
+                console.log(error)
                 Swal.fire({
                     icon: "error",
                     title: "Error...",
@@ -167,9 +170,10 @@ const Login = ({ open, setOpen }) => {
                                     alignItems: 'center'
                                 }}
                             >
-                                <Link>
+                                <Button  onClick={(e) => setOpenModalForget(true)}>
                                     ¿Olvidó su contraseña?
-                                </Link>
+                                </Button>
+                                <ForgetPassword open={openModalForget} setOpen={setOpenModalForget}/>
                             </Box>
                         </Grid>
                         <Grid item xs={6}>

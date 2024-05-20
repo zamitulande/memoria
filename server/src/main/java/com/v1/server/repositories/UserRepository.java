@@ -11,4 +11,6 @@ import com.v1.server.entities.User;
 public interface UserRepository  extends JpaRepository<User, Long>{
     
     Optional<User> findByEmail(String email);
+
+    Optional<User> findByIdentification(String identification);
 }

@@ -6,6 +6,8 @@ import Users from "../components/users/Users"
 import Register from "../components/users/Register"
 import Testimonies from "../components/testimonies/Testimonies"
 import ActivateAccount from "../auth/ActivateAccount"
+import ForgetPassword from "../auth/ForgetPassword"
+import ResetPassword from "../auth/ResetPassword"
 
 const AppRoutes = () => {
   return (
@@ -17,6 +19,8 @@ const AppRoutes = () => {
         <Route path='/usuarios' element={<Users/>} />
         <Route path='/usuarios/registrar' element={<Register/>}/>
         <Route path='/activate-account' element={<ActivateAccount/>}/>
+        <Route path='/forget-password' element={<ForgetPassword/>}/>
+        <Route path='/reset-password' element={<ResetPassword/>}/>
     </Routes>
   )
 }

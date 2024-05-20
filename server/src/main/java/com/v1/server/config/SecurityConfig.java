@@ -42,7 +42,9 @@ public class SecurityConfig {
         return new OrRequestMatcher(
                 new AntPathRequestMatcher("/api/v1/auth/authenticate"),
                 new AntPathRequestMatcher("/api/v1/auth/register"),
-                new AntPathRequestMatcher("/api/v1/auth/activate-account")
+                new AntPathRequestMatcher("/api/v1/auth/activate-account"),
+                new AntPathRequestMatcher("/api/v1/auth/forget-password"),
+                new AntPathRequestMatcher("/api/v1/auth/reset-password")
         );
     }
 }

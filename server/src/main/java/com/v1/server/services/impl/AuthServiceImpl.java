@@ -2,6 +2,7 @@ package com.v1.server.services.impl;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.v1.server.dtos.user.AuthResponseDTO;
 import com.v1.server.dtos.user.AuthenticationRequestDTO;
 import com.v1.server.dtos.user.RegisterRequestDTO;
+import com.v1.server.dtos.user.ResetPasswordDTO;
 import com.v1.server.entities.Token;
 import com.v1.server.entities.User;
 import com.v1.server.enumerate.EmailTemplateName;
+import com.v1.server.exceptions.ApiResponse;
 import com.v1.server.repositories.TokenRepository;
 import com.v1.server.repositories.UserRepository;
 import com.v1.server.services.AuthService;
@@ -42,6 +45,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${activation-url:activationUrl}")
     private String activationUrl;
+
+    @Value("${forget-password:forgetPassword}")
+    private String forgetPassword;
 
     @Value("${characters-token:characters}")
     private String characters;
@@ -156,6 +162,90 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         savedToken.setValidateAt(LocalDateTime.now());
         tokenRepository.save(savedToken);
+    }
+
+    public ApiResponse forgetPassword(String identification) {
+    Optional<User> userOptional = userRepository.findByIdentification(identification);
+    if (userOptional.isPresent()) {
+        User user = userOptional.get();
+        try {
+            sendResetPasswordEmail(user);
+            return ApiResponse.builder()
+                    .status(200)
+                    .message("Password reset email sent successfully.")
+                    .build();
+        } catch (MessagingException e) {
+            return ApiResponse.builder()
+                    .status(500)
+                    .message("Error sending email.")
+                    .build();
+        }
+    } else {
+        return ApiResponse.builder()
+                .status(404)
+                .message("User not found aqui.")
+                .build();
+    }
+}
+
+    private void sendResetPasswordEmail(User user) throws MessagingException {
+        var resetToken = generateAndSaveResetToken(user);
+        String resetUrl = forgetPassword + "?token="+ resetToken;
+    
+        emailService.sendEmail(
+                user.getEmail(),
+                user.getUsername(),
+                user.getFirstName(),
+                EmailTemplateName.forget_password, // Asegúrate de tener esta plantilla en tu servicio de email
+                resetUrl,
+                null,
+                "Password Reset Request");
+    }
+
+    private String generateAndSaveResetToken(User user) {
+        String generateToken = generateActivationCode(6);
+        var token = Token.builder()
+                .token(generateToken)
+                .createAt(LocalDateTime.now())
+                .expirateAt(LocalDateTime.now().plusDays(1)) // Token válido por 1 día
+                .user(user)
+                .build();
+    
+        tokenRepository.save(token);
+        return generateToken;
+    }
+
+    @Override
+    public ApiResponse resetPassword(ResetPasswordDTO request) {
+        
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Las contraseñas no coinciden");
+        }
+        
+        Optional<Token> tokenOptional = tokenRepository.findByToken(request.getToken());
+        if (tokenOptional.isPresent()) {
+            Token resetToken = tokenOptional.get();
+            if(resetToken.getExpirateAt().isAfter(LocalDateTime.now())){
+                User user = resetToken.getUser();
+                user.setPassword(passwordEncoder.encode(request.getPassword()));
+                userRepository.save(user);
+                tokenRepository.delete(resetToken); // Eliminar el token después de usarlo
+                return ApiResponse.builder()
+                        .status(200)
+                        .message("Password reset successfully.")
+                        .build();
+            } else {
+                return ApiResponse.builder()
+                        .status(400)
+                        .message("Token has expired.")
+                        .build();
+            }
+        }else {
+            return ApiResponse.builder()
+                    .status(400)
+                    .message("Invalid token.")
+                    .build();
+        }
     }
 
 }
