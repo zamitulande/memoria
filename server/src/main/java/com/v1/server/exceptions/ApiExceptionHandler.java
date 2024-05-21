@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.v1.server.exceptions.customExceptions.ExpireTokenException;
+import com.v1.server.exceptions.customExceptions.NotFoundException;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -50,9 +53,15 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(new ErrorMessage(errorMessage, HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({NoSuchElementException.class})
-    public ResponseEntity<ErrorMessage> handleNoSuchElementException(HttpServletRequest request, NoSuchElementException ex) {
-        return new ResponseEntity<>(new ErrorMessage("Token invalido", HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND, request.getRequestURI()), HttpStatus.NOT_FOUND);
-        
+    @ExceptionHandler({NotFoundException.class})
+    public ResponseEntity<ErrorMessage> notFoudException(HttpServletRequest request, NoSuchElementException ex){
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI());
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ExpireTokenException.class})
+    public ResponseEntity<ErrorMessage> TokenExpired(HttpServletRequest request, ExpireTokenException ex){
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI());
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }

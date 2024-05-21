@@ -47,20 +47,11 @@ const ForgetPassword = ({ open, setOpen }) => {
                 Swal.fire({
                     icon: "error",
                     text: errorMessage,
+                    customClass: {
+                        container: 'my-swal'
+                    },
                 });
             });
-        const postIdentification = async () => {
-            try {
-                const response = await axiosClient.post('/auth/forget-password', {}, {
-                    params: { identification: identification }
-                });
-             console.log(isLoading)
-                console.log(response.data)
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        postIdentification();
     }
 
     const handleCloseModal = ()=>{

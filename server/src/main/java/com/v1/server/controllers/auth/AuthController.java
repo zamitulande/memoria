@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @GetMapping("/activate-account")
-    public void confirmAccount(@RequestParam String token) throws MessagingException{
+    public void confirmAccount(@RequestParam String token) {
         authService.activateAccount(token);
     }
 
@@ -48,7 +48,6 @@ public class AuthController {
 
     @PostMapping("/reset-password")
     public ApiResponse resetPassword(@RequestBody ResetPasswordDTO request){
-        
         return authService.resetPassword(request);
     }
 }

@@ -5,6 +5,7 @@ import { Box, Button, FormControl, FormHelperText, Grid, IconButton, InputAdornm
 import CloseIcon from '@mui/icons-material/Cancel';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axiosClient from '../config/Axios';
+import Swal from 'sweetalert2';
 
 const style = {
     position: 'absolute',
@@ -42,10 +43,6 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
         const request = {
             token, 
             password, 
@@ -53,10 +50,22 @@ const ResetPassword = () => {
         }
         try {
             const response = await axiosClient.post('/auth/reset-password', request);
-            console.log(response.data);
-            alert(response.data.message);
+            const messageResponse = response.data.message;
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: messageResponse,
+            });
         } catch (error) {
             console.error(error);
+            const errorMessage = error.response.data.message
+            Swal.fire({
+                icon: "error",
+                text: errorMessage,
+                customClass: {
+                    container: 'my-swal'
+                },
+            });
         }
     }
   return (

@@ -13,9 +13,9 @@ public interface AuthService {
     
     ApiResponse authenticate(AuthenticationRequestDTO request) ;
 
-    void activateAccount (String token) throws MessagingException;
+    void activateAccount (String token);
 
-    ApiResponse forgetPassword(String identification);
+    ApiResponse forgetPassword(String identification) throws MessagingException;
 
     ApiResponse resetPassword(ResetPasswordDTO request);
 
