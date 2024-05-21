@@ -11,6 +11,10 @@ public class ApiResponse {
     private String message;
     private Object data;
 
+    public ApiResponse(Object data) {
+        this.data = data;
+    }
+
     public ApiResponse(int status, String message) {
         this.status = status;
         this.message = message;

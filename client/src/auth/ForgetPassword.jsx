@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import UseValidation from '../helpers/hooks/UseValidation';
 import axiosClient from '../config/Axios';
 import CloseIcon from '@mui/icons-material/Cancel';
+import LoadingGif from '../assets/loading/loading.gif'
 import Swal from 'sweetalert2';
 
 const style = {
@@ -23,17 +24,38 @@ const ForgetPassword = ({ open, setOpen }) => {
     const { minLength } = UseValidation();
 
     const [identification, setIdentification] = useState("")
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(identification)
+        setIsLoading(true)
+        axiosClient.post('/auth/forget-password', {}, {params: { identification: identification }})
+            .then((response) => {
+                const messageResponse = response.data.message;
+                setIsLoading(false)
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: messageResponse,
+                });
+                setOpen(false)
+            })
+            .catch((error) => {
+                console.log(error)
+                setIsLoading(false);
+                const errorMessage = error.response.data.message
+                Swal.fire({
+                    icon: "error",
+                    text: errorMessage,
+                });
+            });
         const postIdentification = async () => {
             try {
-                console.log(identification)
                 const response = await axiosClient.post('/auth/forget-password', {}, {
                     params: { identification: identification }
                 });
-                console.log(response)
+             console.log(isLoading)
+                console.log(response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -87,6 +109,13 @@ const ForgetPassword = ({ open, setOpen }) => {
 
                     <Button type='submit' color='secondary' sx={{ mt: 2 }} onClick={handleSubmit}>Enviar</Button> {/* Botón para enviar el código al servidor */}
                 </form>
+                {
+                isLoading && (
+                    <Box className="loading-overlay">
+                        <img src={LoadingGif} alt="Loading..." />
+                    </Box>
+                )
+            }
             </Box>
         </Modal>
     )

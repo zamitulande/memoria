@@ -54,7 +54,7 @@ const ActivateAccount = () => {
                 Swal.fire({
                     icon: "error",
                     title: "Error...",
-                    text: "Codigo no valido o ha caducado.",
+                    text: error.response.data.message,
                     customClass: {
                         container: 'my-swal'
                     },

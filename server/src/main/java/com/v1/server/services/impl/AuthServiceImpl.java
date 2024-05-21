@@ -10,7 +10,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,9 +52,7 @@ public class AuthServiceImpl implements AuthService {
     private String characters;
 
     @Override
-    public User register(RegisterRequestDTO request) throws MessagingException {
-
-        System.out.println("+++++"+request);
+    public ApiResponse register(RegisterRequestDTO request) throws MessagingException {
 
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("Las contraseñas no coinciden");
@@ -83,14 +80,15 @@ public class AuthServiceImpl implements AuthService {
 
         User savedUser = userRepository.save(user);
         sendValidationEmail(savedUser);
-        return savedUser;
+        String message = "Usuario creado satisfactoriamente";
+        return new ApiResponse(200, message);
 
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
         var newToken = generateAndSaveActivationToken(user);
+        
         // send email
-
         emailService.sendEmail(
                 user.getEmail(),
                 user.getUsername(),
@@ -99,7 +97,6 @@ public class AuthServiceImpl implements AuthService {
                 activationUrl,
                 newToken,
                 "Account activation");
-
     }
 
     private String generateAndSaveActivationToken(User user) {
@@ -116,6 +113,7 @@ public class AuthServiceImpl implements AuthService {
         return generateToken;
     }
 
+    //generar codigo para asignar al token
     private String generateActivationCode(int length) {
         StringBuilder codebBuilder = new StringBuilder();
         SecureRandom secureRandom = new SecureRandom();
@@ -127,7 +125,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponseDTO authenticate(AuthenticationRequestDTO request) {
+    public ApiResponse authenticate(AuthenticationRequestDTO request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -137,26 +135,27 @@ public class AuthServiceImpl implements AuthService {
         String roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(""));
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var saveUser = userRepository.findByEmail(request.getEmail());
+        User user = saveUser.get();
         var jwtToken = jwtService.generateToken(user);
         AuthResponseDTO responseDTO = AuthResponseDTO.builder()
                 .token(jwtToken)
                 .role(roles) // Agregar los roles al DTO
                 .build();
-
-        return responseDTO;
+        return new ApiResponse(responseDTO);
 
     }
 
     @Transactional
     public void activateAccount(String token) throws MessagingException {
-        Token savedToken = tokenRepository.findByToken(token).orElseThrow(() -> new RuntimeException("invalid Token"));
+         Optional<Token> savedTokenOptional = tokenRepository.findByToken(token);
+         Token savedToken = savedTokenOptional.get();
+
         if (LocalDateTime.now().isAfter(savedToken.getExpirateAt())) {
             sendValidationEmail(savedToken.getUser());
-            throw new RuntimeException("La activacion del token ha expirado, registrate de nuevo para un nuevo token");
         }
-        var user = userRepository.findById(savedToken.getUser().getUserId())
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        var saveUser = userRepository.findById(savedToken.getUser().getUserId());
+        User user = saveUser.get();
 
         user.setEnabled(true);
         userRepository.save(user);
@@ -172,7 +171,7 @@ public class AuthServiceImpl implements AuthService {
             sendResetPasswordEmail(user);
             return ApiResponse.builder()
                     .status(200)
-                    .message("Password reset email sent successfully.")
+                    .message("Se ha enviado un correo para la recuperacion de contraseña.")
                     .build();
         } catch (MessagingException e) {
             return ApiResponse.builder()

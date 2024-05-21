@@ -12,7 +12,7 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Cancel';
 import Swal from 'sweetalert2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosClient from '../config/Axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,14 +58,13 @@ const Login = ({ open, setOpen }) => {
                         email: '',
                         password: ''
                     })
-                    console.log(response.data)
                 }
             } catch (error) {
                 console.log(error)
                 Swal.fire({
                     icon: "error",
                     title: "Error...",
-                    text: error.response.data.message,
+                    text: "Usuario o contraseña invalidos",
                     customClass: {
                         container: 'my-swal'
                     },

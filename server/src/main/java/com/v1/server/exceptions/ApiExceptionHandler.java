@@ -1,8 +1,10 @@
 package com.v1.server.exceptions;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -34,30 +36,23 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorMessage> handleDataIntegrityViolation(HttpServletRequest request, DataIntegrityViolationException exception){
-        String errorMessage = "Error de integridad en la base de datos.";
+        String errorMessage = "";
 
-    // Obtener la causa raíz de la excepción
-    Throwable rootCause = getRootCause(exception);
-
-    if (rootCause instanceof SQLException) {
-        SQLException sqlException = (SQLException) rootCause;
-        String errorMessageDetail = sqlException.getMessage();
-
-        // Analizar el mensaje de error para determinar qué campo está violando la restricción de integridad
-        if (errorMessageDetail.contains("Duplicate entry") && errorMessageDetail.contains("for key 'UK_ob8kqyqqgmefl0aco34akdtpe'")) {
-            errorMessage = "Ya existe un usuario con el mismo correo electrónico.";
-        } else if (errorMessageDetail.contains("Duplicate entry") && errorMessageDetail.contains("for key 'UK_82p55ya4wxjmu3xcguqdmwc16'")) {
-            errorMessage = "Ya existe un usuario con la misma identificación.";
+        if (exception.getMessage().contains("Duplicate entry")) {
+            String regex = "'(.+?)'";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(exception.getMessage());
+            if (matcher.find()) {
+                String duplicate = matcher.group(1);
+                errorMessage = "El usuario con '" + duplicate + "' ya está registrado.";
+            }
         }
-    }
         return new ResponseEntity<>(new ErrorMessage(errorMessage, HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI()), HttpStatus.BAD_REQUEST);
     }
 
-    public Throwable getRootCause(Throwable throwable) {
-        Throwable cause = throwable;
-        while (cause.getCause() != null) {
-            cause = cause.getCause();
-        }
-        return cause;
+    @ExceptionHandler({NoSuchElementException.class})
+    public ResponseEntity<ErrorMessage> handleNoSuchElementException(HttpServletRequest request, NoSuchElementException ex) {
+        return new ResponseEntity<>(new ErrorMessage("Token invalido", HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND, request.getRequestURI()), HttpStatus.NOT_FOUND);
+        
     }
 }

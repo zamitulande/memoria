@@ -106,7 +106,6 @@ const FormUser = ({ action }) => {
                 });
             })
             .catch((error) => {
-                console.log(error)
                 setIsLoading(false);
                 const errorMessage = error.response.data.message
                 Swal.fire({
@@ -344,10 +343,11 @@ const FormUser = ({ action }) => {
                         <Conditions open={open} setOpen={setOpen} />
                     </Grid>
                     <Grid mt={2}>
-                        <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
+                        {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
                     </Grid>
                     <Grid mt={4}>
-                        <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios || isDisable()}>register</Button>
+                    <Button type="submit" color='secondary' disabled={!conditios || isDisable()}>register</Button>
+                        {/* <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios || isDisable()}>register</Button> */}
                     </Grid>
                 </Grid>
             </form>
