@@ -2,6 +2,9 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import LoginIcon from '@mui/icons-material/Login';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {
     BottomNavigation,
     BottomNavigationAction,
@@ -15,6 +18,8 @@ import {
     Typography,
     Menu,
     Container,
+    Popper,
+    Chip,
 } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { useTheme } from '@emotion/react';
@@ -48,7 +53,7 @@ const Header = () => {
         { item: 'Sena', id: 1, path: 'https://www.sena.edu.co/es-co/Paginas/default.aspx' },
         { item: 'Sennova', id: 2, path: 'https://www.sena.edu.co/es-co/formacion/paginas/tecnologia-innovacion.aspx' },
         { item: 'Tecnoparque', id: 3, path: 'https://sena.edu.co/es-co/formacion/Paginas/tecnoparques.aspx' },
-        { item: 'Contactenos', id: 4, path: '' },
+        { item: 'Contactenos', id: 4 },
     ]
     const buttons = [
         { item: 'Ingresar', id: 1 },
@@ -58,8 +63,8 @@ const Header = () => {
     const [open, setOpen] = useState(false);
     const [anchorElNav, setAnchorElNav] = useState(null)
     const [anchorElUser, setAnchorElUser] = useState(null)
+    const [anchorElContact, setAnchorElContact] = useState(null);
     const [valuePage, setValuePage] = useState(0)
-    const [valueAbout, setValueAbout] = useState()
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -76,33 +81,53 @@ const Header = () => {
         setAnchorElUser(null);
     };
 
+    const contactClick = (event) => {
+        setAnchorElContact(anchorElContact ? null : event.currentTarget);
+    }
+
+    const openInfo = Boolean(anchorElContact);
+    const id = openInfo ? 'simple-popper' : undefined;
+    if(anchorElContact){
+        setTimeout(()=>{
+            setAnchorElContact(null)
+        }, 5000)
+    }
+
     return (
         <AppBar position="static">
-            <Toolbar sx={{justifyContent:'space-around', display: { xs: 'none', md: 'flex' }}}>
+            <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
                 <Box>
-                    <BottomNavigation 
-                        sx={{justifyContent:'space-between;' }}
-                        showLabels
-                        value={valueAbout}
-                        onChange={(event, newValue) => {
-                            setValueAbout(newValue);
-                        }}>
-                        {about.map((page) => (
-                            <BottomNavigationAction
-                                sx={{
-                                    '.MuiBottomNavigationAction-label': {
-                                        fontSize: '0.8rem',
-                                        marginRight: 4
-                                    },
-                                }}
-                                key={page.id}
-                                component={Link}
-                                to={page.path}
-                                label={page.item}
-                            >
-                            </BottomNavigationAction>
-                        ))}
-                    </BottomNavigation>
+                    {about.map((page) => (
+                        <ButtonGroup key={page.id} disableElevation
+                            variant="contained"
+                            aria-label="Disabled button group">
+                            {page.id === 4 ? (
+                                <>
+                                    <Button
+                                        onClick={contactClick}
+                                        size="small"
+                                    >
+                                        {page.item}
+                                    </Button>
+                                    <Popper id={id} open={openInfo} anchorEl={anchorElContact} color='primary'>
+                                        <Box>
+                                            <Chip icon={<MailOutlineIcon />} label="memoriaoralsena@gmail.com" />
+                                            <Chip icon={<PhoneAndroidIcon />} label="+57 (2) 8205108 – 8205903 - Ext. 22408 - 22029" />
+                                            <Chip icon={<LocationOnIcon />} label="Calle 4 #2-80 - Popayán (Cauca)" />
+                                        </Box>
+                                    </Popper>
+                                </>
+                            ) : (
+                                <Link to={page.path}>
+                                    <Button
+                                        size="small"
+                                    >
+                                        {page.item}
+                                    </Button>
+                                </Link>
+                            )}
+                        </ButtonGroup>
+                    ))}
                 </Box>
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                     {buttons.map((button) => (
@@ -221,7 +246,7 @@ const Header = () => {
 
                     {/* :::END MOVIL FIRST NAVBAR:: */}
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
+                    <Box mt={2} sx={{ flexGrow: 1, display: { xs: 'none', md: 'block'}}}>
                         <BottomNavigation
                             showLabels
                             value={valuePage}

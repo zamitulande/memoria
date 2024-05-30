@@ -32,6 +32,7 @@ const Footer = () => {
                         <Link style={{textDecoration:'none'}} to="nosotros">Nosotros</Link>
                         <Link style={{textDecoration:'none'}} to="testimonios">Testimonios</Link>
                         <Link style={{textDecoration:'none'}} to="colaboraciones">Colaboraciones</Link>
+                        <Link style={{textDecoration:'none'}} to="datos-abiertos">Datos Abiertos</Link>
                     </Box>
                 </Grid>                
             </Grid>
