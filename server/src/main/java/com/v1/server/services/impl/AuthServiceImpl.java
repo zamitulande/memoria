@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import com.v1.server.dtos.user.ResetPasswordDTO;
 import com.v1.server.entities.Token;
 import com.v1.server.entities.User;
 import com.v1.server.enumerate.EmailTemplateName;
+import com.v1.server.enumerate.Role;
 import com.v1.server.exceptions.ApiResponse;
 import com.v1.server.exceptions.customExceptions.ExpireTokenException;
 import com.v1.server.exceptions.customExceptions.NotFoundException;
@@ -77,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
-                .role(request.getRole())
+                .role(Role.USER)
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -127,7 +129,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ApiResponse authenticate(AuthenticationRequestDTO request) {
+    public ResponseEntity<AuthResponseDTO> authenticate(AuthenticationRequestDTO request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -144,7 +146,7 @@ public class AuthServiceImpl implements AuthService {
                 .token(jwtToken)
                 .role(roles) // Agregar los roles al DTO
                 .build();
-        return new ApiResponse(responseDTO);
+        return ResponseEntity.ok(responseDTO);
 
     }
 

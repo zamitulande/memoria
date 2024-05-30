@@ -72,6 +72,38 @@ const Header = () => {
 
     return (
         <AppBar position="static">
+                <Toolbar sx={{ justifyContent: 'flex-end' }}>
+                    <Typography>
+                        contacto
+                    </Typography>
+                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        {buttons.map((button) => (
+                            <ButtonGroup key={button.id} disableElevation
+                                variant="contained"
+                                aria-label="Disabled button group">
+                                {button.id === 1 ? (
+                                    <>
+                                        <Button
+                                            onClick={(e) => setOpen(true)}
+                                            size="small"
+                                        >
+                                            {button.item}
+                                        </Button>
+                                        <Login open={open} setOpen={setOpen} />
+                                    </>
+                                ) : (
+                                    <Link to={button.path}>
+                                        <Button
+                                            size="small"
+                                        >
+                                            {button.item}
+                                        </Button>
+                                    </Link>
+                                )}
+                            </ButtonGroup>
+                        ))}
+                    </Box>
+                </Toolbar>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -175,6 +207,9 @@ const Header = () => {
                                         '&.Mui-selected': {
                                             color: theme.palette.bottomNavigation.unselected,
                                         },
+                                        '.MuiBottomNavigationAction-label': {
+                                            fontSize: '0.9rem', // Aquí puedes ajustar el tamaño de la fuente
+                                          },
                                     }}
                                     key={page.id}
                                     component={Link}
@@ -245,35 +280,7 @@ const Header = () => {
 
                     {/* :::END MOVIL FIRST LOGIN:: */}
 
-                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        {buttons.map((button) => (
-                            <ButtonGroup key={button.id} disableElevation
-                                variant="contained"
-                                aria-label="Disabled button group">
-                                {button.id === 1 ? (
-                                    <>
-                                        <Button
-                                            onClick={(e) => setOpen(true)}
-                                            sx={{ m: 2 }}
-                                            size="small"
-                                        >
-                                            {button.item}
-                                        </Button>
-                                        <Login open={open} setOpen={setOpen} />
-                                    </>
-                                ) : (
-                                    <Link to={button.path}>
-                                        <Button
-                                            sx={{ m: 2 }}
-                                            size="small"
-                                        >
-                                            {button.item}
-                                        </Button>
-                                    </Link>
-                                )}
-                            </ButtonGroup>
-                        ))}
-                    </Box>
+                   
                 </Toolbar>
             </Container>
         </AppBar>

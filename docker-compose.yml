@@ -1,16 +1,12 @@
 version: "3.8"
 
 services:
+#mysql Service
   mysqldb:
     image: mysql:8.0.1
     container_name: db_oral
     restart: unless-stopped
-    env_file: ./.env
-    environment:
-        - MYSQL_ROOT_PASSWORD=root
-        - MYSQL_DATABASE=oral_db
-        - MYSQL_USER=root
-        - MYSQL_PASSWORD=root
+    env_file: ./server/.env
     ports:
       - "3306:3306"
     volumes:
@@ -18,19 +14,36 @@ services:
     networks:
       - app-network
 
-  app:
+#server Service
+  server:
     depends_on:
       - mysqldb
-    build: .
-    container_name: oral
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: oral_server
     restart: on-failure
-    env_file: ./.env
+    env_file: ./server/.env
     ports:
       - "6868:8080"
     volumes:
       - .m2:/root/.m2
     networks:
       - app-network
+
+#production
+# #client Service
+#   client:
+#     build:
+#       context: ./client
+#       dockerfile: Dockerfile
+#     container_name: oral_client
+#     ports:
+#       - "3000:80"
+#     depends_on:
+#       - server
+#     networks:
+#       - app-network
 
 
 #phpMyAdmin Service

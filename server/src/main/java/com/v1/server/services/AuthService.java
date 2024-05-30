@@ -1,5 +1,8 @@
 package com.v1.server.services;
 
+import org.springframework.http.ResponseEntity;
+
+import com.v1.server.dtos.user.AuthResponseDTO;
 import com.v1.server.dtos.user.AuthenticationRequestDTO;
 import com.v1.server.dtos.user.RegisterRequestDTO;
 import com.v1.server.dtos.user.ResetPasswordDTO;
@@ -11,7 +14,7 @@ public interface AuthService {
 
     ApiResponse register (RegisterRequestDTO request)  throws MessagingException ;
     
-    ApiResponse authenticate(AuthenticationRequestDTO request) ;
+    ResponseEntity<AuthResponseDTO> authenticate(AuthenticationRequestDTO request) ;
 
     void activateAccount (String token);
 
