@@ -163,7 +163,6 @@ const Login = ({ open, setOpen }) => {
                     <Grid item xs={6}>
                             <Box
                                 sx={{
-                                    mt: 4,
                                     display: 'flex',
                                     justifyContent: 'flex-end',
                                     alignItems: 'center'

@@ -40,13 +40,15 @@ const Header = () => {
         { item: 'Inicio', id: 1, path: '/' },
         { item: 'Nosotros', id: 2, path: 'nosotros' },
         { item: 'Testimonios', id: 3, path: 'testimonios' },
-        { item: 'Datos Abiertos', id: 4, path: 'datos-abiertos' },
-        { item: 'Usuarios', id: 5, path: 'usuarios' },
+        { item: 'Colaboraciones', id: 4, path: 'colaboraciones' },
+        { item: 'Datos Abiertos', id: 5, path: 'datos-abiertos' },
+        { item: 'Usuarios', id: 6, path: 'usuarios' },
     ];
     const about = [
-        { item: 'Colaborar', id: 1, path: 'colaboraciones' },
-        { item: 'Sennova', id: 1, path: 'https://www.sena.edu.co/es-co/formacion/paginas/tecnologia-innovacion.aspx' },
-        { item: 'Tecnoparque', id: 1, path: 'https://www.sena.edu.co/es-co/formacion/Lists/DirectorioTecnoparque/DispForm.aspx?ID=16&Source=https%3A%2F%2Fwww%2Esena%2Eedu%2Eco%2Fes%2Dco%2Fformacion%2FPaginas%2Ftecnoparques%2Easpx&ContentTypeId=0x0100DC38E0E61C31634194921A718AE7F426' },
+        { item: 'Sena', id: 1, path: 'https://www.sena.edu.co/es-co/Paginas/default.aspx' },
+        { item: 'Sennova', id: 2, path: 'https://www.sena.edu.co/es-co/formacion/paginas/tecnologia-innovacion.aspx' },
+        { item: 'Tecnoparque', id: 3, path: 'https://sena.edu.co/es-co/formacion/Paginas/tecnoparques.aspx' },
+        { item: 'Contactenos', id: 4, path: '' },
     ]
     const buttons = [
         { item: 'Ingresar', id: 1 },
@@ -56,7 +58,8 @@ const Header = () => {
     const [open, setOpen] = useState(false);
     const [anchorElNav, setAnchorElNav] = useState(null)
     const [anchorElUser, setAnchorElUser] = useState(null)
-    const [value, setValue] = useState(0)
+    const [valuePage, setValuePage] = useState(0)
+    const [valueAbout, setValueAbout] = useState()
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -75,23 +78,21 @@ const Header = () => {
 
     return (
         <AppBar position="static">
-            <Toolbar sx={{justifyContent:'space-around;', display: { xs: 'none', md: 'flex' }}}>
+            <Toolbar sx={{justifyContent:'space-around', display: { xs: 'none', md: 'flex' }}}>
                 <Box>
-                    <BottomNavigation
+                    <BottomNavigation 
+                        sx={{justifyContent:'space-between;' }}
                         showLabels
-                        value={value}
+                        value={valueAbout}
                         onChange={(event, newValue) => {
-                            setValue(newValue);
+                            setValueAbout(newValue);
                         }}>
                         {about.map((page) => (
                             <BottomNavigationAction
                                 sx={{
-                                    color: theme.palette.bottomNavigation.selected,
-                                    '&.Mui-selected': {
-                                        color: theme.palette.bottomNavigation.unselected,
-                                    },
                                     '.MuiBottomNavigationAction-label': {
                                         fontSize: '0.8rem',
+                                        marginRight: 4
                                     },
                                 }}
                                 key={page.id}
@@ -223,9 +224,9 @@ const Header = () => {
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
                         <BottomNavigation
                             showLabels
-                            value={value}
+                            value={valuePage}
                             onChange={(event, newValue) => {
-                                setValue(newValue);
+                                setValuePage(newValue);
                             }}>
                             {pages.map((page) => (
                                 <BottomNavigationAction
