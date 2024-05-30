@@ -8,6 +8,7 @@ import Testimonies from "../components/testimonies/Testimonies"
 import ActivateAccount from "../auth/ActivateAccount"
 import ForgetPassword from "../auth/ForgetPassword"
 import ResetPassword from "../auth/ResetPassword"
+import Collaborate from "../components/collaborate/Collaborate"
 
 const AppRoutes = () => {
   return (
@@ -21,6 +22,7 @@ const AppRoutes = () => {
         <Route path='/activate-account' element={<ActivateAccount/>}/>
         <Route path='/forget-password' element={<ForgetPassword/>}/>
         <Route path='/reset-password' element={<ResetPassword/>}/>
+        <Route path='/colaboraciones' element={<Collaborate/>}/>
     </Routes>
   )
 }

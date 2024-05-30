@@ -15,8 +15,6 @@ import {
     Typography,
     Menu,
     Container,
-    Modal,
-    TextField
 } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { useTheme } from '@emotion/react';
@@ -45,6 +43,11 @@ const Header = () => {
         { item: 'Datos Abiertos', id: 4, path: 'datos-abiertos' },
         { item: 'Usuarios', id: 5, path: 'usuarios' },
     ];
+    const about = [
+        { item: 'Colaborar', id: 1, path: 'colaboraciones' },
+        { item: 'Sennova', id: 1, path: 'https://www.sena.edu.co/es-co/formacion/paginas/tecnologia-innovacion.aspx' },
+        { item: 'Tecnoparque', id: 1, path: 'https://www.sena.edu.co/es-co/formacion/Lists/DirectorioTecnoparque/DispForm.aspx?ID=16&Source=https%3A%2F%2Fwww%2Esena%2Eedu%2Eco%2Fes%2Dco%2Fformacion%2FPaginas%2Ftecnoparques%2Easpx&ContentTypeId=0x0100DC38E0E61C31634194921A718AE7F426' },
+    ]
     const buttons = [
         { item: 'Ingresar', id: 1 },
         { item: 'Registrar', id: 2, path: 'usuarios/registrar' }
@@ -72,38 +75,62 @@ const Header = () => {
 
     return (
         <AppBar position="static">
-                <Toolbar sx={{ justifyContent: 'flex-end' }}>
-                    <Typography>
-                        contacto
-                    </Typography>
-                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        {buttons.map((button) => (
-                            <ButtonGroup key={button.id} disableElevation
-                                variant="contained"
-                                aria-label="Disabled button group">
-                                {button.id === 1 ? (
-                                    <>
-                                        <Button
-                                            onClick={(e) => setOpen(true)}
-                                            size="small"
-                                        >
-                                            {button.item}
-                                        </Button>
-                                        <Login open={open} setOpen={setOpen} />
-                                    </>
-                                ) : (
-                                    <Link to={button.path}>
-                                        <Button
-                                            size="small"
-                                        >
-                                            {button.item}
-                                        </Button>
-                                    </Link>
-                                )}
-                            </ButtonGroup>
+            <Toolbar sx={{justifyContent:'space-around;', display: { xs: 'none', md: 'flex' }}}>
+                <Box>
+                    <BottomNavigation
+                        showLabels
+                        value={value}
+                        onChange={(event, newValue) => {
+                            setValue(newValue);
+                        }}>
+                        {about.map((page) => (
+                            <BottomNavigationAction
+                                sx={{
+                                    color: theme.palette.bottomNavigation.selected,
+                                    '&.Mui-selected': {
+                                        color: theme.palette.bottomNavigation.unselected,
+                                    },
+                                    '.MuiBottomNavigationAction-label': {
+                                        fontSize: '0.8rem',
+                                    },
+                                }}
+                                key={page.id}
+                                component={Link}
+                                to={page.path}
+                                label={page.item}
+                            >
+                            </BottomNavigationAction>
                         ))}
-                    </Box>
-                </Toolbar>
+                    </BottomNavigation>
+                </Box>
+                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    {buttons.map((button) => (
+                        <ButtonGroup key={button.id} disableElevation
+                            variant="contained"
+                            aria-label="Disabled button group">
+                            {button.id === 1 ? (
+                                <>
+                                    <Button
+                                        onClick={(e) => setOpen(true)}
+                                        size="small"
+                                    >
+                                        {button.item}
+                                    </Button>
+                                    <Login open={open} setOpen={setOpen} />
+                                </>
+                            ) : (
+                                <Link to={button.path}>
+                                    <Button
+                                        size="small"
+                                    >
+                                        {button.item}
+                                    </Button>
+                                </Link>
+                            )}
+                        </ButtonGroup>
+                    ))}
+                </Box>
+            </Toolbar>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
@@ -209,7 +236,7 @@ const Header = () => {
                                         },
                                         '.MuiBottomNavigationAction-label': {
                                             fontSize: '0.9rem', // Aquí puedes ajustar el tamaño de la fuente
-                                          },
+                                        },
                                     }}
                                     key={page.id}
                                     component={Link}
@@ -277,10 +304,7 @@ const Header = () => {
                             </ButtonGroup>
                         </Menu>
                     </Box>
-
                     {/* :::END MOVIL FIRST LOGIN:: */}
-
-                   
                 </Toolbar>
             </Container>
         </AppBar>
