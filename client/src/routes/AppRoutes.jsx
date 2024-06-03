@@ -9,20 +9,25 @@ import ActivateAccount from "../auth/ActivateAccount"
 import ForgetPassword from "../auth/ForgetPassword"
 import ResetPassword from "../auth/ResetPassword"
 import Collaborate from "../components/collaborate/Collaborate"
+import ProtectedRoutes from "./ProtectedRoutes"
 
 const AppRoutes = () => {
   return (
     <Routes>
-        <Route path='/' element={<Home/>} />
-        <Route path='/nosotros' element={<AbautUs/>} />
-        <Route path='/testimonios' element={<Testimonies/>} />
-        <Route path='/datos-abiertos' element={<OpenData/>} />
-        <Route path='/usuarios' element={<Users/>} />
-        <Route path='/usuarios/registrar' element={<Register/>}/>
-        <Route path='/activate-account' element={<ActivateAccount/>}/>
-        <Route path='/forget-password' element={<ForgetPassword/>}/>
-        <Route path='/reset-password' element={<ResetPassword/>}/>
-        <Route path='/colaboraciones' element={<Collaborate/>}/>
+      <Route path='/' element={<Home />} />
+      <Route path='/nosotros' element={<AbautUs />} />
+      <Route path='/testimonios' element={<Testimonies />} />
+      <Route path='/datos-abiertos' element={<OpenData />} />
+      <Route
+        path='/usuarios'
+        element={<ProtectedRoutes redirectTo="/">
+          <Users/>
+        </ProtectedRoutes>} />
+      <Route path='/usuarios/registrar' element={<Register />} />
+      <Route path='/activate-account' element={<ActivateAccount />} />
+      <Route path='/forget-password' element={<ForgetPassword />} />
+      <Route path='/reset-password' element={<ResetPassword />} />
+      <Route path='/colaboraciones' element={<Collaborate />} />
     </Routes>
   )
 }

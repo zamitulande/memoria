@@ -37,7 +37,6 @@ const Login = ({ open, setOpen }) => {
     const dispatch = useDispatch();
 
     const getActiveAccount = useSelector((state)=>state.user.activeAccount)
-
     const [user, setUser] = useState({
         email: '',
         password: ''
@@ -49,7 +48,7 @@ const Login = ({ open, setOpen }) => {
         e.preventDefault();
         const postLogin = async () => {
             try {
-                const response = await axiosClient.post('/auth/authenticate', user);
+                const response = await axiosClient.post('/auth/authenticate', user);               
                 if (response.data.token && response.data.role && response.status == "200") {
                     dispatch(setLogin(true));
                     dispatch(setToken(response.data.token));
@@ -58,6 +57,8 @@ const Login = ({ open, setOpen }) => {
                         email: '',
                         password: ''
                     })
+                    dispatch(setActiveAccount(false))
+                    setOpen(false)
                 }
             } catch (error) {
                 console.log(error)

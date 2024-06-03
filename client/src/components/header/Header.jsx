@@ -26,18 +26,6 @@ import { useTheme } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import Login from '../../auth/Login';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-};
-
 const Header = () => {
 
     const theme = useTheme();
@@ -55,7 +43,7 @@ const Header = () => {
         { item: 'Tecnoparque', id: 3, path: 'https://sena.edu.co/es-co/formacion/Paginas/tecnoparques.aspx' },
         { item: 'Contactenos', id: 4 },
     ]
-    const buttons = [
+    const buttonsAuth = [
         { item: 'Ingresar', id: 1 },
         { item: 'Registrar', id: 2, path: 'usuarios/registrar' }
     ];
@@ -130,7 +118,7 @@ const Header = () => {
                     ))}
                 </Box>
                 <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                    {buttons.map((button) => (
+                    {buttonsAuth.map((button) => (
                         <ButtonGroup key={button.id} disableElevation
                             variant="contained"
                             aria-label="Disabled button group">
@@ -261,7 +249,7 @@ const Header = () => {
                                             color: theme.palette.bottomNavigation.unselected,
                                         },
                                         '.MuiBottomNavigationAction-label': {
-                                            fontSize: '0.9rem', // Aquí puedes ajustar el tamaño de la fuente
+                                            fontSize: '0.9rem', 
                                         },
                                     }}
                                     key={page.id}
@@ -299,7 +287,7 @@ const Header = () => {
                             onClose={handleCloseUserMenu}
                         >
                             <ButtonGroup orientation="vertical" variant="contained" aria-label="Vertical button group">
-                                {buttons.map((button) => (
+                                {buttonsAuth.map((button) => (
                                     <Fragment key={button.id}>
                                         {button.id === 1 ? (
                                             <>
