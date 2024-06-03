@@ -25,10 +25,12 @@ import { Fragment, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import Login from '../../auth/Login';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
 
     const theme = useTheme();
+    
     const pages = [
         { item: 'Inicio', id: 1, path: '/' },
         { item: 'Nosotros', id: 2, path: 'nosotros' },
@@ -53,6 +55,9 @@ const Header = () => {
     const [anchorElUser, setAnchorElUser] = useState(null)
     const [anchorElContact, setAnchorElContact] = useState(null);
     const [valuePage, setValuePage] = useState(0)
+
+    const login = useSelector((state)=>state.user.login)
+    const role = useSelector((state)=>state.user.role)
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -80,6 +85,13 @@ const Header = () => {
             setAnchorElContact(null)
         }, 5000)
     }
+
+    const filteredPages = pages.filter(page => {
+        if (page.item === 'Usuarios' && (!login || role !== 'ADMIN')) {
+            return false;
+        }
+        return true;
+    });
 
     return (
         <AppBar position="static">
@@ -198,7 +210,7 @@ const Header = () => {
                             }}
                         >
                             <ButtonGroup orientation="vertical" variant="contained" aria-label="Vertical button group">
-                                {pages.map((page) => (
+                                {filteredPages.map((page) => (
                                     <Link
                                         to={page.path}
                                         key={page.id}>
@@ -241,7 +253,7 @@ const Header = () => {
                             onChange={(event, newValue) => {
                                 setValuePage(newValue);
                             }}>
-                            {pages.map((page) => (
+                            {filteredPages.map((page) => (
                                 <BottomNavigationAction
                                     sx={{
                                         color: theme.palette.bottomNavigation.selected,
