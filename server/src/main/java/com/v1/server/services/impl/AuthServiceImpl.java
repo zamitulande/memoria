@@ -139,10 +139,13 @@ public class AuthServiceImpl implements AuthService {
         String roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(""));
+        String firstName = userDetails.getFirstName();
+        String lastName = userDetails.getFirstLastName();
         var saveUser = userRepository.findByEmail(request.getEmail());
         User user = saveUser.get();
         var jwtToken = jwtService.generateToken(user);
         AuthResponseDTO responseDTO = AuthResponseDTO.builder()
+                .userName(firstName+" "+lastName)
                 .token(jwtToken)
                 .role(roles) // Agregar los roles al DTO
                 .build();

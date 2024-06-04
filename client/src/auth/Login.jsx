@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosClient from '../config/Axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { setActiveAccount, setLogin, setRole, setToken } from '../redux/features/userSlice';
+import { setActiveAccount, setLogin, setRole, setToken, setUserName } from '../redux/features/userSlice';
 import ForgetPassword from './ForgetPassword';
 
 const style = {
@@ -49,17 +49,17 @@ const Login = ({ open, setOpen }) => {
         const postLogin = async () => {
             try {
                 const response = await axiosClient.post('/auth/authenticate', user);   
-                console.log(response)            
                 if (response.data.token && response.data.role && response.status == "200") {
                     dispatch(setLogin(true));
                     dispatch(setToken(response.data.token));
-                    dispatch(setRole(response.data.role));
+                    dispatch(setRole(response.data.role));                    
                     setUser({
                         email: '',
                         password: ''
                     })
-                    dispatch(setActiveAccount(false))
+                    dispatch(setActiveAccount(false))                    
                     setOpen(false)
+                    dispatch(setUserName(response.data.userName))
                 }
             } catch (error) {
                 console.log(error)

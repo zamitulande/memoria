@@ -25,11 +25,13 @@ import { Fragment, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import Login from '../../auth/Login';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLogin } from '../../redux/features/userSlice';
 
 const Header = () => {
 
     const theme = useTheme();
+    const dispatch = useDispatch();
     
     const pages = [
         { item: 'Inicio', id: 1, path: '/' },
@@ -45,11 +47,21 @@ const Header = () => {
         { item: 'Tecnoparque', id: 3, path: 'https://sena.edu.co/es-co/formacion/Paginas/tecnoparques.aspx' },
         { item: 'Contactenos', id: 4 },
     ]
+
+    const handlePasswordChange = ()=>{
+
+    }
+
+    const handleLogout = ()=>{
+        dispatch(setLogin(false))
+        console.log('entro')
+    }
+
     const buttonsAuth = [
         { item: 'Ingresar', id: 1 },
         { item: 'Registrar', id: 2, path: 'usuarios/registrar' },
-        { item: 'Cambiar contraseña', id: 3 },
-        { item: 'Cerrar Sesion', id: 4 },        
+        { item: 'Cambiar contraseña', id: 3, action: handlePasswordChange()  },
+        { item: 'Cerrar Sesion', id: 4, action: handleLogout()  },        
     ];
 
     const [open, setOpen] = useState(false);
@@ -60,7 +72,9 @@ const Header = () => {
 
     const login = useSelector((state)=>state.user.login)
     const role = useSelector((state)=>state.user.role)
+    const userName = useSelector((state)=>state.user.userName)
 
+    
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -135,6 +149,7 @@ const Header = () => {
                         </ButtonGroup>
                     ))}
                 </Box>
+                {login ? <Typography>hola {userName}</Typography> : null}
             </Toolbar>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
@@ -308,9 +323,8 @@ const Header = () => {
                                                     {button.item}
                                                 </Button>
                                             </Link>
-                                        ) : (
+                                        ) :(                                            
                                             <Button
-                                                onClick={handleCloseUserMenu}
                                                 size="small"
                                             >
                                                 {button.item}

@@ -19,6 +19,7 @@ export const userSlice = createSlice({
         token : obtenerTokenJWT() || "",
         login: false,
         role: "",
+        userName: "",
         activeAccount: false
     },
     reducers:{
@@ -28,9 +29,15 @@ export const userSlice = createSlice({
         },
         setLogin: (state, action)=>{
             state.login = action.payload;
+            if (!action.payload) {
+                eliminarTokenJWT();
+            }
         },
         setRole: (state, action)=>{
             state.role = action.payload;
+        },
+        setUserName: (state, action)=>{
+            state.userName = action.payload
         },
         setActiveAccount: (state, action)=>{
             state.activeAccount = action.payload;
@@ -38,6 +45,6 @@ export const userSlice = createSlice({
     }
 });
 
-export const {setToken, setLogin, setRole, setActiveAccount} = userSlice.actions;
+export const {setToken, setLogin, setRole, setUserName, setActiveAccount} = userSlice.actions;
 
 export default userSlice.reducer;
