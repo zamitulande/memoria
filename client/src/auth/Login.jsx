@@ -66,7 +66,7 @@ const Login = ({ open, setOpen }) => {
                 Swal.fire({
                     icon: "error",
                     title: "Error...",
-                    text: "Usuario o contraseña invalidos",
+                    text: error.response.data,
                     customClass: {
                         container: 'my-swal'
                     },

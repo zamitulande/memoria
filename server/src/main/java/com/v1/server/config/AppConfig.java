@@ -1,5 +1,6 @@
 package com.v1.server.config;
 
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,5 +44,13 @@ public class AppConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
         return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public FilterRegistrationBean<RateLimitingFilter> rateLimitingFilter() {
+        FilterRegistrationBean<RateLimitingFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new RateLimitingFilter());
+        registrationBean.addUrlPatterns("/api/v1/auth/authenticate"); // Ajusta el patrón de URL según tus necesidades
+        return registrationBean;
     }
 }
