@@ -47,7 +47,9 @@ const Header = () => {
     ]
     const buttonsAuth = [
         { item: 'Ingresar', id: 1 },
-        { item: 'Registrar', id: 2, path: 'usuarios/registrar' }
+        { item: 'Registrar', id: 2, path: 'usuarios/registrar' },
+        { item: 'Cambiar contraseña', id: 3 },
+        { item: 'Cerrar Sesion', id: 4 },        
     ];
 
     const [open, setOpen] = useState(false);
@@ -93,6 +95,10 @@ const Header = () => {
         return true;
     });
 
+    const filteredAuth = login
+    ? buttonsAuth.filter(button => button.id === 3 || button.id === 4)
+    : buttonsAuth.filter(button => button.id === 1 || button.id === 2);
+
     return (
         <AppBar position="static">
             <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
@@ -118,38 +124,11 @@ const Header = () => {
                                     </Popper>
                                 </>
                             ) : (
-                                <Link to={page.path}>
+                                <Link to={page.path} target='_blank' rel="noopener noreferrer">
                                     <Button
                                         size="small"
                                     >
                                         {page.item}
-                                    </Button>
-                                </Link>
-                            )}
-                        </ButtonGroup>
-                    ))}
-                </Box>
-                <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                    {buttonsAuth.map((button) => (
-                        <ButtonGroup key={button.id} disableElevation
-                            variant="contained"
-                            aria-label="Disabled button group">
-                            {button.id === 1 ? (
-                                <>
-                                    <Button
-                                        onClick={(e) => setOpen(true)}
-                                        size="small"
-                                    >
-                                        {button.item}
-                                    </Button>
-                                    <Login open={open} setOpen={setOpen} />
-                                </>
-                            ) : (
-                                <Link to={button.path}>
-                                    <Button
-                                        size="small"
-                                    >
-                                        {button.item}
                                     </Button>
                                 </Link>
                             )}
@@ -276,9 +255,15 @@ const Header = () => {
 
                     {/* :::START MOVIL FIRST LOGIN:: */}
 
-                    <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                    <Box sx={{ display: { xs: 'flex' } }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                {login ? <Typography sx={{ display: { xs: 'none', md: 'flex' } }}>
+                                    Opciones
+                                </Typography> : 
+                                <Typography sx={{ display: { xs: 'none', md: 'flex' } }}>
+                                Acceder
+                            </Typography>}
                                 <LoginIcon />
                             </IconButton>
                         </Tooltip>
@@ -299,7 +284,7 @@ const Header = () => {
                             onClose={handleCloseUserMenu}
                         >
                             <ButtonGroup orientation="vertical" variant="contained" aria-label="Vertical button group">
-                                {buttonsAuth.map((button) => (
+                                {filteredAuth.map((button) => (
                                     <Fragment key={button.id}>
                                         {button.id === 1 ? (
                                             <>
@@ -314,7 +299,7 @@ const Header = () => {
                                                 </Button>
                                                 <Login open={open} setOpen={setOpen} />
                                             </>
-                                        ) : (
+                                        ) : button.path ? (
                                             <Link to={button.path}>
                                                 <Button
                                                     onClick={handleCloseUserMenu}
@@ -323,7 +308,13 @@ const Header = () => {
                                                     {button.item}
                                                 </Button>
                                             </Link>
-
+                                        ) : (
+                                            <Button
+                                                onClick={handleCloseUserMenu}
+                                                size="small"
+                                            >
+                                                {button.item}
+                                            </Button>
                                         )}
                                     </Fragment>
                                 ))}
