@@ -32,7 +32,7 @@ const Header = () => {
 
     const theme = useTheme();
     const dispatch = useDispatch();
-    
+
     const pages = [
         { item: 'Inicio', id: 1, path: '/' },
         { item: 'Nosotros', id: 2, path: 'nosotros' },
@@ -48,20 +48,11 @@ const Header = () => {
         { item: 'Contactenos', id: 4 },
     ]
 
-    const handlePasswordChange = ()=>{
-
-    }
-
-    const handleLogout = ()=>{
-        dispatch(setLogin(false))
-        console.log('entro')
-    }
-
     const buttonsAuth = [
         { item: 'Ingresar', id: 1 },
         { item: 'Registrar', id: 2, path: 'usuarios/registrar' },
-        { item: 'Cambiar contraseña', id: 3, action: handlePasswordChange()  },
-        { item: 'Cerrar Sesion', id: 4, action: handleLogout()  },        
+        { item: 'Cambiar contraseña', id: 3 },
+        { item: 'Cerrar Sesion', id: 4 },
     ];
 
     const [open, setOpen] = useState(false);
@@ -70,24 +61,16 @@ const Header = () => {
     const [anchorElContact, setAnchorElContact] = useState(null);
     const [valuePage, setValuePage] = useState(0)
 
-    const login = useSelector((state)=>state.user.login)
-    const role = useSelector((state)=>state.user.role)
-    const userName = useSelector((state)=>state.user.userName)
+    const login = useSelector((state) => state.user.login)
+    const role = useSelector((state) => state.user.role)
+    const userName = useSelector((state) => state.user.userName)
 
-    
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
+    const handleMenuOpen = (setter) => (event) => {
+        setter(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
+    const handleMenuClose = (setter) => () => {
+        setter(null);
     };
 
     const contactClick = (event) => {
@@ -96,10 +79,18 @@ const Header = () => {
 
     const openInfo = Boolean(anchorElContact);
     const id = openInfo ? 'simple-popper' : undefined;
-    if(anchorElContact){
-        setTimeout(()=>{
+    if (anchorElContact) {
+        setTimeout(() => {
             setAnchorElContact(null)
         }, 5000)
+    }
+
+    const handlePasswordChange = () => {
+
+    }
+
+    const handleLogout = () => {
+        dispatch(setLogin(false))
     }
 
     const filteredPages = pages.filter(page => {
@@ -110,45 +101,29 @@ const Header = () => {
     });
 
     const filteredAuth = login
-    ? buttonsAuth.filter(button => button.id === 3 || button.id === 4)
-    : buttonsAuth.filter(button => button.id === 1 || button.id === 2);
+        ? buttonsAuth.filter(button => button.id === 3 || button.id === 4)
+        : buttonsAuth.filter(button => button.id === 1 || button.id === 2);
+
+    const renderButtonGroup = (items) => (
+        <ButtonGroup disableElevation variant="contained" aria-label="button group">
+            {items.map((item) => (
+                item.path ? (
+                    <Link to={item.path} target="_blank" rel="noopener noreferrer" key={item.id}>
+                        <Button size="small">{item.item}</Button>
+                    </Link>
+                ) : (
+                    <Button onClick={contactClick} size="small" key={item.id}>
+                        {item.item}
+                    </Button>
+                )
+            ))}
+        </ButtonGroup>
+    );
 
     return (
         <AppBar position="static">
             <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
-                <Box>
-                    {about.map((page) => (
-                        <ButtonGroup key={page.id} disableElevation
-                            variant="contained"
-                            aria-label="Disabled button group">
-                            {page.id === 4 ? (
-                                <>
-                                    <Button
-                                        onClick={contactClick}
-                                        size="small"
-                                    >
-                                        {page.item}
-                                    </Button>
-                                    <Popper id={id} open={openInfo} anchorEl={anchorElContact} color='primary'>
-                                        <Box>
-                                            <Chip icon={<MailOutlineIcon />} label="memoriaoralsena@gmail.com" />
-                                            <Chip icon={<PhoneAndroidIcon />} label="+57 (2) 8205108 – 8205903 - Ext. 22408 - 22029" />
-                                            <Chip icon={<LocationOnIcon />} label="Calle 4 #2-80 - Popayán (Cauca)" />
-                                        </Box>
-                                    </Popper>
-                                </>
-                            ) : (
-                                <Link to={page.path} target='_blank' rel="noopener noreferrer">
-                                    <Button
-                                        size="small"
-                                    >
-                                        {page.item}
-                                    </Button>
-                                </Link>
-                            )}
-                        </ButtonGroup>
-                    ))}
-                </Box>
+                <Box>{renderButtonGroup(about)}</Box>
                 {login ? <Typography>hola {userName}</Typography> : null}
             </Toolbar>
             <Container maxWidth="xl">
@@ -180,7 +155,7 @@ const Header = () => {
                             aria-label="account of current user"
                             aria-controls="menu-appbar"
                             aria-haspopup="true"
-                            onClick={handleOpenNavMenu}
+                            onClick={handleMenuOpen(setAnchorElNav)}
                             color="inherit"
                         >
                             <MenuIcon />
@@ -198,7 +173,7 @@ const Header = () => {
                                 horizontal: 'left',
                             }}
                             open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
+                            onClose={handleMenuClose(setAnchorElNav)}
                             sx={{
                                 display: { xs: 'block', md: 'none' },
                             }}
@@ -209,7 +184,7 @@ const Header = () => {
                                         to={page.path}
                                         key={page.id}>
                                         <Button
-                                            onClick={handleCloseNavMenu}
+                                            onClick={handleMenuClose(setAnchorElNav)}
                                         >
                                             {page.item}
                                         </Button>
@@ -240,7 +215,7 @@ const Header = () => {
 
                     {/* :::END MOVIL FIRST NAVBAR:: */}
 
-                    <Box mt={2} sx={{ flexGrow: 1, display: { xs: 'none', md: 'block'}}}>
+                    <Box mt={2} sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
                         <BottomNavigation
                             showLabels
                             value={valuePage}
@@ -255,7 +230,7 @@ const Header = () => {
                                             color: theme.palette.bottomNavigation.unselected,
                                         },
                                         '.MuiBottomNavigationAction-label': {
-                                            fontSize: '0.9rem', 
+                                            fontSize: '0.9rem',
                                         },
                                     }}
                                     key={page.id}
@@ -272,13 +247,10 @@ const Header = () => {
 
                     <Box sx={{ display: { xs: 'flex' } }}>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                {login ? <Typography sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                    Opciones
-                                </Typography> : 
+                            <IconButton onClick={handleMenuOpen(setAnchorElUser)} sx={{ p: 0 }}>
                                 <Typography sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                Acceder
-                            </Typography>}
+                                    {login ? 'Opciones' : 'Acceder'}
+                                </Typography>
                                 <LoginIcon />
                             </IconButton>
                         </Tooltip>
@@ -296,7 +268,7 @@ const Header = () => {
                                 horizontal: 'right',
                             }}
                             open={Boolean(anchorElUser)}
-                            onClose={handleCloseUserMenu}
+                            onClose={handleMenuClose(setAnchorElUser)}
                         >
                             <ButtonGroup orientation="vertical" variant="contained" aria-label="Vertical button group">
                                 {filteredAuth.map((button) => (
@@ -306,7 +278,7 @@ const Header = () => {
                                                 <Button
                                                     onClick={(e) => {
                                                         setOpen(true)
-                                                        handleCloseUserMenu()
+                                                        handleMenuClose(setAnchorElUser)();
                                                     }}
                                                     size="small"
                                                 >
@@ -317,14 +289,19 @@ const Header = () => {
                                         ) : button.path ? (
                                             <Link to={button.path}>
                                                 <Button
-                                                    onClick={handleCloseUserMenu}
+                                                    onClick={handleMenuClose(setAnchorElUser)}
                                                     size="small"
                                                 >
                                                     {button.item}
                                                 </Button>
                                             </Link>
-                                        ) :(                                            
+                                        ) : (
                                             <Button
+                                                onClick={() => {
+                                                    if (button.id === 4) handleLogout();
+                                                    if (button.id === 3) handlePasswordChange();
+                                                    handleMenuClose(setAnchorElUser)();
+                                                }}
                                                 size="small"
                                             >
                                                 {button.item}
@@ -338,6 +315,15 @@ const Header = () => {
                     {/* :::END MOVIL FIRST LOGIN:: */}
                 </Toolbar>
             </Container>
+            {openInfo && (
+                <Popper id={id} open={openInfo} anchorEl={anchorElContact} color="primary">
+                    <Box>
+                        <Chip icon={<MailOutlineIcon />} label="memoriaoralsena@gmail.com" />
+                        <Chip icon={<PhoneAndroidIcon />} label="+57 (2) 8205108 – 8205903 - Ext. 22408 - 22029" />
+                        <Chip icon={<LocationOnIcon />} label="Calle 4 #2-80 - Popayán (Cauca)" />
+                    </Box>
+                </Popper>
+            )}
         </AppBar>
     )
 }
