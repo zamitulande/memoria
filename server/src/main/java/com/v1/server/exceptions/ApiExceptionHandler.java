@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -62,6 +63,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler({ExpireTokenException.class})
     public ResponseEntity<ErrorMessage> TokenExpired(HttpServletRequest request, ExpireTokenException ex){
         ErrorMessage errorMessage = new ErrorMessage(ex.getMessage(), HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI());
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorMessage> handleAuthenticationException (HttpServletRequest request, AuthenticationException ex){
+        ErrorMessage errorMessage = new ErrorMessage("Email o password incorrectos", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }

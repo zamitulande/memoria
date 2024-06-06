@@ -66,7 +66,7 @@ const Login = ({ open, setOpen }) => {
                 Swal.fire({
                     icon: "error",
                     title: "Error...",
-                    text: error.response.data,
+                    text: error.response.data.message,
                     customClass: {
                         container: 'my-swal'
                     },

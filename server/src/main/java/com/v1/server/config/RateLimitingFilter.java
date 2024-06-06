@@ -26,7 +26,7 @@ public class RateLimitingFilter implements Filter {
     private final ObjectMapper objectMapper;
 
     public RateLimitingFilter() {
-        Bandwidth limit = Bandwidth.classic(2, Refill.greedy(2, Duration.ofMinutes(1)));
+        Bandwidth limit = Bandwidth.classic(6, Refill.greedy(6, Duration.ofMinutes(5)));
         this.bucket = Bucket.builder().addLimit(limit).build();
         this.objectMapper = new ObjectMapper();
     }
@@ -43,7 +43,7 @@ public class RateLimitingFilter implements Filter {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
              ErrorMessage errorMessage = new ErrorMessage(
-                "Too many requests",
+                "Supero el limite de solicitudes al servidor",
                 HttpServletResponse.SC_MULTIPLE_CHOICES,
                 HttpStatus.TOO_MANY_REQUESTS,
                 httpServletRequest.getRequestURI()
