@@ -229,7 +229,6 @@ public class AuthServiceImpl implements AuthService {
             User user = resetToken.getUser();
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             userRepository.save(user);
-            tokenRepository.delete(resetToken); // Eliminar el token después de usarlo
             return new ApiResponse(200, "Contraseña cambiada satisfactoriamente");
         } else {
             throw new ExpireTokenException(

@@ -37,6 +37,9 @@ const ForgetPassword = ({ open, setOpen }) => {
                     position: "top-end",
                     icon: "success",
                     title: messageResponse,
+                    customClass: {
+                        container: 'my-swal'
+                    },
                 });
                 setOpen(false)
             })

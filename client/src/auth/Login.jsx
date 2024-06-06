@@ -48,7 +48,8 @@ const Login = ({ open, setOpen }) => {
         e.preventDefault();
         const postLogin = async () => {
             try {
-                const response = await axiosClient.post('/auth/authenticate', user);   
+                const response = await axiosClient.post('/auth/authenticate', user);  
+                console.log(response) 
                 if (response.data.token && response.data.role && response.status == "200") {
                     dispatch(setLogin(true));
                     dispatch(setToken(response.data.token));

@@ -28,8 +28,6 @@ const ResetPassword = () => {
     const query = new URLSearchParams(location.search);
     const token = query.get('token');
 
-    console.log(token)
-
     const [open, setOpen] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
@@ -55,7 +53,11 @@ const ResetPassword = () => {
                 position: "top-end",
                 icon: "success",
                 title: messageResponse,
+                customClass: {
+                    container: 'my-swal'
+                },
             });
+            handleCloseModal()
         } catch (error) {
             console.error(error);
             const errorMessage = error.response.data.message
