@@ -13,6 +13,7 @@ import com.v1.server.dtos.user.AuthResponseDTO;
 import com.v1.server.dtos.user.AuthenticationRequestDTO;
 import com.v1.server.dtos.user.RegisterRequestDTO;
 import com.v1.server.dtos.user.ResetPasswordDTO;
+import com.v1.server.dtos.user.ResetPasswordSessionDTO;
 import com.v1.server.exceptions.ApiResponse;
 import com.v1.server.services.AuthService;
 
@@ -27,14 +28,14 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
-    
+
     @PostMapping("/register")
-    public ApiResponse register(@RequestBody RegisterRequestDTO request) throws MessagingException{
-            return authService.register(request);
+    public ApiResponse register(@RequestBody RegisterRequestDTO request) throws MessagingException {
+        return authService.register(request);
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO request)  {
+    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthenticationRequestDTO request) {
         return authService.authenticate(request);
     }
 
@@ -44,12 +45,20 @@ public class AuthController {
     }
 
     @PostMapping("/forget-password")
-    public ApiResponse forgetPassword(HttpServletRequest request, @RequestParam String identification) throws MessagingException{
-       return authService.forgetPassword(identification);
+    public ApiResponse forgetPassword(HttpServletRequest request, @RequestParam String identification)
+            throws MessagingException {
+        return authService.forgetPassword(identification);
     }
 
+    // metodo para manejar si olvido contraseña
     @PostMapping("/reset-password")
-    public ApiResponse resetPassword(@RequestBody ResetPasswordDTO request){
+    public ApiResponse resetPassword(@RequestBody ResetPasswordDTO request) {
         return authService.resetPassword(request);
+    }
+
+    // metodo para manejar si cambia contraseña con sesion iniciada
+    @PostMapping("/reset-password-session")
+    public ApiResponse resetPasswordSession(@RequestBody ResetPasswordSessionDTO request) {
+        return authService.resetPasswordSesion(request);
     }
 }

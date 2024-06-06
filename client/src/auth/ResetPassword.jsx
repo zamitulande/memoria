@@ -1,54 +1,69 @@
-import React, { useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import UseValidation from '../helpers/hooks/UseValidation';
 import { Box, Button, FormControl, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, Modal, OutlinedInput } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Cancel';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import axiosClient from '../config/Axios';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
-    maxWidth: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    px: 2,
-};
+const ResetPassword = ({ open, setOpen }) => {
 
-const ResetPassword = () => {
+    const [openModal, setOpenModal] = useState(false);
 
     const { passwordValid } = UseValidation();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const query = new URLSearchParams(location.search);
     const token = query.get('token');
+    const userId = useSelector((state)=>state.user.userId)
+    const getToken = useSelector((state)=>state.user.token)
 
-    const [open, setOpen] = useState(true);
+    // Si se proporciona un token en la URL, abre el modal directamente
+    useEffect(() => {
+        if (token) {
+            setOpenModal(true);
+        }
+    }, [token]);
+    
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
 
     const handleCloseModal = ()=>{
-        setOpen(false)
+        setOpenModal(false)
+        setOpen(false)        
         //dispatch(setActiveAccount(false))
     }
 
     const handleSubmit = async (e) =>{
         e.preventDefault();
-        const request = {
+        const requestForguet = {
             token, 
             password, 
             confirmPassword
         }
+        const requestSession ={
+            password, 
+            confirmPassword,
+            userId
+        }
+        const request = token ? requestForguet : requestSession;
+        const endPoint = token ? '/auth/reset-password' : '/auth/reset-password-session';
+        const config = token ? {} : {
+            headers: {
+                'Authorization': `Bearer ${getToken}`
+            }
+        };
         try {
-            const response = await axiosClient.post('/auth/reset-password', request);
+            const response = await axiosClient.post(endPoint, request, config);
             const messageResponse = response.data.message;
+            if (token) {
+                navigate('/');
+            }
             Swal.fire({
                 position: "top-end",
                 icon: "success",
@@ -57,9 +72,10 @@ const ResetPassword = () => {
                     container: 'my-swal'
                 },
             });
-            handleCloseModal()
+            setOpenModal(false)
+            setOpen(false)
+            
         } catch (error) {
-            console.error(error);
             const errorMessage = error.response.data.message
             Swal.fire({
                 icon: "error",
@@ -72,12 +88,12 @@ const ResetPassword = () => {
     }
   return (
     <Modal
-            open={open}
+            open={openModal || open}
             onClose={handleCloseModal}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style}>
+            <Box className='modal-style'>
                 <IconButton
                     aria-label="close"
                     onClick={handleCloseModal}

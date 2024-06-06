@@ -20,6 +20,7 @@ export const userSlice = createSlice({
         login: false,
         role: "",
         userName: "",
+        userId: null,
         activeAccount: false
     },
     reducers:{
@@ -39,12 +40,15 @@ export const userSlice = createSlice({
         setUserName: (state, action)=>{
             state.userName = action.payload
         },
+        setUserId: (state, action)=>{
+            state.userId = action.payload;
+        },
         setActiveAccount: (state, action)=>{
             state.activeAccount = action.payload;
         }
     }
 });
 
-export const {setToken, setLogin, setRole, setUserName, setActiveAccount} = userSlice.actions;
+export const {setToken, setLogin, setRole, setUserName, setUserId, setActiveAccount} = userSlice.actions;
 
 export default userSlice.reducer;

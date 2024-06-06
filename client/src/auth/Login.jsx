@@ -16,21 +16,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosClient from '../config/Axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { setActiveAccount, setLogin, setRole, setToken, setUserName } from '../redux/features/userSlice';
+import { setActiveAccount, setLogin, setRole, setToken, setUserId, setUserName } from '../redux/features/userSlice';
 import ForgetPassword from './ForgetPassword';
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
-    maxWidth: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    px: 2,
-};
 
 const Login = ({ open, setOpen }) => {
 
@@ -48,12 +35,12 @@ const Login = ({ open, setOpen }) => {
         e.preventDefault();
         const postLogin = async () => {
             try {
-                const response = await axiosClient.post('/auth/authenticate', user);  
-                console.log(response) 
+                const response = await axiosClient.post('/auth/authenticate', user);
                 if (response.data.token && response.data.role && response.status == "200") {
                     dispatch(setLogin(true));
                     dispatch(setToken(response.data.token));
-                    dispatch(setRole(response.data.role));                    
+                    dispatch(setRole(response.data.role));   
+                    dispatch(setUserId(response.data.userId));                 
                     setUser({
                         email: '',
                         password: ''
@@ -63,7 +50,6 @@ const Login = ({ open, setOpen }) => {
                     dispatch(setUserName(response.data.userName))
                 }
             } catch (error) {
-                console.log(error)
                 Swal.fire({
                     icon: "error",
                     title: "Error...",
@@ -101,7 +87,7 @@ const Login = ({ open, setOpen }) => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style}>
+            <Box className='modal-style'>
                 <IconButton
                     aria-label="close"
                     onClick={handleCloseModal}

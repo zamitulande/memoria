@@ -6,20 +6,6 @@ import axiosClient from '../config/Axios';
 import { useDispatch } from 'react-redux';
 import { setActiveAccount } from '../redux/features/userSlice';
 
-
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
-    maxWidth: 300,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    px: 2,
-};
-
 const ActivateAccount = () => {
 
     const dispatch = useDispatch();
@@ -50,7 +36,6 @@ const ActivateAccount = () => {
                     },
                 });
             } catch (error) {
-                console.log(error)
                 Swal.fire({
                     icon: "error",
                     title: "Error...",
@@ -70,7 +55,7 @@ const ActivateAccount = () => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style}>
+            <Box className='modal-style'>
                 <Typography sx={{mt:2}}>Activar Cuenta.</Typography>
                 <Typography>ingrese el codigo que llego a su correo.</Typography>
                 <VerificationInput

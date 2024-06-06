@@ -27,6 +27,7 @@ import { Link } from 'react-router-dom';
 import Login from '../../auth/Login';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogin } from '../../redux/features/userSlice';
+import ResetPassword from '../../auth/ResetPassword';
 
 const Header = () => {
 
@@ -56,6 +57,7 @@ const Header = () => {
     ];
 
     const [open, setOpen] = useState(false);
+    const [openResetPassword, setOpenResetPassword] = useState(false);
     const [anchorElNav, setAnchorElNav] = useState(null)
     const [anchorElUser, setAnchorElUser] = useState(null)
     const [anchorElContact, setAnchorElContact] = useState(null);
@@ -296,16 +298,19 @@ const Header = () => {
                                                 </Button>
                                             </Link>
                                         ) : (
-                                            <Button
-                                                onClick={() => {
-                                                    if (button.id === 4) handleLogout();
-                                                    if (button.id === 3) handlePasswordChange();
-                                                    handleMenuClose(setAnchorElUser)();
-                                                }}
-                                                size="small"
-                                            >
-                                                {button.item}
-                                            </Button>
+                                            <>
+                                                <Button
+                                                    onClick={() => {
+                                                        if (button.id === 4) handleLogout();
+                                                        if (button.id === 3) setOpenResetPassword(true);
+                                                        handleMenuClose(setAnchorElUser)();
+                                                    }}
+                                                    size="small"
+                                                >
+                                                    {button.item}
+                                                </Button>
+                                                <ResetPassword open={openResetPassword} setOpen={setOpenResetPassword} />
+                                            </>
                                         )}
                                     </Fragment>
                                 ))}

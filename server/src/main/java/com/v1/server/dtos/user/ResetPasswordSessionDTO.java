@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class AuthResponseDTO {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ResetPasswordSessionDTO {
     
-    private String token;
-    private String role;
-    private String userName;
+    private String password;
+    private String confirmPassword;
     private Long userId;
 }

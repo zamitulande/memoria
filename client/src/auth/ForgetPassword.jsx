@@ -6,19 +6,6 @@ import CloseIcon from '@mui/icons-material/Cancel';
 import LoadingGif from '../assets/loading/loading.gif'
 import Swal from 'sweetalert2';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
-    maxWidth: 300,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    px: 2,
-};
-
 const ForgetPassword = ({ open, setOpen }) => {
 
     const { minLength } = UseValidation();
@@ -42,9 +29,9 @@ const ForgetPassword = ({ open, setOpen }) => {
                     },
                 });
                 setOpen(false)
+                setIdentification("")
             })
             .catch((error) => {
-                console.log(error)
                 setIsLoading(false);
                 const errorMessage = error.response.data.message
                 Swal.fire({
@@ -68,7 +55,7 @@ const ForgetPassword = ({ open, setOpen }) => {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
-            <Box sx={style}>
+            <Box className='modal-style'>
             <IconButton
                     aria-label="close"
                     onClick={handleCloseModal}

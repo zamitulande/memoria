@@ -6,6 +6,7 @@ import com.v1.server.dtos.user.AuthResponseDTO;
 import com.v1.server.dtos.user.AuthenticationRequestDTO;
 import com.v1.server.dtos.user.RegisterRequestDTO;
 import com.v1.server.dtos.user.ResetPasswordDTO;
+import com.v1.server.dtos.user.ResetPasswordSessionDTO;
 import com.v1.server.exceptions.ApiResponse;
 
 import jakarta.mail.MessagingException;
@@ -22,5 +23,5 @@ public interface AuthService {
 
     ApiResponse resetPassword(ResetPasswordDTO request);
 
-
+    ApiResponse resetPasswordSesion(ResetPasswordSessionDTO request);
 }

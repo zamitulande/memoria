@@ -19,6 +19,7 @@ import com.v1.server.dtos.user.AuthResponseDTO;
 import com.v1.server.dtos.user.AuthenticationRequestDTO;
 import com.v1.server.dtos.user.RegisterRequestDTO;
 import com.v1.server.dtos.user.ResetPasswordDTO;
+import com.v1.server.dtos.user.ResetPasswordSessionDTO;
 import com.v1.server.entities.Token;
 import com.v1.server.entities.User;
 import com.v1.server.enumerate.EmailTemplateName;
@@ -141,13 +142,15 @@ public class AuthServiceImpl implements AuthService {
                 .collect(Collectors.joining(""));
         String firstName = userDetails.getFirstName();
         String lastName = userDetails.getFirstLastName();
+        Long userId = userDetails.getUserId();
         var saveUser = userRepository.findByEmail(request.getEmail());
         User user = saveUser.get();
         var jwtToken = jwtService.generateToken(user);
         AuthResponseDTO responseDTO = AuthResponseDTO.builder()
                 .userName(firstName+" "+lastName)
                 .token(jwtToken)
-                .role(roles) // Agregar los roles al DTO
+                .role(roles)
+                .userId(userId) // Agregar los roles al DTO
                 .build();
         return ResponseEntity.ok(responseDTO);
 
@@ -234,6 +237,25 @@ public class AuthServiceImpl implements AuthService {
             throw new ExpireTokenException(
                     "La solicitud de cambio de contraseña ha expirado, click en olvido contraseña para una nueva solicitud");
         }
+    }
+
+    public ApiResponse resetPasswordSesion(ResetPasswordSessionDTO request) {
+
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Las contraseñas no coinciden");
+        }
+    
+        Long userId = request.getUserId();
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new NotFoundException("usuario no encontrado");
+        }
+        User user = userOptional.get();
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.save(user);
+
+        return new ApiResponse(200, "Contraseña cambiada satisfactoriamente");
     }
 
 }
