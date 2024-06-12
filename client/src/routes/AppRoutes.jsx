@@ -4,19 +4,19 @@ import AbautUs from "../components/abautUs/AbautUs"
 import OpenData from "../components/openData/OpenData"
 import Users from "../components/users/Users"
 import Register from "../components/users/Register"
-import Testimonies from "../components/testimonies/Testimonies"
 import ActivateAccount from "../auth/ActivateAccount"
 import ForgetPassword from "../auth/ForgetPassword"
 import ResetPassword from "../auth/ResetPassword"
 import Collaborate from "../components/collaborate/Collaborate"
 import ProtectedRoutes from "./ProtectedRoutes"
+import Repository from "../components/testimonies/Repository"
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path='/' element={<Home />} />
       <Route path='/nosotros' element={<AbautUs />} />
-      <Route path='/testimonios' element={<Testimonies />} />
+      <Route path='/repositorio' element={<Repository />} />
       <Route path='/datos-abiertos' element={<OpenData />} />
       <Route
         path='/usuarios'

@@ -37,7 +37,7 @@ const Header = () => {
     const pages = [
         { item: 'Inicio', id: 1, path: '/' },
         { item: 'Nosotros', id: 2, path: 'nosotros' },
-        { item: 'Testimonios', id: 3, path: 'testimonios' },
+        { item: 'Repositorio', id: 3, path: 'repositorio' },
         { item: 'Colaboraciones', id: 4, path: 'colaboraciones' },
         { item: 'Datos Abiertos', id: 5, path: 'datos-abiertos' },
         { item: 'Usuarios', id: 6, path: 'usuarios' },

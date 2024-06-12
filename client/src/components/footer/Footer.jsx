@@ -30,7 +30,7 @@ const Footer = () => {
                     <Box display="flex" flexDirection="column">
                         <Link style={{textDecoration:'none'}} to="/">Inicio</Link>
                         <Link style={{textDecoration:'none'}} to="nosotros">Nosotros</Link>
-                        <Link style={{textDecoration:'none'}} to="testimonios">Testimonios</Link>
+                        <Link style={{textDecoration:'none'}} to="repositorio">Repositorio</Link>
                         <Link style={{textDecoration:'none'}} to="colaboraciones">Colaboraciones</Link>
                         <Link style={{textDecoration:'none'}} to="datos-abiertos">Datos Abiertos</Link>
                     </Box>
