@@ -50,7 +50,7 @@ public class AppConfig {
     public FilterRegistrationBean<RateLimitingFilter> rateLimitingFilter() {
         FilterRegistrationBean<RateLimitingFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new RateLimitingFilter());
-        registrationBean.addUrlPatterns("/api/v1/auth/authenticate"); // Ajusta el patrón de URL según tus necesidades
+        registrationBean.addUrlPatterns("/api/v1/auth/authenticate"); 
         return registrationBean;
     }
 }
