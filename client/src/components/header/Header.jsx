@@ -123,7 +123,8 @@ const Header = () => {
     );
 
     return (
-        <AppBar position="static">
+       <>
+         <AppBar position="fixed">
             <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
                 <Box>{renderButtonGroup(about)}</Box>
                 {login ? <Typography>hola {userName}</Typography> : null}
@@ -330,6 +331,8 @@ const Header = () => {
                 </Popper>
             )}
         </AppBar>
+        <Box sx={{ height: '150px' }} />
+       </>
     )
 }
 

@@ -15,7 +15,7 @@ const Repository = () => {
   useEffect(()=>{
     setTimeout(()=>{
       setIsLoading(!isLoading)
-    },2000)
+    },1000)
   }, [])
 
   const images = [
@@ -28,7 +28,7 @@ const Repository = () => {
   ];
   return (
     <Container>
-      <Grid container spacing={1} mt={4} mb={6}>
+      <Grid container spacing={1} mb={6}>
         {images.map((image, index) => (
           <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
             <Card sx={{
@@ -57,7 +57,7 @@ const Repository = () => {
               </CardActionArea>
               <CardActions>
                 <Link to={image.link}>
-                  <Button size="small" color="secondary" >
+                  <Button size="small" color="secondary" variant="contained">
                     Ver más
                   </Button>
                 </Link>
@@ -74,6 +74,7 @@ const Repository = () => {
                 )
             }
     </Container>
+    
   )
 }
 
