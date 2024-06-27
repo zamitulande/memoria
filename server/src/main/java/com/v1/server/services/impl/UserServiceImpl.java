@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.v1.server.dtos.user.UsersDTO;
 import com.v1.server.entities.User;
+import com.v1.server.enumerate.Role;
 import com.v1.server.repositories.UserRepository;
 import com.v1.server.services.UserService;
 
@@ -18,16 +19,16 @@ public class UserServiceImpl  implements UserService{
 
     @Override
     public Page<UsersDTO> findAllUsers(Pageable pageable) {
-        Page<User> userPage = userRepository.findAll(pageable);
+        Page<User> userPage = userRepository.findByRole(Role.USER, pageable);
+        System.out.println(userPage);
         return userPage.map(user->UsersDTO.builder()
                 .userId(user.getUserId())
                 .role(user.getRole())
                 .identification(user.getIdentification())
-                .names(user.getFirstName()+user.getSecondName())
-                .lastNames(user.getFirstLastName()+user.getSecondLastName())
+                .names(user.getFirstName()+" "+user.getSecondName())
+                .lastNames(user.getFirstLastName()+" "+user.getSecondLastName())
                 .contactNumber(user.getContactNumber())
-                .department(user.getDepartment())
-                .municipio(user.getMunicipio())
+                .municipio(user.getMunicipio() + "-"+ user.getDepartment())
                 .email(user.getEmail())
                 .build());
     }

@@ -16,10 +16,11 @@ const UseValidation = () => {
     };
 
     const maxLength = (text, length) => {
-        return text.length <= length;
+        const regex = new RegExp(`^.{0,${length}}$`);
+        return regex.test(text);
     };
 
-    const passwordValid = (text) =>{
+    const passwordValid = (text) => {
         const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         return regex.test(text)
     }

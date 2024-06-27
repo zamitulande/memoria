@@ -14,7 +14,7 @@ import SelectCity from '../../../helpers/components/SelectCity';
 
 const FormUser = ({ action }) => {
 
-    const { minLength, isCellPhone, passwordValid } = UseValidation();
+    const {  isCellPhone, passwordValid, } = UseValidation();
 
     const [open, setOpen] = useState(false);
 
@@ -100,7 +100,7 @@ const FormUser = ({ action }) => {
                 resetForm();
                 setIsLoading(false)
                 Swal.fire({
-                    position: "top-end",
+                    position: "bottom-end",
                     icon: "success",
                     title: messageResponse,
                 });
@@ -114,6 +114,21 @@ const FormUser = ({ action }) => {
                 });
             });
     }
+
+    // Función para verificar la longitud mínima
+    const minLength = (str, length) => {
+        return str.length >= length;
+    };
+
+    // Función para verificar la longitud máxima
+    const maxLength = (str, length) => {
+        return str.length <= length;
+    };
+
+    const capitalizeFirstLetter = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     return (
         <Box position="relative">
             <form onSubmit={handleSubmit}>
@@ -171,13 +186,16 @@ const FormUser = ({ action }) => {
                             name="firstName"
                             type='text'
                             value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
+                            onChange={(e) => setFirstName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
                             required
+                            inputProps={{ maxLength: 11 }} 
                             helperText={
                                 (!minLength(firstName, 3) && firstName)
                                     ? "Este campo debe tener al menos 3 caracteres"
-                                    : ""
+                                    : (!maxLength(firstName, 10) && firstName)
+                                        ? "Este campo no puede ser mayor a 10 caracteres"
+                                        : ""
                             }
                             FormHelperTextProps={{ sx: { color: "error.main" } }}
                         />
@@ -190,13 +208,19 @@ const FormUser = ({ action }) => {
                             name="secondName"
                             type='text'
                             value={secondName}
-                            onChange={(e) => setSecondName(e.target.value)}
+                            onChange={(e) => setSecondName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
+                            inputProps={{ maxLength: 11 }} 
                             helperText={
                                 (!minLength(secondName, 3) && secondName)
                                     ? "Este campo debe tener al menos 3 caracteres"
-                                    : ""
-                            } />
+                                    : (!maxLength(secondName, 10) && secondName)
+                                        ? "Este campo no puede ser mayor a 10 caracteres"
+                                        : ""
+                            } 
+                            FormHelperTextProps={{ sx: { color: "error.main" } }}
+                            />
+                            
                     </Grid>
                     <Grid item xs={4}>
                         <TextField
@@ -206,13 +230,16 @@ const FormUser = ({ action }) => {
                             name="firstLastName"
                             type='text'
                             value={firstLastName}
-                            onChange={(e) => setFirstLastName(e.target.value)}
+                            onChange={(e) => setFirstLastName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
                             required
+                            inputProps={{ maxLength: 11 }} 
                             helperText={
                                 (!minLength(firstLastName, 3) && firstLastName)
                                     ? "Este campo debe tener al menos 3 caracteres"
-                                    : ""
+                                    : (!maxLength(firstLastName, 10) && firstLastName)
+                                        ? "Este campo no puede ser mayor a 10 caracteres"
+                                        : ""
                             }
                             FormHelperTextProps={{ sx: { color: "error.main" } }}
                         />
@@ -225,13 +252,19 @@ const FormUser = ({ action }) => {
                             name="secondLastName"
                             type='text'
                             value={secondLastName}
-                            onChange={(e) => setSecondLastName(e.target.value)}
+                            onChange={(e) => setSecondLastName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
+                            inputProps={{ maxLength: 11 }} 
                             helperText={
                                 (!minLength(secondLastName, 3) && secondLastName)
                                     ? "Este campo debe tener al menos 3 caracteres"
-                                    : ""
-                            } />
+                                    : (!maxLength(secondLastName, 10) && secondLastName)
+                                        ? "Este campo no puede ser mayor a 10 caracteres"
+                                        : ""
+                            } 
+                            FormHelperTextProps={{ sx: { color: "error.main" } }}
+                            />
+                            
                     </Grid>
                     <Grid item xs={4}>
                         <SelectDepartment
@@ -346,7 +379,7 @@ const FormUser = ({ action }) => {
                         {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
                     </Grid>
                     <Grid mt={4}>
-                    <Button type="submit" color='secondary' disabled={!conditios || isDisable()}>register</Button>
+                        <Button type="submit" color='secondary' disabled={!conditios || isDisable()}>register</Button>
                         {/* <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios || isDisable()}>register</Button> */}
                     </Grid>
                 </Grid>

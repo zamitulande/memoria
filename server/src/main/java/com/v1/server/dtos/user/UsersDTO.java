@@ -18,8 +18,7 @@ public class UsersDTO {
     private String identification; 
     private String names;
     private String lastNames;   
-    private String contactNumber;    
-    private String department;
+    private String contactNumber;
     private String municipio;
     private String email;
 }
