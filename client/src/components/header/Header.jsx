@@ -87,10 +87,6 @@ const Header = () => {
         }, 5000)
     }
 
-    const handlePasswordChange = () => {
-
-    }
-
     const handleLogout = () => {
         dispatch(setLogin(false))
     }

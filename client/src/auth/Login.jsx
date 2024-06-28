@@ -24,7 +24,7 @@ const Login = ({ open, setOpen }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const getActiveAccount = useSelector((state)=>state.user.activeAccount)
+    const getActiveAccount = useSelector((state) => state.user.activeAccount)
     const [user, setUser] = useState({
         email: '',
         password: ''
@@ -37,33 +37,46 @@ const Login = ({ open, setOpen }) => {
         const postLogin = async () => {
             try {
                 const response = await axiosClient.post('/auth/authenticate', user);
+
                 if (response.data.token && response.data.role && response.status == "200") {
                     dispatch(setLogin(true));
                     dispatch(setToken(response.data.token));
-                    dispatch(setRole(response.data.role));   
-                    dispatch(setUserId(response.data.userId));                 
+                    dispatch(setRole(response.data.role));
+                    dispatch(setUserId(response.data.userId));
                     setUser({
                         email: '',
                         password: ''
                     })
-                    dispatch(setActiveAccount(false))                    
+                    dispatch(setActiveAccount(false))
                     setOpen(false)
                     dispatch(setUserName(response.data.userName))
                     navigate('/');
                 }
             } catch (error) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error...",
-                    text: error.response.data.message,
-                    customClass: {
-                        container: 'my-swal'
-                    },
-                });
+                if (!error.response) {
+                    // No response from the server
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error de Conexión...",
+                        text: "No se pudo conectar con el servidor. Por favor, inténtalo de nuevo más tarde.",
+                        customClass: {
+                            container: 'my-swal'
+                        },
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error...",
+                        text: error.response.data.message,
+                        customClass: {
+                            container: 'my-swal'
+                        },
+                    });
+                }
                 setUser({
                     email: '',
                     password: ''
-                })
+                });
             }
         }
         postLogin();
@@ -77,7 +90,7 @@ const Login = ({ open, setOpen }) => {
         }));
     }
 
-    const handleCloseModal = ()=>{
+    const handleCloseModal = () => {
         setOpen(false)
         dispatch(setActiveAccount(false))
     }
@@ -151,7 +164,7 @@ const Login = ({ open, setOpen }) => {
                         />
                     </FormControl>
                     <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                        <Grid item xs={6}>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -159,10 +172,10 @@ const Login = ({ open, setOpen }) => {
                                     alignItems: 'center'
                                 }}
                             >
-                                <Button  onClick={(e) => setOpenModalForget(true)}>
+                                <Button onClick={(e) => setOpenModalForget(true)}>
                                     ¿Olvidó su contraseña?
                                 </Button>
-                                <ForgetPassword open={openModalForget} setOpen={setOpenModalForget}/>
+                                <ForgetPassword open={openModalForget} setOpen={setOpenModalForget} />
                             </Box>
                         </Grid>
                         <Grid item xs={6}>
@@ -175,7 +188,7 @@ const Login = ({ open, setOpen }) => {
                             >
                                 Ingresar
                             </Button>
-                        </Grid>                       
+                        </Grid>
                     </Grid>
                     <p>
                         ¿No tiene una cuenta de usuario?, haga <Link to='usuarios/registrar' onClick={handleCloseModal}>click aquí</Link> para registrarse.

@@ -4,16 +4,18 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LockIcon from '@mui/icons-material/Lock';
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axiosClient from '../../config/Axios'
 import ViewMore from './ViewMore';
-import Update from './Update';
 import { useNavigate } from 'react-router-dom';
+import { setUserId } from '../../redux/features/userSlice';
+import Loading from '../../helpers/components/Loading';
 
 
 const Users = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const getToken = useSelector((state) => state.user.token)
 
   const [users, setUsers] = useState([]);
@@ -21,9 +23,11 @@ const Users = () => {
   const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
       try {
         const config = {
@@ -34,6 +38,7 @@ const Users = () => {
         const response = await axiosClient.get(`/users?page=${currentPage}&size=10`, config);
         setUsers(response.data.content);
         setTotalPages(response.data.totalPages);
+        setIsLoading(false);
       } catch (error) {
         console.log(error)
       }
@@ -58,8 +63,10 @@ const Users = () => {
     setOpen(true)
  }
 
- const handleOpenModalUpdate = (user) => { 
+ const handleUpdate = (userId) => { 
   navigate('/usuarios/editar');
+  dispatch(setUserId(userId))
+
 }
 
   return (
@@ -93,7 +100,7 @@ const Users = () => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Editar">
-                      <IconButton onClick={() => handleOpenModalUpdate(user)}>
+                      <IconButton onClick={() => handleUpdate(user.userId)}>
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
@@ -124,6 +131,7 @@ const Users = () => {
         </Box>
       </Paper>
       <ViewMore open={open} setOpen={setOpen} user={selectedUser}/>
+      <Loading isLoading={isLoading} />
     </Container>
   )
 }

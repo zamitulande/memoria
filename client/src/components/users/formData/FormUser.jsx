@@ -4,18 +4,21 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react'
 import axiosClient from '../../../config/Axios'
 import UseValidation from '../../../helpers/hooks/UseValidation'
-import LoadingGif from '../../../assets/loading/loading.gif'
 import Swal from 'sweetalert2';
 import Recaptcha from '../../../helpers/components/Recaptcha';
 import Conditions from '../../../helpers/components/Conditions';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
 import SelectCity from '../../../helpers/components/SelectCity';
+import { useSelector } from 'react-redux';
+import Loading from '../../../helpers/components/Loading';
 
 
 const FormUser = ({ action }) => {
 
     const { isCellPhone, passwordValid, } = UseValidation();
-
+    const getUserId = useSelector((state) => state.user.userId)
+    const getToken = useSelector((state) => state.user.token)
+    
     const [open, setOpen] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -61,23 +64,37 @@ const FormUser = ({ action }) => {
     }
 
     const isDisable = () => {
-        return (
-            !identification ||
-            !minLength(identification, 8) ||
-            !firstName ||
-            !minLength(firstName, 3) ||
-            !firstLastName ||
-            !minLength(firstLastName, 3) ||
-            !password ||
-            !minLength(password, 8) ||
-            !city ||
-            !department ||
-            !contactNumber ||
-            !confirmPassword ||
-            !minLength(confirmPassword, 8)
-        )
+        if (action === 'register') {
+            return (
+                !identification ||
+                !minLength(identification, 8) ||
+                !firstName ||
+                !minLength(firstName, 3) ||
+                !firstLastName ||
+                !minLength(firstLastName, 3) ||
+                !password ||
+                !minLength(password, 8) ||
+                !city ||
+                !department ||
+                !contactNumber ||
+                !confirmPassword ||
+                !minLength(confirmPassword, 8)
+            );
+        } else if (action === 'update') {
+            return (
+                !identification ||
+                !minLength(identification, 8) ||
+                !firstName ||
+                !minLength(firstName, 3) ||
+                !firstLastName ||
+                !minLength(firstLastName, 3) ||
+                !city ||
+                !department ||
+                !contactNumber
+            );
+        }
     }
-    const handleSubmit = (e) => {
+    const handleSubmitRegister = (e) => {
         e.preventDefault();
         setIsLoading(true);
         const user = {
@@ -115,6 +132,26 @@ const FormUser = ({ action }) => {
             });
     }
 
+    const handleSubmitUpdate = async (e) => {
+        e.preventDefault();
+        const userEdit ={
+
+        }
+        try {
+            const config = {
+                headers: {
+                    'Authorization': `Bearer${getToken}`
+                }
+            }
+            const response = await axiosClient.put(`users/update/${getUserId}`, userEdit, config)
+            console.log(response)
+            console.log(response)
+        } catch (error) {
+            console.log(error)
+        }
+        
+    }
+
     // Función para verificar la longitud mínima
     const minLength = (str, length) => {
         return str.length >= length;
@@ -125,13 +162,14 @@ const FormUser = ({ action }) => {
         return str.length <= length;
     };
 
+    // funcion para colocar primera letra en mayusculas
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
     return (
         <Box position="relative">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={action === 'register' ? handleSubmitRegister : handleSubmitUpdate}>
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                     <Grid item xs={4}>
                         <TextField
@@ -388,13 +426,7 @@ const FormUser = ({ action }) => {
                     </Grid>
                 </Grid>
             </form>
-            {
-                isLoading && (
-                    <Box className="loading-overlay">
-                        <img src={LoadingGif} alt="Loading..." />
-                    </Box>
-                )
-            }
+            <Loading isLoading={isLoading} />
         </Box >
 
     )
