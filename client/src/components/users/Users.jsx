@@ -6,13 +6,16 @@ import LockIcon from '@mui/icons-material/Lock';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axiosClient from '../../config/Axios'
+import ViewMore from './ViewMore';
 
 
 const Users = () => {
 
   const getToken = useSelector((state) => state.user.token)
 
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [open, setOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
@@ -47,9 +50,14 @@ const Users = () => {
     }
   };
 
+  const handleOpenModal = (user) => { 
+    setSelectedUser(user);
+    setOpen(true)
+ }
+
   return (
     <Container>
-      <Paper sx={{ width: '110%', overflow: 'auto'}}>
+      <Paper sx={{ width: '100%', overflow: 'auto'}}>
         <TableContainer sx={{ minWidth: 650 }}>
           <Table sx={{ minWidth: 650 }} aria-label="sticky table">
           <TableHead>
@@ -58,8 +66,7 @@ const Users = () => {
               <TableCell align="center">Nombres</TableCell>
               <TableCell align="center">Apellidos</TableCell>
               <TableCell align="center">Telefono</TableCell>
-              <TableCell align="center">Correo</TableCell>              
-              <TableCell align="center">Municipio</TableCell>
+              <TableCell align="center">Correo</TableCell>
               <TableCell align="center">Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -72,11 +79,10 @@ const Users = () => {
                   <TableCell align="center">{user.lastNames}</TableCell>
                   <TableCell align="center">{user.contactNumber}</TableCell>
                   <TableCell align="center">{user.email}</TableCell>
-                  <TableCell align="center">{user.municipio}</TableCell>
                   <TableCell>
-                    <Tooltip title="Ver">
-                      <IconButton>
-                        <VisibilityIcon />
+                    <Tooltip title="Ver más">
+                      <IconButton onClick={() => handleOpenModal(user)}>
+                        <VisibilityIcon/>
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Editar">
@@ -110,7 +116,7 @@ const Users = () => {
           </Button>
         </Box>
       </Paper>
-
+      <ViewMore open={open} setOpen={setOpen} user={selectedUser}/>
     </Container>
   )
 }
