@@ -13,7 +13,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Cancel';
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axiosClient from '../config/Axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveAccount, setLogin, setRole, setToken, setUserId, setUserName } from '../redux/features/userSlice';
@@ -22,6 +22,7 @@ import ForgetPassword from './ForgetPassword';
 const Login = ({ open, setOpen }) => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const getActiveAccount = useSelector((state)=>state.user.activeAccount)
     const [user, setUser] = useState({
@@ -48,6 +49,7 @@ const Login = ({ open, setOpen }) => {
                     dispatch(setActiveAccount(false))                    
                     setOpen(false)
                     dispatch(setUserName(response.data.userName))
+                    navigate('/');
                 }
             } catch (error) {
                 Swal.fire({

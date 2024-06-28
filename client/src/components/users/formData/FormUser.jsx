@@ -14,7 +14,7 @@ import SelectCity from '../../../helpers/components/SelectCity';
 
 const FormUser = ({ action }) => {
 
-    const {  isCellPhone, passwordValid, } = UseValidation();
+    const { isCellPhone, passwordValid, } = UseValidation();
 
     const [open, setOpen] = useState(false);
 
@@ -189,7 +189,7 @@ const FormUser = ({ action }) => {
                             onChange={(e) => setFirstName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
                             required
-                            inputProps={{ maxLength: 11 }} 
+                            inputProps={{ maxLength: 11 }}
                             helperText={
                                 (!minLength(firstName, 3) && firstName)
                                     ? "Este campo debe tener al menos 3 caracteres"
@@ -210,17 +210,17 @@ const FormUser = ({ action }) => {
                             value={secondName}
                             onChange={(e) => setSecondName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
-                            inputProps={{ maxLength: 11 }} 
+                            inputProps={{ maxLength: 11 }}
                             helperText={
                                 (!minLength(secondName, 3) && secondName)
                                     ? "Este campo debe tener al menos 3 caracteres"
                                     : (!maxLength(secondName, 10) && secondName)
                                         ? "Este campo no puede ser mayor a 10 caracteres"
                                         : ""
-                            } 
+                            }
                             FormHelperTextProps={{ sx: { color: "error.main" } }}
-                            />
-                            
+                        />
+
                     </Grid>
                     <Grid item xs={4}>
                         <TextField
@@ -233,7 +233,7 @@ const FormUser = ({ action }) => {
                             onChange={(e) => setFirstLastName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
                             required
-                            inputProps={{ maxLength: 11 }} 
+                            inputProps={{ maxLength: 11 }}
                             helperText={
                                 (!minLength(firstLastName, 3) && firstLastName)
                                     ? "Este campo debe tener al menos 3 caracteres"
@@ -254,17 +254,17 @@ const FormUser = ({ action }) => {
                             value={secondLastName}
                             onChange={(e) => setSecondLastName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
-                            inputProps={{ maxLength: 11 }} 
+                            inputProps={{ maxLength: 11 }}
                             helperText={
                                 (!minLength(secondLastName, 3) && secondLastName)
                                     ? "Este campo debe tener al menos 3 caracteres"
                                     : (!maxLength(secondLastName, 10) && secondLastName)
                                         ? "Este campo no puede ser mayor a 10 caracteres"
                                         : ""
-                            } 
+                            }
                             FormHelperTextProps={{ sx: { color: "error.main" } }}
-                            />
-                            
+                        />
+
                     </Grid>
                     <Grid item xs={4}>
                         <SelectDepartment
@@ -302,57 +302,61 @@ const FormUser = ({ action }) => {
                             required
                         />
                     </Grid>
-                    <Grid item xs={4}>
-                        <FormControl variant="outlined" color='textField' fullWidth required>
-                            <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
-                            <OutlinedInput
-                                type={showPassword ? 'text' : 'password'}
-                                value={password}
-                                name='password'
-                                onChange={(e) => setPassword(e.target.value)}
-                                label="Contraseña"
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={() => setShowPassword((show) => !show)}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                            />
-                            <FormHelperText error>
-                                {!passwordValid(password) && password
-                                    ? "La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un carácter especial."
-                                    : ""}
-                            </FormHelperText>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <FormControl variant="outlined" color='textField' fullWidth required>
-                            <InputLabel htmlFor="outlined-adornment-password">Confirmar contraseña</InputLabel>
-                            <OutlinedInput
-                                type={showPasswordConfirm ? 'text' : 'password'}
-                                value={confirmPassword}
-                                name='confirmPassword'
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                label="Confirmar contraseña"
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={() => setShowPasswordConfirm((show) => !show)}
-                                            edge="end"
-                                        >
-                                            {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                            />
-                        </FormControl>
-                    </Grid>
+                    {action === "register" && (
+                        <>
+                            <Grid item xs={4} sx={{ display: { xs: 'none', md: 'flex' } }}>
+                                <FormControl variant="outlined" color='textField' fullWidth required>
+                                    <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
+                                    <OutlinedInput
+                                        type={showPassword ? 'text' : 'password'}
+                                        value={password}
+                                        name='password'
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        label="Contraseña"
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => setShowPassword((show) => !show)}
+                                                    edge="end"
+                                                >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                    />
+                                    <FormHelperText error>
+                                        {!passwordValid(password) && password
+                                            ? "La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un carácter especial."
+                                            : ""}
+                                    </FormHelperText>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControl variant="outlined" color='textField' fullWidth required>
+                                    <InputLabel htmlFor="outlined-adornment-password">Confirmar contraseña</InputLabel>
+                                    <OutlinedInput
+                                        type={showPasswordConfirm ? 'text' : 'password'}
+                                        value={confirmPassword}
+                                        name='confirmPassword'
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        label="Confirmar contraseña"
+                                        endAdornment={
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="toggle password visibility"
+                                                    onClick={() => setShowPasswordConfirm((show) => !show)}
+                                                    edge="end"
+                                                >
+                                                    {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }
+                                    />
+                                </FormControl>
+                            </Grid>
+                        </>
+                    )}
                 </Grid>
                 <Grid
                     container
@@ -361,7 +365,7 @@ const FormUser = ({ action }) => {
                     justifyContent="space-around"
                     alignItems="center"
                 >
-                    <Grid>
+                    <Grid sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <FormControlLabel
                             value="end"
                             control={<Checkbox color='secondary' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}

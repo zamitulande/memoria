@@ -10,6 +10,7 @@ import ResetPassword from "../auth/ResetPassword"
 import Collaborate from "../components/collaborate/Collaborate"
 import ProtectedRoutes from "./ProtectedRoutes"
 import Repository from "../components/testimonies/Repository"
+import Update from "../components/users/Update"
 
 const AppRoutes = () => {
   return (
@@ -24,6 +25,11 @@ const AppRoutes = () => {
           <Users/>
         </ProtectedRoutes>} />
       <Route path='/usuarios/registrar' element={<Register />} />
+      <Route 
+        path='/usuarios/editar' 
+        element={<ProtectedRoutes redirectTo="/">
+          <Update/>
+        </ProtectedRoutes>} />
       <Route path='/activate-account' element={<ActivateAccount />} />
       <Route path='/forget-password' element={<ForgetPassword />} />
       <Route path='/reset-password' element={<ResetPassword />} />

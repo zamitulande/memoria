@@ -7,10 +7,13 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axiosClient from '../../config/Axios'
 import ViewMore from './ViewMore';
+import Update from './Update';
+import { useNavigate } from 'react-router-dom';
 
 
 const Users = () => {
 
+  const navigate = useNavigate();
   const getToken = useSelector((state) => state.user.token)
 
   const [users, setUsers] = useState([]);
@@ -55,6 +58,10 @@ const Users = () => {
     setOpen(true)
  }
 
+ const handleOpenModalUpdate = (user) => { 
+  navigate('/usuarios/editar');
+}
+
   return (
     <Container>
       <Paper sx={{ width: '100%', overflow: 'auto'}}>
@@ -86,7 +93,7 @@ const Users = () => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Editar">
-                      <IconButton>
+                      <IconButton onClick={() => handleOpenModalUpdate(user)}>
                         <EditIcon />
                       </IconButton>
                     </Tooltip>
