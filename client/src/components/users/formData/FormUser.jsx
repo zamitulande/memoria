@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FilledInput, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, Link, OutlinedInput, TextField } from '@mui/material'
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react'
@@ -11,14 +11,18 @@ import SelectDepartment from '../../../helpers/components/SelectDepartment';
 import SelectCity from '../../../helpers/components/SelectCity';
 import { useSelector } from 'react-redux';
 import Loading from '../../../helpers/components/Loading';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 const FormUser = ({ action }) => {
 
     const { isCellPhone, passwordValid, } = UseValidation();
-    const getUserId = useSelector((state) => state.user.userId)
+    const navigate = useNavigate();
+    const getFormEditar = useSelector((state) => state.user.formEdit)
+    const gerUserId = useSelector((state) => state.user.userId)
     const getToken = useSelector((state) => state.user.token)
-    
+
     const [open, setOpen] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -94,23 +98,24 @@ const FormUser = ({ action }) => {
             );
         }
     }
+    const user = {
+        identification,
+        email,
+        confirmEmail,
+        firstName,
+        secondName,
+        firstLastName,
+        secondLastName,
+        contactNumber,
+        department,
+        municipio,
+        password,
+        confirmPassword
+    }
+
     const handleSubmitRegister = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const user = {
-            identification,
-            email,
-            confirmEmail,
-            firstName,
-            secondName,
-            firstLastName,
-            secondLastName,
-            contactNumber,
-            department,
-            municipio,
-            password,
-            confirmPassword
-        }
         axiosClient.post('/auth/register', user)
             .then((response) => {
                 const messageResponse = response.data.message;
@@ -134,22 +139,43 @@ const FormUser = ({ action }) => {
 
     const handleSubmitUpdate = async (e) => {
         e.preventDefault();
-        const userEdit ={
+        const updateUser = { ...user };
+        updateUser.identification = user.identification || getFormEditar.identification;
+        updateUser.email = user.email || getFormEditar.email;
+        updateUser.confirmEmail = user.confirmEmail || getFormEditar.confirmEmail;
+        updateUser.firstName = user.firstName || getFormEditar.firstName;
+        updateUser.secondName = user.secondName || getFormEditar.secondName;
+        updateUser.firstLastName = user.firstLastName || getFormEditar.firstLastName;
+        updateUser.secondLastName = user.secondLastName || getFormEditar.secondLastName;
+        updateUser.contactNumber = user.contactNumber || getFormEditar.contactNumber;
+        updateUser.department = user.department || getFormEditar.department;
+        updateUser.municipio = user.municipio || getFormEditar.municipio;
 
-        }
-        try {
-            const config = {
-                headers: {
-                    'Authorization': `Bearer${getToken}`
+        Swal.fire({
+            title: "¿Quieres guardar los cambios?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Guardar",
+            denyButtonText: `No guardar`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const config = {
+                        headers: {
+                            'Authorization': `Bearer${getToken}`
+                        }
+                    }
+                    const response = await axiosClient.put(`users/update/${getFormEditar.userId}`, updateUser, config);
+                    Swal.fire("¡Guardado!", "Los cambios han sido guardados exitosamente.", "success");
+                    navigate('/usuarios');
+                } catch (error) {
+                    Swal.fire("Error", error.response.data.message, "error");
                 }
+            } else if (result.isDenied) {
+                Swal.fire("Cambios no guardados", "Los cambios no han sido guardados.", "info");
+                navigate('/usuarios');
             }
-            const response = await axiosClient.put(`users/update/${getUserId}`, userEdit, config)
-            console.log(response)
-            console.log(response)
-        } catch (error) {
-            console.log(error)
-        }
-        
+        });
     }
 
     // Función para verificar la longitud mínima
@@ -178,7 +204,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="identification"
                             type='number'
-                            value={identification}
+                            value={action === 'register' ? identification : undefined}
+                            defaultValue={action === 'update' ? getFormEditar.identification : undefined}
                             onChange={(e) => {
                                 const value = e.target.value.slice(0, 12);
                                 setIdentification(value)
@@ -199,7 +226,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="email"
                             type='email'
-                            value={email}
+                            value={action === 'register' ? email : undefined}
+                            defaultValue={action === 'update' ? getFormEditar.email : undefined}
                             onChange={(e) => setEmail(e.target.value)}
                             fullWidth
                             required />
@@ -211,7 +239,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="confirmEmail"
                             type='email'
-                            value={confirmEmail}
+                            value={action === 'register' ? confirmEmail : undefined}
+                            defaultValue={action === 'update' ? getFormEditar.confirmEmail : undefined}
                             onChange={(e) => setConfirmEmail(e.target.value)}
                             fullWidth
                             required />
@@ -223,7 +252,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="firstName"
                             type='text'
-                            value={firstName}
+                            value={action === 'register' ? firstName : undefined}
+                            defaultValue={action === 'update' ? getFormEditar.firstName : undefined}
                             onChange={(e) => setFirstName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
                             required
@@ -245,7 +275,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="secondName"
                             type='text'
-                            value={secondName}
+                            value={action === 'register' ? secondName : undefined}
+                            defaultValue={action === 'update' ? getFormEditar.secondName : undefined}
                             onChange={(e) => setSecondName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
                             inputProps={{ maxLength: 11 }}
@@ -267,7 +298,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="firstLastName"
                             type='text'
-                            value={firstLastName}
+                            value={action === 'register' ? firstLastName : undefined}
+                            defaultValue={action === 'update' ? getFormEditar.firstLastName : undefined}
                             onChange={(e) => setFirstLastName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
                             required
@@ -289,7 +321,8 @@ const FormUser = ({ action }) => {
                             variant="outlined"
                             name="secondLastName"
                             type='text'
-                            value={secondLastName}
+                            value={action === 'register' ? secondLastName : undefined}
+                            defaultValue={action === 'update' ? getFormEditar.secondLastName : undefined}
                             onChange={(e) => setSecondLastName(capitalizeFirstLetter(e.target.value))}
                             fullWidth
                             inputProps={{ maxLength: 11 }}
@@ -325,7 +358,8 @@ const FormUser = ({ action }) => {
                             color='textField'
                             type='text'
                             variant="outlined"
-                            value={contactNumber}
+                            value={action === 'register' ? contactNumber : undefined}
+                            defaultValue={action === 'update' ? getFormEditar.contactNumber : undefined}
                             onChange={(e) => {
                                 const value = e.target.value.slice(0, 10);
                                 setContactNumber(value)
@@ -403,25 +437,28 @@ const FormUser = ({ action }) => {
                     justifyContent="space-around"
                     alignItems="center"
                 >
-                    <Grid sx={{ display: { xs: 'none', md: 'flex' } }}>
-                        <FormControlLabel
-                            value="end"
-                            control={<Checkbox color='secondary' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}
-                            labelPlacement="end"
-                        />
-                        <Button
-                            color='secondary'
-                            onClick={(e) => { setOpen(true) }}
-                            size="small">
-                            Terminos y condiciones
-                        </Button>
-                        <Conditions open={open} setOpen={setOpen} />
-                    </Grid>
+                    {action === 'register' ?
+                        <Grid >
+                            <FormControlLabel
+                                value="end"
+                                control={<Checkbox color='secondary' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}
+                                labelPlacement="end"
+                            />
+                            <Button
+                                color='secondary'
+                                onClick={(e) => { setOpen(true) }}
+                                size="small">
+                                Terminos y condiciones
+                            </Button>
+                            <Conditions open={open} setOpen={setOpen} />
+                        </Grid> : null
+                    }
                     <Grid mt={2}>
                         {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
                     </Grid>
                     <Grid mt={4}>
-                        <Button type="submit" color='secondary' disabled={!conditios || isDisable()}>register</Button>
+                        <Button type="submit" color='secondary' disabled={action === 'register' ? !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
+                        {action === 'update' ? <Link to="/usuarios"> <Button color='secondary'>Cancelar</Button></Link> : null}
                         {/* <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios || isDisable()}>register</Button> */}
                     </Grid>
                 </Grid>

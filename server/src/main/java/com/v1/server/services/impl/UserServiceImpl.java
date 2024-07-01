@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.v1.server.dtos.user.UserUpdateDTO;
 import com.v1.server.dtos.user.UsersDTO;
 import com.v1.server.entities.User;
 import com.v1.server.enumerate.Role;
@@ -27,18 +26,25 @@ public class UserServiceImpl  implements UserService{
         System.out.println(userPage);
         return userPage.map(user->UsersDTO.builder()
                 .userId(user.getUserId())
-                .role(user.getRole())
                 .identification(user.getIdentification())
-                .names(user.getFirstName()+" "+user.getSecondName())
-                .lastNames(user.getFirstLastName()+" "+user.getSecondLastName())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .secondName(user.getSecondName())
+                .firstLastName(user.getFirstLastName())
+                .secondLastName(user.getSecondLastName())
                 .contactNumber(user.getContactNumber())
-                .municipio(user.getMunicipio() + "-"+ user.getDepartment())
+                .municipio(user.getMunicipio())
+                .department(user.getDepartment())
                 .email(user.getEmail())
                 .build());
     }
 
     @Override
-    public UserUpdateDTO updateUser(Long id, UserUpdateDTO userUpdateDTO) {
+    public UsersDTO updateUser(Long id, UsersDTO userUpdateDTO) {
+
+        if (!userUpdateDTO.getEmail().equals(userUpdateDTO.getConfirmEmail())) {
+            throw new IllegalArgumentException("Los correos electronicos no coiciden");
+        }
         Optional<User> userOption = userRepository.findById(id);
         if (userOption.isPresent()) {
             User user = userOption.get();
@@ -51,10 +57,9 @@ public class UserServiceImpl  implements UserService{
             user.setMunicipio(userUpdateDTO.getMunicipio());
             user.setIdentification(userUpdateDTO.getIdentification());
             user.setEmail(userUpdateDTO.getEmail());
-            user.setConfirmEmail(userUpdateDTO.getConfirmEmail());
             userRepository.save(user);
 
-            UserUpdateDTO updateDTO = UserUpdateDTO.builder()
+            UsersDTO updateDTO = UsersDTO.builder()
                     .firstName(user.getFirstName())
                     .secondName(user.getSecondName())
                     .firstLastName(user.getFirstLastName())
@@ -64,7 +69,6 @@ public class UserServiceImpl  implements UserService{
                     .municipio(user.getMunicipio())
                     .identification(user.getIdentification())
                     .email(user.getEmail())
-                    .confirmEmail(user.getConfirmEmail())
                     .build();
 
 

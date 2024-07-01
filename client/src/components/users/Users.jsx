@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import axiosClient from '../../config/Axios'
 import ViewMore from './ViewMore';
 import { useNavigate } from 'react-router-dom';
-import { setUserId } from '../../redux/features/userSlice';
+import { setFormEdit, setUserId } from '../../redux/features/userSlice';
 import Loading from '../../helpers/components/Loading';
 
 
@@ -24,7 +24,6 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
 
   useEffect(() => {
     setIsLoading(true);
@@ -63,10 +62,10 @@ const Users = () => {
     setOpen(true)
  }
 
- const handleUpdate = (userId) => { 
+ const handleUpdate = (user) => {
   navigate('/usuarios/editar');
-  dispatch(setUserId(userId))
-
+  dispatch(setFormEdit(user))
+  dispatch(setUserId(user))
 }
 
   return (
@@ -89,8 +88,8 @@ const Users = () => {
               return (
                 <TableRow key={user.userId}>
                   <TableCell align="center">{user.identification}</TableCell>
-                  <TableCell align="center">{user.names}</TableCell>
-                  <TableCell align="center">{user.lastNames}</TableCell>
+                  <TableCell align="center">{user.firstName}</TableCell>
+                  <TableCell align="center">{user.firstLastName}</TableCell>
                   <TableCell align="center">{user.contactNumber}</TableCell>
                   <TableCell align="center">{user.email}</TableCell>
                   <TableCell>
@@ -100,7 +99,7 @@ const Users = () => {
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Editar">
-                      <IconButton onClick={() => handleUpdate(user.userId)}>
+                      <IconButton onClick={() => handleUpdate(user)}>
                         <EditIcon />
                       </IconButton>
                     </Tooltip>

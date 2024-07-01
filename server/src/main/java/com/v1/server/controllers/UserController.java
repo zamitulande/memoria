@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.v1.server.dtos.user.UserUpdateDTO;
 import com.v1.server.dtos.user.UsersDTO;
 import com.v1.server.exceptions.customExceptions.NotFoundException;
 import com.v1.server.services.UserService;
@@ -34,9 +33,9 @@ public class UserController {
     }
 
     @PutMapping("/users/update/{id}")
-    public ResponseEntity<UserUpdateDTO> update (@PathVariable Long id, @RequestBody UserUpdateDTO userUpdateDTO){
+    public ResponseEntity<UsersDTO> update (@PathVariable Long id, @RequestBody UsersDTO userUpdateDTO){
             try {
-                UserUpdateDTO updatedUserDTO = userService.updateUser(id, userUpdateDTO);
+                UsersDTO updatedUserDTO = userService.updateUser(id, userUpdateDTO);
                 return ResponseEntity.ok(updatedUserDTO);
             } catch (NotFoundException e) {
                 return ResponseEntity.notFound().build();

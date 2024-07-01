@@ -21,6 +21,7 @@ export const userSlice = createSlice({
         role: "",
         userName: "",
         userId: null,
+        formEdit: [],
         activeAccount: false
     },
     reducers:{
@@ -43,12 +44,15 @@ export const userSlice = createSlice({
         setUserId: (state, action)=>{
             state.userId = action.payload;
         },
+        setFormEdit: (state, action)=>{
+            state.formEdit = action.payload;
+        },
         setActiveAccount: (state, action)=>{
             state.activeAccount = action.payload;
         }
     }
 });
 
-export const {setToken, setLogin, setRole, setUserName, setUserId, setActiveAccount} = userSlice.actions;
+export const {setToken, setLogin, setRole, setUserName, setUserId, setFormEdit, setActiveAccount} = userSlice.actions;
 
 export default userSlice.reducer;
