@@ -192,6 +192,7 @@ const FormUser = ({ action }) => {
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
+    console.log(getFormEditar)
 
     return (
         <Box position="relative">
@@ -339,7 +340,7 @@ const FormUser = ({ action }) => {
                     </Grid>
                     <Grid item xs={4}>
                         <SelectDepartment
-                            value={department}
+                            value={action === 'register'  ? department : getFormEditar.department}
                             onChange={(e, item) => {
                                 setDepartment(e.target.value);
                             }}
@@ -347,9 +348,9 @@ const FormUser = ({ action }) => {
                     </Grid>
                     <Grid item xs={4}>
                         <SelectCity
-                            value={city}
+                            value={action === 'register'  ? city : getFormEditar.municipio}
                             setCity={setCity}
-                            department={department}
+                            department={action === 'register'  ? department : getFormEditar.department}
                         />
                     </Grid>
                     <Grid item xs={4}>
