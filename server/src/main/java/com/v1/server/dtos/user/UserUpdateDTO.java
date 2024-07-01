@@ -5,14 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UsersDTO {
-    
-    private Long userId;
-
+public class UserUpdateDTO {    
+     
     private String firstName;
 
     private String secondName;
@@ -33,6 +32,4 @@ public class UsersDTO {
 
     private String confirmEmail;
 
-    private boolean accountLocked;
-    
 }

@@ -15,7 +15,7 @@ import com.v1.server.repositories.UserRepository;
 import com.v1.server.services.UserService;
 
 @Service
-public class UserServiceImpl  implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -24,7 +24,7 @@ public class UserServiceImpl  implements UserService{
     public Page<UsersDTO> findAllUsers(Pageable pageable) {
         Page<User> userPage = userRepository.findByRole(Role.USER, pageable);
         System.out.println(userPage);
-        return userPage.map(user->UsersDTO.builder()
+        return userPage.map(user -> UsersDTO.builder()
                 .userId(user.getUserId())
                 .identification(user.getIdentification())
                 .email(user.getEmail())
@@ -71,11 +71,36 @@ public class UserServiceImpl  implements UserService{
                     .email(user.getEmail())
                     .build();
 
-
             return updateDTO;
         } else {
             throw new NotFoundException("User not found with id: " + id);
         }
     }
-    
+
+    @Override
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public boolean blockUser(Long userId) {
+        Optional<User> userOption = userRepository.findById(userId);
+        if (userOption.isPresent()) {
+            User user = userOption.get();
+            user.setAccountLocked(true);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean unblockUser(Long userId) {
+        Optional<User> userOption = userRepository.findById(userId);
+        if (userOption.isPresent()) {
+            User user = userOption.get();
+            user.setAccountLocked(false);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
 }

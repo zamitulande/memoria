@@ -12,5 +12,10 @@ public interface UserService {
     Page<UsersDTO> findAllUsers(Pageable pageable);
 
     UsersDTO updateUser(Long id, UsersDTO userUpdateDTO);
-    
+
+    void deleteById(Long id);
+
+    boolean blockUser(Long userId);
+
+    boolean unblockUser(Long userId);
 } 

@@ -192,7 +192,6 @@ const FormUser = ({ action }) => {
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
-    console.log(getFormEditar)
 
     return (
         <Box position="relative">

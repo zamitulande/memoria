@@ -68,7 +68,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorMessage> handleAuthenticationException (HttpServletRequest request, AuthenticationException ex){
-        ErrorMessage errorMessage = new ErrorMessage("Email o password incorrectos", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI());
+        ErrorMessage errorMessage = new ErrorMessage("Tus credenciales son incorrectas o tu cuenta esta bloqueada, revisa tu correo", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 }

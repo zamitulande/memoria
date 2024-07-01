@@ -53,6 +53,7 @@ const Login = ({ open, setOpen }) => {
                     navigate('/');
                 }
             } catch (error) {
+                console.log(error)
                 if (!error.response) {
                     // No response from the server
                     Swal.fire({
