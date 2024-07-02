@@ -23,7 +23,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UsersDTO> findAllUsers(Pageable pageable) {
         Page<User> userPage = userRepository.findByRole(Role.USER, pageable);
-        System.out.println(userPage);
         return userPage.map(user -> UsersDTO.builder()
                 .userId(user.getUserId())
                 .identification(user.getIdentification())

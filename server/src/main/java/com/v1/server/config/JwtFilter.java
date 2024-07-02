@@ -1,8 +1,12 @@
 package com.v1.server.config;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,6 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.v1.server.exceptions.customExceptions.AccessDeniedException;
 import com.v1.server.services.JwtService;
 
 import io.jsonwebtoken.security.SignatureException;
@@ -37,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
-        try {
+      
             if (authHeader == null || !authHeader.startsWith("Bearer")) {
                 filterChain.doFilter((request), response);
                 return;
@@ -47,19 +52,20 @@ public class JwtFilter extends OncePerRequestFilter {
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 if (jwtService.validateToken(jwt, userDetails)) {
+                    List<GrantedAuthority> authorities = jwtService.getRoles(jwt).stream()
+                                .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
+                                .collect(Collectors.toList());
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
-                            userDetails.getAuthorities());
+                            authorities);
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                }
+                } 
+            }else {
+                throw new AccessDeniedException("Token is not valid");
             }
             filterChain.doFilter(request, response);
-        } catch (IOException | SignatureException | ServletException e) {
-            // Captura y maneja las excepciones
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write(e.getMessage());
-        }
+       
     }
 }

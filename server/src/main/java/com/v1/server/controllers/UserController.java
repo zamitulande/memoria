@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,13 +19,14 @@ import com.v1.server.dtos.user.UsersDTO;
 import com.v1.server.services.UserService;
 
 @RestController
-@RequestMapping("/api/v1")
+@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("")   
     public ResponseEntity<Page<UsersDTO>> findAllUsers(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -32,27 +34,26 @@ public class UserController {
         return ResponseEntity.ok(userPage);
     }
 
-    @PutMapping("/users/update/{userId}")
+    @PutMapping("/update/{userId}")
     public ResponseEntity<UsersDTO> update(@PathVariable Long userId, @RequestBody UsersDTO userUpdateDTO) {
         UsersDTO updatedUserDTO = userService.updateUser(userId, userUpdateDTO);
         return ResponseEntity.ok(updatedUserDTO);
 
     }
 
-    @DeleteMapping("users/delete/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<?> deleteById(@PathVariable Long userId) {
-        System.out.println(userId);
         userService.deleteById(userId);
         return ResponseEntity.ok("Usuario eliminado");
     }
 
-    @PutMapping("/users/block/{userId}")
+    @PutMapping("/block/{userId}")
     public ResponseEntity<UsersDTO> blockUser(@PathVariable Long userId) {
         UsersDTO blockedUser = userService.blockUser(userId);
         return ResponseEntity.ok(blockedUser);
     }
 
-    @PutMapping("/users/unblock/{userId}")
+    @PutMapping("/unblock/{userId}")
     public ResponseEntity<UsersDTO> unblockUser(@PathVariable Long userId) {
         UsersDTO unblockedUser = userService.unblockUser(userId);
         return ResponseEntity.ok(unblockedUser);

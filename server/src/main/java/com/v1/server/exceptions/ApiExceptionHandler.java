@@ -12,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
+import com.v1.server.exceptions.customExceptions.AccessDeniedException;
 import com.v1.server.exceptions.customExceptions.ExpireTokenException;
 import com.v1.server.exceptions.customExceptions.NotFoundException;
 
@@ -70,5 +72,10 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErrorMessage> handleAuthenticationException (HttpServletRequest request, AuthenticationException ex){
         ErrorMessage errorMessage = new ErrorMessage("Tus credenciales son incorrectas o tu cuenta esta bloqueada, revisa tu correo", HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST, request.getRequestURI());
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 }
