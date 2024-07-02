@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
                 .firstLastName(user.getFirstLastName())
                 .secondLastName(user.getSecondLastName())
                 .contactNumber(user.getContactNumber())
+                .accountLocked(user.isAccountLocked())
                 .municipio(user.getMunicipio())
                 .department(user.getDepartment())
                 .email(user.getEmail())
@@ -40,12 +41,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsersDTO updateUser(Long id, UsersDTO userUpdateDTO) {
+    public UsersDTO updateUser(Long userId, UsersDTO userUpdateDTO) {
 
         if (!userUpdateDTO.getEmail().equals(userUpdateDTO.getConfirmEmail())) {
             throw new IllegalArgumentException("Los correos electronicos no coiciden");
         }
-        Optional<User> userOption = userRepository.findById(id);
+        Optional<User> userOption = userRepository.findById(userId);
         if (userOption.isPresent()) {
             User user = userOption.get();
             user.setFirstName(userUpdateDTO.getFirstName());
@@ -73,34 +74,36 @@ public class UserServiceImpl implements UserService {
 
             return updateDTO;
         } else {
-            throw new NotFoundException("User not found with id: " + id);
+            throw new NotFoundException("Usuario no encontrado.");
         }
     }
 
     @Override
-    public void deleteById(Long id) {
-        userRepository.deleteById(id);
+    public void deleteById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Usuario no encontrado."));
+        userRepository.delete(user);
     }
 
-    public boolean blockUser(Long userId) {
-        Optional<User> userOption = userRepository.findById(userId);
-        if (userOption.isPresent()) {
-            User user = userOption.get();
-            user.setAccountLocked(true);
-            userRepository.save(user);
-            return true;
-        }
-        return false;
+    public UsersDTO blockUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+        user.setAccountLocked(true);
+        userRepository.save(user);
+
+        UsersDTO usersDTO = UsersDTO.builder()
+                    .accountLocked(user.isAccountLocked())
+                    .build();
+        return usersDTO;
     }
 
-    public boolean unblockUser(Long userId) {
-        Optional<User> userOption = userRepository.findById(userId);
-        if (userOption.isPresent()) {
-            User user = userOption.get();
-            user.setAccountLocked(false);
-            userRepository.save(user);
-            return true;
-        }
-        return false;
+    public UsersDTO unblockUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+        user.setAccountLocked(false);
+        userRepository.save(user);
+
+        UsersDTO usersDTO = UsersDTO.builder()
+                    .accountLocked(user.isAccountLocked())
+                    .build();
+        return usersDTO;
     }
 }

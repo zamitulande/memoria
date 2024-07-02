@@ -32,36 +32,29 @@ public class UserController {
         return ResponseEntity.ok(userPage);
     }
 
-    @PutMapping("/users/update/{id}")
-    public ResponseEntity<UsersDTO> update(@PathVariable Long id, @RequestBody UsersDTO userUpdateDTO) {
-        UsersDTO updatedUserDTO = userService.updateUser(id, userUpdateDTO);
+    @PutMapping("/users/update/{userId}")
+    public ResponseEntity<UsersDTO> update(@PathVariable Long userId, @RequestBody UsersDTO userUpdateDTO) {
+        UsersDTO updatedUserDTO = userService.updateUser(userId, userUpdateDTO);
         return ResponseEntity.ok(updatedUserDTO);
 
     }
 
-    @DeleteMapping("users/delete/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Long id) {
-        userService.deleteById(id);
+    @DeleteMapping("users/delete/{userId}")
+    public ResponseEntity<?> deleteById(@PathVariable Long userId) {
+        System.out.println(userId);
+        userService.deleteById(userId);
         return ResponseEntity.ok("Usuario eliminado");
     }
 
     @PutMapping("/users/block/{userId}")
-    public ResponseEntity<Void> blockUser(@PathVariable Long userId) {
-        boolean isBlocked = userService.blockUser(userId);
-        if (isBlocked) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<UsersDTO> blockUser(@PathVariable Long userId) {
+        UsersDTO blockedUser = userService.blockUser(userId);
+        return ResponseEntity.ok(blockedUser);
     }
 
     @PutMapping("/users/unblock/{userId}")
-    public ResponseEntity<Void> unblockUser(@PathVariable Long userId) {
-        boolean isUnblocked = userService.unblockUser(userId);
-        if (isUnblocked) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<UsersDTO> unblockUser(@PathVariable Long userId) {
+        UsersDTO unblockedUser = userService.unblockUser(userId);
+        return ResponseEntity.ok(unblockedUser);
     }
 }

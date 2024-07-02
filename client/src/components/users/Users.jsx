@@ -27,9 +27,11 @@ const Users = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [stateUser, setStateUser]=useState(false);
 
   useEffect(() => {
     setIsLoading(true);
+    
     const fetchData = async () => {
       try {
         const config = {
@@ -42,14 +44,16 @@ const Users = () => {
         setTotalPages(response.data.totalPages);
         setTotalElements(response.data.totalElements)
         setIsLoading(false);
+        
       } catch (error) {
         console.log(error)
       }
     }
     fetchData();
   }, [currentPage])
-
+  
   const handleBlockUnblock = async (user) => {
+    setStateUser(true)
     const { userId, accountLocked } = user;
     const action = accountLocked ? 'unblock' : 'block';
     const actionText = accountLocked ? 'desbloque' : 'bloque';
@@ -59,7 +63,7 @@ const Users = () => {
           'Authorization': `Bearer ${getToken}`
         }
       };
-      const response = await axiosClient.put(`/users/${action}/${userId}`, {}, config);
+      const response = await axiosClient.put(`/users/${action}/${user.userId}`, {}, config);
       if (response.status === 200) {
         const updatedUsers = users.map((u) => 
           u.userId === userId ? { ...u, accountLocked: !accountLocked } : u
@@ -70,8 +74,7 @@ const Users = () => {
         Swal.fire('Error', `No se pudo ${actionText}ar el usuario`, 'error');
       }
     } catch (error) {
-      console.log(error)
-      Swal.fire('Error', `No se pudo ${actionText}ar el usuario`, 'error');
+      Swal.fire('Error', `${error.response.data.message}, no se pudo ${actionText}ar el usuario`, 'error');
     }
   };
 
@@ -132,10 +135,11 @@ const Users = () => {
         console.log('failed to delete user')
       }
     } catch (error) {
+      console.log(error)
       console.error('error deleting user' + error)
     }
   }
-  
+
   return (
     <Container>
       <Paper sx={{ width: '100%', overflow: 'auto' }}>
@@ -178,7 +182,7 @@ const Users = () => {
                       </Tooltip>
                       <Tooltip title={user.accountLocked ? "Desbloquear" : "Bloquear"}>
                         <IconButton onClick={() => handleBlockUnblock(user)}>
-                          {user.accountLocked ? <LockOpenIcon /> : <LockIcon />}
+                          {user.accountLocked ? <LockIcon /> : <LockOpenIcon />}
                         </IconButton>
                       </Tooltip>
                     </TableCell>

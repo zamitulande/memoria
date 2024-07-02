@@ -11,11 +11,11 @@ public interface UserService {
 
     Page<UsersDTO> findAllUsers(Pageable pageable);
 
-    UsersDTO updateUser(Long id, UsersDTO userUpdateDTO);
+    UsersDTO updateUser(Long userId, UsersDTO userUpdateDTO);
 
-    void deleteById(Long id);
+    void deleteById(Long userId);
 
-    boolean blockUser(Long userId);
+    UsersDTO blockUser(Long userId);
 
-    boolean unblockUser(Long userId);
+    UsersDTO unblockUser(Long userId);
 } 
