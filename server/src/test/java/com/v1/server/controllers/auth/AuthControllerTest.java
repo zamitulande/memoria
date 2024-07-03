@@ -13,6 +13,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
@@ -22,6 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.v1.server.dtos.user.AuthResponseDTO;
 import com.v1.server.dtos.user.AuthenticationRequestDTO;
 import com.v1.server.dtos.user.RegisterRequestDTO;
+import com.v1.server.dtos.user.ResetPasswordDTO;
+import com.v1.server.dtos.user.ResetPasswordSessionDTO;
 import com.v1.server.enumerate.Role;
 import com.v1.server.exceptions.ApiResponse;
 import com.v1.server.services.AuthService;
@@ -79,7 +82,7 @@ public class AuthControllerTest {
                             .build();
 
         AuthResponseDTO authResponseDTO = AuthResponseDTO.builder()
-                            .token("5454546546545454654687987987")
+                            .token("test-token")
                             .role("USER")
                             .userId(5058956L)
                             .userName("JUAN MANUEL")
@@ -93,5 +96,61 @@ public class AuthControllerTest {
                     .content(objectMapper.writeValueAsString(authenticationRequestDTO)))
                     .andExpect(status().isOk());
                     
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    public void testConfirmAccount() throws Exception {
+        String token = "test-token";
+
+        mockMvc.perform(get("/api/v1/auth/activate-account").with(csrf())
+                .param("token", token))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    public void testForgetPassword() throws Exception {
+        String identification = "test-identification";
+
+        when(authService.forgetPassword(any(String.class))).thenReturn(new ApiResponse(HttpStatus.OK.value(),"success"));
+
+        mockMvc.perform(post("/api/v1/auth/forget-password").with(csrf())
+                .param("identification", identification))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    public void testResetPassword() throws Exception {
+        ResetPasswordDTO request = ResetPasswordDTO.builder()
+                            .password("test-password")
+                            .confirmPassword("test-password")
+                            .token("test-token")
+                            .build();
+
+        when(authService.resetPassword(any(ResetPasswordDTO.class))).thenReturn(new ApiResponse(HttpStatus.OK.value(),"success"));
+
+        mockMvc.perform(post("/api/v1/auth/reset-password").with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+     @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    public void testResetPasswordSession() throws Exception {
+        ResetPasswordSessionDTO request = ResetPasswordSessionDTO.builder()
+                    .password("test-password")
+                    .confirmPassword("test-password")
+                    .userId(25L)
+                    .build();
+
+        when(authService.resetPasswordSesion(any(ResetPasswordSessionDTO.class))).thenReturn(new ApiResponse(HttpStatus.OK.value(),"success"));
+
+        mockMvc.perform(post("/api/v1/auth/reset-password-session").with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
     }
 }
