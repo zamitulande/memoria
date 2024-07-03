@@ -32,4 +32,6 @@ public class UserUpdateDTO {
 
     private String confirmEmail;
 
+    private String documentUrl;
+
 }

@@ -86,6 +86,7 @@ public class User implements UserDetails{
 
     private boolean enabled;
 
+    private String documentUrl;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -34,5 +34,7 @@ public class UsersDTO {
     private String confirmEmail;
 
     private boolean accountLocked;
+
+    private String documentUrl;
     
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import { Box, Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react'
@@ -20,7 +20,6 @@ const FormUser = ({ action }) => {
     const { isCellPhone, passwordValid, } = UseValidation();
     const navigate = useNavigate();
     const getFormEditar = useSelector((state) => state.user.formEdit)
-    const gerUserId = useSelector((state) => state.user.userId)
     const getToken = useSelector((state) => state.user.token)
 
     const [open, setOpen] = useState(false);
@@ -41,6 +40,7 @@ const FormUser = ({ action }) => {
     const [city, setCity] = useState("");
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+    const [file, setFile] = useState({})
 
     const [recaptchaIsValid, setRecaptchaIsValid] = useState(false)
     const [conditios, setConditios] = useState(false);
@@ -116,7 +116,29 @@ const FormUser = ({ action }) => {
     const handleSubmitRegister = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        axiosClient.post('/auth/register', user)
+
+        const formData = new FormData();
+        formData.append('identification', identification)
+        formData.append('email', email)
+        formData.append('confirmEmail', confirmEmail)
+        formData.append('firstName', firstName)
+        formData.append('secondName', secondName)
+        formData.append('firstLastName', firstLastName)
+        formData.append('secondLastName', secondLastName)
+        formData.append('contactNumber', contactNumber)
+        formData.append('department', department)
+        formData.append('municipio', municipio)
+        formData.append('password', password)
+        formData.append('confirmPassword', confirmPassword)
+        formData.append('document', file[0]);
+
+        const config = {
+            headers: {
+                'content-Type': 'multipart/form-data',
+            }
+        }
+
+        axiosClient.post('/auth/register', formData, config)
             .then((response) => {
                 const messageResponse = response.data.message;
                 resetForm();
@@ -339,7 +361,7 @@ const FormUser = ({ action }) => {
                     </Grid>
                     <Grid item xs={4}>
                         <SelectDepartment
-                            value={action === 'register'  ? department : getFormEditar.department}
+                            value={action === 'register' ? department : getFormEditar.department}
                             onChange={(e, item) => {
                                 setDepartment(e.target.value);
                             }}
@@ -347,9 +369,9 @@ const FormUser = ({ action }) => {
                     </Grid>
                     <Grid item xs={4}>
                         <SelectCity
-                            value={action === 'register'  ? city : getFormEditar.municipio}
+                            value={action === 'register' ? city : getFormEditar.municipio}
                             setCity={setCity}
-                            department={action === 'register'  ? department : getFormEditar.department}
+                            department={action === 'register' ? department : getFormEditar.department}
                         />
                     </Grid>
                     <Grid item xs={4}>
@@ -424,6 +446,21 @@ const FormUser = ({ action }) => {
                                                 </IconButton>
                                             </InputAdornment>
                                         }
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid>
+                                <FormControl variant="standard" fullWidth >
+                                    <InputLabel shrink>
+                                        Consentimiento informado
+                                    </InputLabel>
+                                    <Input
+                                        id="document"
+                                        name="document"
+                                        type="file"
+                                        onChange={(e) => setFile(e.target.files)}
+                                        size="small"
+                                        required
                                     />
                                 </FormControl>
                             </Grid>
