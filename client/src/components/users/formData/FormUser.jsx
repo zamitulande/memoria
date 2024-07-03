@@ -1,23 +1,20 @@
 import { Box, Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
 import React, { useState } from 'react'
 import axiosClient from '../../../config/Axios'
-import UseValidation from '../../../helpers/hooks/UseValidation'
+
 import Swal from 'sweetalert2';
 import Recaptcha from '../../../helpers/components/Recaptcha';
-import Conditions from '../../../helpers/components/Conditions';
-import SelectDepartment from '../../../helpers/components/SelectDepartment';
-import SelectCity from '../../../helpers/components/SelectCity';
+
+
 import { useSelector } from 'react-redux';
 import Loading from '../../../helpers/components/Loading';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
+import Form from './Form';
 
 const FormUser = ({ action }) => {
 
-    const { isCellPhone, passwordValid, } = UseValidation();
     const navigate = useNavigate();
     const getFormEditar = useSelector((state) => state.user.formEdit)
     const getToken = useSelector((state) => state.user.token)
@@ -98,20 +95,6 @@ const FormUser = ({ action }) => {
             );
         }
     }
-    const user = {
-        identification,
-        email,
-        confirmEmail,
-        firstName,
-        secondName,
-        firstLastName,
-        secondLastName,
-        contactNumber,
-        department,
-        municipio,
-        password,
-        confirmPassword
-    }
 
     const handleSubmitRegister = (e) => {
         e.preventDefault();
@@ -131,13 +114,11 @@ const FormUser = ({ action }) => {
         formData.append('password', password)
         formData.append('confirmPassword', confirmPassword)
         formData.append('document', file[0]);
-
         const config = {
             headers: {
                 'content-Type': 'multipart/form-data',
             }
         }
-
         axiosClient.post('/auth/register', formData, config)
             .then((response) => {
                 const messageResponse = response.data.message;
@@ -200,306 +181,53 @@ const FormUser = ({ action }) => {
         });
     }
 
-    // Función para verificar la longitud mínima
-    const minLength = (str, length) => {
-        return str.length >= length;
-    };
-
-    // Función para verificar la longitud máxima
-    const maxLength = (str, length) => {
-        return str.length <= length;
-    };
-
-    // funcion para colocar primera letra en mayusculas
-    const capitalizeFirstLetter = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    };
+   
 
     return (
         <Box position="relative">
-            <form onSubmit={action === 'register' ? handleSubmitRegister : handleSubmitUpdate}>
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                    <Grid item xs={4}>
-                        <TextField
-                            label="Identificacion"
-                            color='textField'
-                            variant="outlined"
-                            name="identification"
-                            type='number'
-                            value={action === 'register' ? identification : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.identification : undefined}
-                            onChange={(e) => {
-                                const value = e.target.value.slice(0, 12);
-                                setIdentification(value)
-                            }}
-                            fullWidth
-                            helperText={
-                                (!minLength(identification, 8) && identification)
-                                    ? "Este campo debe tener al menos 8 caracteres"
-                                    : ""
-                            }
-                            FormHelperTextProps={{ sx: { color: "error.main" } }}
-                            required />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            label="Correo electronico"
-                            color='textField'
-                            variant="outlined"
-                            name="email"
-                            type='email'
-                            value={action === 'register' ? email : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.email : undefined}
-                            onChange={(e) => setEmail(e.target.value)}
-                            fullWidth
-                            required />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            label="Confirmar correo electronico"
-                            color='textField'
-                            variant="outlined"
-                            name="confirmEmail"
-                            type='email'
-                            value={action === 'register' ? confirmEmail : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.confirmEmail : undefined}
-                            onChange={(e) => setConfirmEmail(e.target.value)}
-                            fullWidth
-                            required />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            label="Primer nombre"
-                            color='textField'
-                            variant="outlined"
-                            name="firstName"
-                            type='text'
-                            value={action === 'register' ? firstName : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.firstName : undefined}
-                            onChange={(e) => setFirstName(capitalizeFirstLetter(e.target.value))}
-                            fullWidth
-                            required
-                            inputProps={{ maxLength: 11 }}
-                            helperText={
-                                (!minLength(firstName, 3) && firstName)
-                                    ? "Este campo debe tener al menos 3 caracteres"
-                                    : (!maxLength(firstName, 10) && firstName)
-                                        ? "Este campo no puede ser mayor a 10 caracteres"
-                                        : ""
-                            }
-                            FormHelperTextProps={{ sx: { color: "error.main" } }}
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            label="Segundo nombre"
-                            color='textField'
-                            variant="outlined"
-                            name="secondName"
-                            type='text'
-                            value={action === 'register' ? secondName : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.secondName : undefined}
-                            onChange={(e) => setSecondName(capitalizeFirstLetter(e.target.value))}
-                            fullWidth
-                            inputProps={{ maxLength: 11 }}
-                            helperText={
-                                (!minLength(secondName, 3) && secondName)
-                                    ? "Este campo debe tener al menos 3 caracteres"
-                                    : (!maxLength(secondName, 10) && secondName)
-                                        ? "Este campo no puede ser mayor a 10 caracteres"
-                                        : ""
-                            }
-                            FormHelperTextProps={{ sx: { color: "error.main" } }}
-                        />
-
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            label="Primer apellido"
-                            color='textField'
-                            variant="outlined"
-                            name="firstLastName"
-                            type='text'
-                            value={action === 'register' ? firstLastName : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.firstLastName : undefined}
-                            onChange={(e) => setFirstLastName(capitalizeFirstLetter(e.target.value))}
-                            fullWidth
-                            required
-                            inputProps={{ maxLength: 11 }}
-                            helperText={
-                                (!minLength(firstLastName, 3) && firstLastName)
-                                    ? "Este campo debe tener al menos 3 caracteres"
-                                    : (!maxLength(firstLastName, 10) && firstLastName)
-                                        ? "Este campo no puede ser mayor a 10 caracteres"
-                                        : ""
-                            }
-                            FormHelperTextProps={{ sx: { color: "error.main" } }}
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            label="Segundo apellido"
-                            color='textField'
-                            variant="outlined"
-                            name="secondLastName"
-                            type='text'
-                            value={action === 'register' ? secondLastName : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.secondLastName : undefined}
-                            onChange={(e) => setSecondLastName(capitalizeFirstLetter(e.target.value))}
-                            fullWidth
-                            inputProps={{ maxLength: 11 }}
-                            helperText={
-                                (!minLength(secondLastName, 3) && secondLastName)
-                                    ? "Este campo debe tener al menos 3 caracteres"
-                                    : (!maxLength(secondLastName, 10) && secondLastName)
-                                        ? "Este campo no puede ser mayor a 10 caracteres"
-                                        : ""
-                            }
-                            FormHelperTextProps={{ sx: { color: "error.main" } }}
-                        />
-
-                    </Grid>
-                    <Grid item xs={4}>
-                        <SelectDepartment
-                            value={action === 'register' ? department : getFormEditar.department}
-                            onChange={(e, item) => {
-                                setDepartment(e.target.value);
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <SelectCity
-                            value={action === 'register' ? city : getFormEditar.municipio}
-                            setCity={setCity}
-                            department={action === 'register' ? department : getFormEditar.department}
-                        />
-                    </Grid>
-                    <Grid item xs={4}>
-                        <TextField
-                            label="Celular"
-                            color='textField'
-                            type='text'
-                            variant="outlined"
-                            value={action === 'register' ? contactNumber : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.contactNumber : undefined}
-                            onChange={(e) => {
-                                const value = e.target.value.slice(0, 10);
-                                setContactNumber(value)
-                            }}
-                            fullWidth
-                            helperText={
-                                !isCellPhone(contactNumber) && contactNumber
-                                    ? "Número de celular incorrecto"
-                                    : ""
-                            }
-                            FormHelperTextProps={{ sx: { color: "error.main" } }}
-                            required
-                        />
-                    </Grid>
-                    {action === "register" && (
-                        <>
-                            <Grid item xs={4} sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                <FormControl variant="outlined" color='textField' fullWidth required>
-                                    <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
-                                    <OutlinedInput
-                                        type={showPassword ? 'text' : 'password'}
-                                        value={password}
-                                        name='password'
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        label="Contraseña"
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={() => setShowPassword((show) => !show)}
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                    />
-                                    <FormHelperText error>
-                                        {!passwordValid(password) && password
-                                            ? "La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un carácter especial."
-                                            : ""}
-                                    </FormHelperText>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <FormControl variant="outlined" color='textField' fullWidth required>
-                                    <InputLabel htmlFor="outlined-adornment-password">Confirmar contraseña</InputLabel>
-                                    <OutlinedInput
-                                        type={showPasswordConfirm ? 'text' : 'password'}
-                                        value={confirmPassword}
-                                        name='confirmPassword'
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        label="Confirmar contraseña"
-                                        endAdornment={
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    aria-label="toggle password visibility"
-                                                    onClick={() => setShowPasswordConfirm((show) => !show)}
-                                                    edge="end"
-                                                >
-                                                    {showPasswordConfirm ? <VisibilityOff /> : <Visibility />}
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid>
-                                <FormControl variant="standard" fullWidth >
-                                    <InputLabel shrink>
-                                        Consentimiento informado
-                                    </InputLabel>
-                                    <Input
-                                        id="document"
-                                        name="document"
-                                        type="file"
-                                        onChange={(e) => setFile(e.target.files)}
-                                        size="small"
-                                        required
-                                    />
-                                </FormControl>
-                            </Grid>
-                        </>
-                    )}
-                </Grid>
-                <Grid
-                    container
-                    mt={6}
-                    direction="column"
-                    justifyContent="space-around"
-                    alignItems="center"
-                >
-                    {action === 'register' ?
-                        <Grid >
-                            <FormControlLabel
-                                value="end"
-                                control={<Checkbox color='secondary' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}
-                                labelPlacement="end"
-                            />
-                            <Button
-                                color='secondary'
-                                onClick={(e) => { setOpen(true) }}
-                                size="small">
-                                Terminos y condiciones
-                            </Button>
-                            <Conditions open={open} setOpen={setOpen} />
-                        </Grid> : null
-                    }
-                    <Grid mt={2}>
-                        {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
-                    </Grid>
-                    <Grid mt={4}>
-                        <Button type="submit" color='secondary' disabled={action === 'register' ? !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
-                        {action === 'update' ? <Link to="/usuarios"> <Button color='secondary'>Cancelar</Button></Link> : null}
-                        {/* <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios || isDisable()}>register</Button> */}
-                    </Grid>
-                </Grid>
-            </form>
+            <Form
+                open={open}
+                setOpen={setOpen} 
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+                showPasswordConfirm={showPasswordConfirm}
+                setShowPasswordConfirm={setShowPasswordConfirm}
+                identification={identification} 
+                setIdentification={setIdentification}
+                email={email} 
+                setEmail={setEmail}
+                confirmEmail={confirmEmail} 
+                setConfirmEmail={setConfirmEmail}
+                firstName={firstName} 
+                setFirstName={setFirstName}
+                secondName={secondName} 
+                setSecondName={setSecondName}
+                firstLastName={firstLastName} 
+                setFirstLastName={setFirstLastName}
+                secondLastName={secondLastName} 
+                setSecondLastName={setSecondLastName}
+                department={department} 
+                setDepartment={setDepartment}
+                contactNumber={contactNumber} 
+                setContactNumber={setContactNumber}
+                city={city} 
+                setCity={setCity}
+                password={password} 
+                setPassword={setPassword}
+                confirmPassword={confirmPassword} 
+                setConfirmPassword={setConfirmPassword}
+                file={file} 
+                setFile={setFile}
+                recaptchaIsValid={recaptchaIsValid} 
+                setRecaptchaIsValid={setRecaptchaIsValid}
+                conditios={conditios} 
+                setConditios={setConditios}
+                resetForm={resetForm}
+                isDisable={isDisable}
+                handleSubmitRegister={handleSubmitRegister}
+                handleSubmitUpdate={handleSubmitUpdate}
+                action={action}
+                />
             <Loading isLoading={isLoading} />
         </Box >
 

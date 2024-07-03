@@ -1,4 +1,4 @@
-import { Card, Container, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box } from '@mui/material'
+import { Card, Container, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert } from '@mui/material'
 import { Link } from 'react-router-dom';
 import slider1 from '../../assets/slider/slider1.png'
 import slider2 from '../../assets/slider/slider2.png'
@@ -7,15 +7,19 @@ import slider4 from '../../assets/slider/slider4.png'
 import slider5 from '../../assets/slider/slider5.png'
 import LoadingGif from '../../assets/loading/loading.gif'
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Repository = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(()=>{
-    setTimeout(()=>{
+  const login = useSelector((state) => state.user.login)
+  const role = useSelector((state) => state.user.role)
+
+  useEffect(() => {
+    setTimeout(() => {
       setIsLoading(!isLoading)
-    },1000)
+    }, 1000)
   }, [])
 
   const images = [
@@ -26,13 +30,41 @@ const Repository = () => {
     { src: slider5, title: "Mitos y leyendas", description: "Cuentos ancestrales llenos de suspenso.", link: "/page5" },
     { src: slider1, title: "Artesanos", description: "Historias contadas en sus manos.", link: "/page5" }
   ];
+
+  let message = "";
+
+  if (login == true && role == "ADMIN") {
+    message = <Grid container spacing={1} justifyContent="space-evenly" mb={2}>
+      <Grid item>
+        <Alert severity="info">A continuación puede registrar el testimonio, debera tener los datos de la persona que da el testimonio.</Alert>
+      </Grid>
+      <Grid item>
+        <Button variant="contained" color="secondary" size="large" >
+          <span>Registrar Testimonio</span>
+        </Button>
+      </Grid>
+    </Grid>
+  } else if(login == true && role == "USER"){
+    message = <Grid container spacing={1} justifyContent="space-evenly" mb={2}>
+      <Grid item>
+        <Alert severity="info">A continuación puede registrar su testimonio</Alert>
+      </Grid>
+      <Grid item>
+        <Button variant="contained" color="secondary" size="large">
+          <span>Registrar Testimonio</span>
+        </Button>
+      </Grid>
+    </Grid>
+  }
+
   return (
     <Container>
+      {message}
       <Grid container spacing={1} mb={6}>
         {images.map((image, index) => (
           <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
             <Card sx={{
-              boxShadow: 8, 
+              boxShadow: 8,
               transition: 'transform 0.3s, box-shadow 0.3s',
               '&:hover': {
                 transform: 'scale(1.05)',
@@ -66,15 +98,15 @@ const Repository = () => {
           </Grid>
         ))}
       </Grid>
-      {
+      {/* {
                 isLoading && (
                     <Box className="loading-overlay">
                         <img src={LoadingGif} alt="Loading..." />
                     </Box>
                 )
-            }
+            } */}
     </Container>
-    
+
   )
 }
 
