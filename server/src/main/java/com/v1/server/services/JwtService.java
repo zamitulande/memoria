@@ -52,7 +52,14 @@ public class JwtService {
 
     public List<String> getRoles(String token) {
         Claims claims = getAllClaims(token);
-        return claims.get("roles", List.class);
+        List<?> roles = claims.get("roles", List.class);
+        List<String> rolesStrings = new ArrayList<>();
+        for (Object role : roles) {
+            if (role instanceof String) {
+                rolesStrings.add((String) role);
+            }
+        }        
+        return rolesStrings;
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {

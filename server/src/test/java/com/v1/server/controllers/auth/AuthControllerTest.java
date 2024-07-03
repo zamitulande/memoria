@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -18,6 +19,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.v1.server.dtos.user.AuthResponseDTO;
+import com.v1.server.dtos.user.AuthenticationRequestDTO;
 import com.v1.server.dtos.user.RegisterRequestDTO;
 import com.v1.server.enumerate.Role;
 import com.v1.server.exceptions.ApiResponse;
@@ -65,5 +68,30 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isOk()); 
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = {"USER"})
+    public void testAuthenticate() throws Exception {
+        AuthenticationRequestDTO authenticationRequestDTO = AuthenticationRequestDTO.builder()
+                            .email("pepito@correo.com")
+                            .password("qwer*1234")
+                            .build();
+
+        AuthResponseDTO authResponseDTO = AuthResponseDTO.builder()
+                            .token("5454546546545454654687987987")
+                            .role("USER")
+                            .userId(5058956L)
+                            .userName("JUAN MANUEL")
+                            .build();
+
+        when(authService.authenticate(any(AuthenticationRequestDTO.class)))
+                    .thenReturn(ResponseEntity.ok(authResponseDTO));
+
+        mockMvc.perform(post("/api/v1/auth/authenticate").with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(authenticationRequestDTO)))
+                    .andExpect(status().isOk());
+                    
     }
 }
