@@ -4,7 +4,7 @@ services:
 #mysql Service
   mysqldb:
     image: mysql:8.0.1
-    container_name: db_oral
+    container_name: oral_db
     restart: unless-stopped
     env_file: ./server/.env
     ports:
@@ -32,18 +32,18 @@ services:
       - app-network
 
 #production
-#client Service
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    container_name: oral_client
-    ports:
-      - "3000:80"
-    depends_on:
-      - server
-    networks:
-      - app-network
+# #client Service
+#   client:
+#     build:
+#       context: ./client
+#       dockerfile: Dockerfile
+#     container_name: oral_client
+#     ports:
+#       - "3000:80"
+#     depends_on:
+#       - server
+#     networks:
+#       - app-network
 
 
 #phpMyAdmin Service

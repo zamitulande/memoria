@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Activation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 10px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .activation-code {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .activation-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .activation-link a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Activacion de Cuenta</h1>
+    <p style="font-size: 24px;" th:text="'Hola ' + ${name} + ','"></p>
+    <p style="font-size: 24px;">Gracias por registrarse en nuestra plataforma Memoria Oral, a continuacion ha recibido un codigo, haga click en el boton Activar Tu Cuenta e ingrese el codigo:</p>
+    <div class="activation-code"><span th:text="${activation_code}"></span></div>
+    <div class="activation-link" style="font-size: 24px;">
+        <a th:href="${confirmationUrl}" target="_blank">Activar Tu Cuenta</a>
+    </div>
+</div>
+</body>
+</html>
