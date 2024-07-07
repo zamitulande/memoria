@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Form from './Form';
 
-const FormUser = ({ action }) => {
+const FormUser = ({ action, role }) => {
 
     const navigate = useNavigate();
     const getFormEditar = useSelector((state) => state.user.formEdit)
@@ -47,6 +47,16 @@ const FormUser = ({ action }) => {
         const { name } = city;
         municipio = name;
     }
+
+      // Función para verificar la longitud mínima
+      const minLength = (str, length) => {
+        return str.length >= length;
+    };
+
+    // Función para verificar la longitud máxima
+    const maxLength = (str, length) => {
+        return str.length <= length;
+    }; 
 
     const resetForm = () => {
         setIdentification("")
@@ -96,7 +106,46 @@ const FormUser = ({ action }) => {
         }
     }
 
-    const handleSubmitRegister = (e) => {
+    const handleSubmitRegisterUser = (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        const user = {
+            identification,
+            email,
+            confirmEmail,
+            firstName,
+            secondName,
+            firstLastName,
+            secondLastName,
+            contactNumber,
+            department,
+            municipio,
+            password,
+            confirmPassword
+        }
+        axiosClient.post('/auth/register', user)
+            .then((response) => {
+                const messageResponse = response.data.message;
+                resetForm();
+                setIsLoading(false)
+                Swal.fire({
+                    position: "bottom-end",
+                    icon: "success",
+                    title: messageResponse,
+                });
+            })
+            .catch((error) => {
+                console.log(error)
+                setIsLoading(false);
+                const errorMessage = error.response.data.message
+                Swal.fire({
+                    icon: "error",
+                    text: errorMessage,
+                });
+            });
+    }
+
+    const handleSubmitRegisterAdmin = (e) => {
         e.preventDefault();
         setIsLoading(true);
 
@@ -119,7 +168,7 @@ const FormUser = ({ action }) => {
                 'content-Type': 'multipart/form-data',
             }
         }
-        axiosClient.post('/auth/register', formData, config)
+        axiosClient.post('/users/register', formData, config)
             .then((response) => {
                 const messageResponse = response.data.message;
                 resetForm();
@@ -131,6 +180,7 @@ const FormUser = ({ action }) => {
                 });
             })
             .catch((error) => {
+                console.log(error)
                 setIsLoading(false);
                 const errorMessage = error.response.data.message
                 Swal.fire({
@@ -172,6 +222,7 @@ const FormUser = ({ action }) => {
                     Swal.fire("¡Guardado!", "Los cambios han sido guardados exitosamente.", "success");
                     navigate('/usuarios');
                 } catch (error) {
+                    console.log(error)
                     Swal.fire("Error", error.response.data.message, "error");
                 }
             } else if (result.isDenied) {
@@ -180,8 +231,6 @@ const FormUser = ({ action }) => {
             }
         });
     }
-
-   
 
     return (
         <Box position="relative">
@@ -224,9 +273,13 @@ const FormUser = ({ action }) => {
                 setConditios={setConditios}
                 resetForm={resetForm}
                 isDisable={isDisable}
-                handleSubmitRegister={handleSubmitRegister}
+                handleSubmitRegisterUser={handleSubmitRegisterUser}
                 handleSubmitUpdate={handleSubmitUpdate}
                 action={action}
+                role={role}
+                minLength={minLength}
+                maxLength={maxLength}
+                handleSubmitRegisterAdmin={handleSubmitRegisterAdmin}
                 />
             <Loading isLoading={isLoading} />
         </Box >

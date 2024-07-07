@@ -6,6 +6,8 @@ import SelectCity from '../../../helpers/components/SelectCity';
 import { Link } from 'react-router-dom';
 import UseValidation from '../../../helpers/hooks/UseValidation'
 import Conditions from '../../../helpers/components/Conditions';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 
 
@@ -43,10 +45,17 @@ const Form = ({ open,
     conditios,
     setConditios,
     isDisable,
-    handleSubmitRegister,
+    handleSubmitRegisterUser,
     handleSubmitUpdate,
-    action, }) => {
+    action,
+    role,
+    minLength,
+    maxLength,
+    handleSubmitRegisterAdmin
+}) => {
 
+    const login = useSelector((state) => state.user.login)
+    console.log(login)
     const { isCellPhone, passwordValid, } = UseValidation();
 
     // funcion para colocar primera letra en mayusculas
@@ -54,18 +63,42 @@ const Form = ({ open,
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
-     // Función para verificar la longitud mínima
-     const minLength = (str, length) => {
-        return str.length >= length;
+    let imagen = "";
+    
+    if(login){
+        if(action === 'register' && role === 'ADMIN'){
+            imagen =  <Grid>
+            <FormControl variant="standard" fullWidth >
+                <InputLabel shrink>
+                    Consentimiento informado
+                </InputLabel>
+                <Input
+                    id="document"
+                    name="document"
+                    type="file"
+                    onChange={(e) => setFile(e.target.files)}
+                    size="small"
+                />
+            </FormControl>
+        </Grid>
+        }
+    }
+    
+    const determineSubmitHandler = () => {
+        switch (true) {
+            case action === 'register' && role === 'ADMIN':
+                return handleSubmitRegisterAdmin;
+            case action === 'register':
+                return handleSubmitRegisterUser;
+            case action === 'update':
+                return handleSubmitUpdate;
+            default:
+                return (event) => event.preventDefault(); // Default handler
+        }
     };
 
-    // Función para verificar la longitud máxima
-    const maxLength = (str, length) => {
-        return str.length <= length;
-    };   
-
     return (
-        <form onSubmit={action === 'register' ? handleSubmitRegister : handleSubmitUpdate}>
+        <form onSubmit={determineSubmitHandler()}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                 <Grid item xs={4}>
                     <TextField
@@ -297,21 +330,7 @@ const Form = ({ open,
                                 />
                             </FormControl>
                         </Grid>
-                        <Grid>
-                            <FormControl variant="standard" fullWidth >
-                                <InputLabel shrink>
-                                    Consentimiento informado
-                                </InputLabel>
-                                <Input
-                                    id="document"
-                                    name="document"
-                                    type="file"
-                                    onChange={(e) => setFile(e.target.files)}
-                                    size="small"
-                                    required
-                                />
-                            </FormControl>
-                        </Grid>
+                        {imagen}
                     </>
                 )}
             </Grid>

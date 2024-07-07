@@ -1,5 +1,5 @@
 import { Card, Container, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert } from '@mui/material'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import slider1 from '../../assets/slider/slider1.png'
 import slider2 from '../../assets/slider/slider2.png'
 import slider3 from '../../assets/slider/slider3.png'
@@ -11,10 +11,16 @@ import { useSelector } from 'react-redux';
 
 const Repository = () => {
 
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(true);
 
   const login = useSelector((state) => state.user.login)
   const role = useSelector((state) => state.user.role)
+
+  const handleRegister = ()=>{
+    navigate('/usuarios/registrar');
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -39,7 +45,7 @@ const Repository = () => {
         <Alert severity="info">A continuación puede registrar el testimonio, debera tener los datos de la persona que da el testimonio.</Alert>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="secondary" size="large" >
+        <Button variant="contained" color="secondary" size="large"  onClick={handleRegister} >
           <span>Registrar Testimonio</span>
         </Button>
       </Grid>

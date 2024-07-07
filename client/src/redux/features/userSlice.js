@@ -33,6 +33,7 @@ export const userSlice = createSlice({
             state.login = action.payload;
             if (!action.payload) {
                 eliminarTokenJWT();
+                state.role = "";
             }
         },
         setRole: (state, action)=>{

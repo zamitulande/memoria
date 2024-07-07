@@ -25,26 +25,12 @@ services:
     ports:
       - "6868:8080"
     volumes:
+      - ./server:/app
       - .m2:/root/.m2
     depends_on:
       - mysqldb
     networks:
       - app-network
-
-#production
-# #client Service
-#   client:
-#     build:
-#       context: ./client
-#       dockerfile: Dockerfile
-#     container_name: oral_client
-#     ports:
-#       - "3000:80"
-#     depends_on:
-#       - server
-#     networks:
-#       - app-network
-
 
 #phpMyAdmin Service
   phpmyadmin:

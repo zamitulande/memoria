@@ -1,24 +1,164 @@
 package com.v1.server.services.impl;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.v1.server.dtos.user.UsersDTO;
+import com.v1.server.entities.Token;
 import com.v1.server.entities.User;
+import com.v1.server.enumerate.EmailTemplateName;
 import com.v1.server.enumerate.Role;
+import com.v1.server.exceptions.ApiResponse;
 import com.v1.server.exceptions.customExceptions.NotFoundException;
+import com.v1.server.repositories.TokenRepository;
 import com.v1.server.repositories.UserRepository;
+import com.v1.server.services.EmailService;
 import com.v1.server.services.UserService;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    private PasswordEncoder passwordEncoder;
+
+    @Value("${activation-url:activationUrl}")
+    private String activationUrl;
+
+    @Value("${characters-token:characters}")
+    private String characters;
+
+    //registra admin
+    @Override
+    public ApiResponse register(
+            String firstName,
+            String secondName,
+            String firstLastName,
+            String secondLastName,
+            String contactNumber,
+            String department,
+            String municipio,
+            String identification,
+            String email,
+            String confirmEmail,
+            String password,
+            String confirmPassword,
+            MultipartFile document
+            ) throws MessagingException, IOException {
+
+        if (!password.equals(confirmPassword)) {
+            throw new IllegalArgumentException("Las contraseñas no coinciden");
+        }
+        if (!email.equals(confirmEmail)) {
+            throw new IllegalArgumentException("Los correos electronicos no coiciden");
+        }
+
+        String documentUrl = saveUploadedFile(document);
+
+        var user = User.builder()
+                .firstName(firstName)
+                .secondName(secondName)
+                .firstLastName(firstLastName)
+                .secondLastName(secondLastName)
+                .identification(identification)
+                .contactNumber(contactNumber)
+                .department(department)
+                .municipio(municipio)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .accountLocked(false)
+                .enabled(false)
+                .documentUrl(documentUrl)
+                .role(Role.USER)
+                .build();
+
+        User savedUser = userRepository.save(user);
+        sendValidationEmail(savedUser);
+        String message = "Usuario creado satisfactoriamente";
+        return new ApiResponse(200, message);
+
+    }
+
+    private String saveUploadedFile(MultipartFile file) throws IOException {
+
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+
+        String uploadDir = "./server/src/main/resources/static/consentimiento-informado";
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        Path filePath = uploadPath.resolve(fileName);
+        try (OutputStream os = new FileOutputStream(filePath.toFile())) {
+            os.write(file.getBytes());
+        }
+        return fileName;
+    }
+
+    private void sendValidationEmail(User user) throws MessagingException {
+        var newToken = generateAndSaveActivationToken(user);
+
+        // send email
+        emailService.sendEmail(
+                user.getEmail(),
+                user.getUsername(),
+                user.getFirstName(),
+                EmailTemplateName.activate_account,
+                activationUrl,
+                newToken,
+                "Account activation");
+    }
+
+    private String generateAndSaveActivationToken(User user) {
+        // generate token
+        String generateToken = generateActivationCode(6);
+        var token = Token.builder()
+                .token(generateToken)
+                .createAt(LocalDateTime.now())
+                .expirateAt(LocalDateTime.now().plusDays(8))
+                .user(user)
+                .build();
+
+        tokenRepository.save(token);
+        return generateToken;
+    }
+
+    // generar codigo para asignar al token
+    private String generateActivationCode(int length) {
+        StringBuilder codebBuilder = new StringBuilder();
+        SecureRandom secureRandom = new SecureRandom();
+        for (int i = 0; i < length; i++) {
+            int randomIndex = secureRandom.nextInt(characters.length());
+            codebBuilder.append(characters.charAt(randomIndex));
+        }
+        return codebBuilder.toString();
+    }
+
 
     @Override
     public Page<UsersDTO> findAllUsers(Pageable pageable) {

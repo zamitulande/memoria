@@ -1,15 +1,8 @@
 package com.v1.server.services.impl;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -21,10 +14,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.v1.server.dtos.user.AuthResponseDTO;
 import com.v1.server.dtos.user.AuthenticationRequestDTO;
+import com.v1.server.dtos.user.RegisterRequestDTO;
 import com.v1.server.dtos.user.ResetPasswordDTO;
 import com.v1.server.dtos.user.ResetPasswordSessionDTO;
 import com.v1.server.entities.Token;
@@ -63,47 +56,31 @@ public class AuthServiceImpl implements AuthService {
     @Value("${characters-token:characters}")
     private String characters;
 
+    //register user
     @Override
-    public ApiResponse register(
-            String firstName,
-            String secondName,
-            String firstLastName,
-            String secondLastName,
-            String contactNumber,
-            String department,
-            String municipio,
-            String identification,
-            String email,
-            String confirmEmail,
-            String password,
-            String confirmPassword,
-            MultipartFile document
-            ) throws MessagingException, IOException {
-                System.out.println(password+"/"+confirmPassword);
+    public ApiResponse register(RegisterRequestDTO request) throws MessagingException {
 
-        if (!password.equals(confirmPassword)) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
             throw new IllegalArgumentException("Las contraseñas no coinciden");
         }
-        if (!email.equals(confirmEmail)) {
+        if (!request.getEmail().equals(request.getConfirmEmail())) {
             throw new IllegalArgumentException("Los correos electronicos no coiciden");
         }
 
-        String documentUrl = saveUploadedFile(document);
-
         var user = User.builder()
-                .firstName(firstName)
-                .secondName(secondName)
-                .firstLastName(firstLastName)
-                .secondLastName(secondLastName)
-                .identification(identification)
-                .contactNumber(contactNumber)
-                .department(department)
-                .municipio(municipio)
-                .email(email)
-                .password(passwordEncoder.encode(password))
+                .userId(request.getUserId())
+                .firstName(request.getFirstName())
+                .secondName(request.getSecondName())
+                .firstLastName(request.getFirstLastName())
+                .secondLastName(request.getSecondLastName())
+                .identification(request.getIdentification())
+                .contactNumber(request.getContactNumber())
+                .department(request.getDepartment())
+                .municipio(request.getMunicipio())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .accountLocked(false)
                 .enabled(false)
-                .documentUrl(documentUrl)
                 .role(Role.USER)
                 .build();
 
@@ -112,22 +89,6 @@ public class AuthServiceImpl implements AuthService {
         String message = "Usuario creado satisfactoriamente";
         return new ApiResponse(200, message);
 
-    }
-
-    private String saveUploadedFile(MultipartFile file) throws IOException {
-
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-
-        String uploadDir = "./server/src/main/resources/static/consentimiento-informado";
-        Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        Path filePath = uploadPath.resolve(fileName);
-        try (OutputStream os = new FileOutputStream(filePath.toFile())) {
-            os.write(file.getBytes());
-        }
-        return fileName;
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
