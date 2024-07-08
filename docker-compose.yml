@@ -10,7 +10,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - db:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     networks:
       - app-network
 
@@ -26,11 +26,20 @@ services:
       - "6868:8080"
     volumes:
       - ./server:/app
-      - .m2:/root/.m2
+      - server-cache:/root/.m2
     depends_on:
       - mysqldb
     networks:
       - app-network
+  
+  #client Service
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+      - client-cache:/root/.cache/vite
 
 #phpMyAdmin Service
   phpmyadmin:
@@ -46,7 +55,9 @@ services:
         - app-network
 
 volumes:
-  db:
+  client-cache:
+  server-cache:
+  mysql-data:
 
 networks:
   app-network:
