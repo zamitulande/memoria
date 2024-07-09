@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const  api = import.meta.env.API;
+const  api = import.meta.env.VITE_API;
 
 
 const axiosClient = axios.create({
