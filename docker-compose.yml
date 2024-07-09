@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     env_file: ./server/.env
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -36,7 +36,7 @@ services:
   client:
     build: ./client
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - ./client:/app
       - client-cache:/root/.cache/vite
@@ -46,7 +46,7 @@ services:
       image: phpmyadmin/phpmyadmin
       container_name: phpmyadminOral
       ports:
-        - "8081:80"
+        - "8082:80"
       environment:
         PMA_HOST: mysqldb
         PMA_PORT: 3306
