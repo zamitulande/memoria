@@ -279,7 +279,7 @@ const Form = ({ open,
                 </Grid>
                 {action === "register" && (
                     <>
-                        <Grid item xs={4} sx={{ display: { xs: 'none', md: 'flex' } }}>
+                        <Grid item xs={4}>
                             <FormControl variant="outlined" color='textField' fullWidth required>
                                 <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
                                 <OutlinedInput

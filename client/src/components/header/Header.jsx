@@ -20,6 +20,7 @@ import {
     Container,
     Popper,
     Chip,
+    useMediaQuery,
 } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { useTheme } from '@emotion/react';
@@ -32,6 +33,7 @@ import ResetPassword from '../../auth/ResetPassword';
 const Header = () => {
 
     const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     const dispatch = useDispatch();
 
     const pages = [
@@ -327,7 +329,7 @@ const Header = () => {
                 </Popper>
             )}
         </AppBar>
-        <Box sx={{ height: '150px' }} />
+        {isMobile ? <Box sx={{  height: '30px' }} />:<Box sx={{  height: '120px' }} />}
        </>
     )
 }
