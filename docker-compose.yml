@@ -35,6 +35,7 @@ services:
   #client Service
   client:
     build: ./client
+    env_file: ./client/.env
     ports:
       - "3001:3000"
     volumes:
