@@ -329,7 +329,7 @@ const Header = () => {
                 </Popper>
             )}
         </AppBar>
-        {isMobile ? <Box sx={{  height: '60px' }} />:<Box sx={{  height: '120px' }} />}
+        {isMobile ? <Box sx={{  height: '60px' }} />:<Box sx={{  height: '150px' }} />}
        </>
     )
 }
