@@ -51,11 +51,11 @@ const Form = ({ open,
     role,
     minLength,
     maxLength,
-    handleSubmitRegisterAdmin
+    handleSubmitRegisterAdmin,
+    getFormEditar
 }) => {
 
     const login = useSelector((state) => state.user.login)
-    console.log(login)
     const { isCellPhone, passwordValid, } = UseValidation();
 
     // funcion para colocar primera letra en mayusculas

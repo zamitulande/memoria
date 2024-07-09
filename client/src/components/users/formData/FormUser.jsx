@@ -280,6 +280,7 @@ const FormUser = ({ action, role }) => {
                 minLength={minLength}
                 maxLength={maxLength}
                 handleSubmitRegisterAdmin={handleSubmitRegisterAdmin}
+                getFormEditar={getFormEditar}
                 />
             <Loading isLoading={isLoading} />
         </Box >
