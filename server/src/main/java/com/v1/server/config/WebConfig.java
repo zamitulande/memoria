@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -18,14 +19,15 @@ public class WebConfig implements WebMvcConfigurer {
 
     private static final Long MAX_AGE = 3600L;
 
+    @Value("${origin:origin}")
+    private String origin;
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        //config.addAllowedOrigin("http://localhost:5173");
-        //config.addAllowedOrigin("http://0.0.0.0:3001");
-        config.addAllowedOrigin("http://memoriaoral.com");
+        config.addAllowedOrigin(origin);
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.AUTHORIZATION,
                 HttpHeaders.CONTENT_TYPE,
