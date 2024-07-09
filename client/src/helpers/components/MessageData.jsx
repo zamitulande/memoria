@@ -2,16 +2,10 @@ import React, { useEffect, useState } from 'react'
 import Snackbar from '@mui/material/Snackbar';
 import { Alert, Box } from '@mui/material';
 
-const MessageData = ({ totalElements }) => {
+const MessageData = () => {
 
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     
-    useEffect(() => {
-        if (totalElements < 0) {
-            setOpen(true)
-        }
-    }, [totalElements])
-
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;

@@ -221,7 +221,9 @@ const Users = () => {
       )}
       <ViewMore open={open} setOpen={setOpen} user={selectedUser} />
       <Loading isLoading={isLoading} />
-      <MessageData totalElements={totalElements}/>
+      {totalElements < 1 && (
+        <MessageData/>
+      )}
     </Container>
   )
 }
