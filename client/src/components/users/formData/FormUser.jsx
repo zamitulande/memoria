@@ -37,7 +37,8 @@ const FormUser = ({ action, role }) => {
     const [city, setCity] = useState("");
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-    const [file, setFile] = useState({})
+    const [file, setFile] = useState(null)
+    const [fileName, setFileName] = useState('');
 
     const [recaptchaIsValid, setRecaptchaIsValid] = useState(false)
     const [conditios, setConditios] = useState(false);
@@ -72,6 +73,7 @@ const FormUser = ({ action, role }) => {
         setCity("")
         setDepartment("")
         setContactNumber("")
+        setFileName('')
     }
 
     const isDisable = () => {
@@ -89,7 +91,8 @@ const FormUser = ({ action, role }) => {
                 !department ||
                 !contactNumber ||
                 !confirmPassword ||
-                !minLength(confirmPassword, 8)
+                !minLength(confirmPassword, 8) ||
+                !file
             );
         } else if (action === 'update') {
             return (
@@ -169,13 +172,12 @@ const FormUser = ({ action, role }) => {
                     'Authorization': `Bearer${getToken}`,
                     'content-Type': 'multipart/form-data'
                 }
-            }
-           
+            }           
             try {
                 const res = await axiosClient.post('/users/register', formData, config);
                 const messageResponse = res.data.message;
                 resetForm();
-                setIsLoading(false)
+                setIsLoading(false);
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
@@ -286,6 +288,8 @@ const FormUser = ({ action, role }) => {
                 maxLength={maxLength}
                 handleSubmitRegisterAdmin={handleSubmitRegisterAdmin}
                 getFormEditar={getFormEditar}
+                fileName={fileName}
+                setFileName={setFileName}
             />
             <Loading isLoading={isLoading} />
         </Box >

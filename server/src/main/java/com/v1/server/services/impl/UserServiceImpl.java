@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.v1.server.dtos.user.UsersDTO;
@@ -109,13 +110,13 @@ public class UserServiceImpl implements UserService {
 
         // Validar tipo de archivo
     if (!file.getContentType().equals("application/pdf")) {
-        throw new IllegalArgumentException("El archivo debe ser un PDF.");
+        throw new IllegalArgumentException("El archivo debe ser de tipo PDF.");
     }
 
     // Validar tamaño del archivo (máximo 2 MB)
     long maxFileSize = 2 * 1024 * 1024; // 2 MB en bytes
     if (file.getSize() > maxFileSize) {
-        throw new IllegalArgumentException("El tamaño del archivo no debe superar los 2 MB.");
+        throw new MaxUploadSizeExceededException(2);
     }
         String fileName = identification+"_"+file.getOriginalFilename();
 

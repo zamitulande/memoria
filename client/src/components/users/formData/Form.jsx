@@ -53,13 +53,13 @@ const Form = ({ open,
     minLength,
     maxLength,
     handleSubmitRegisterAdmin,
-    getFormEditar
+    getFormEditar,
+    fileName,
+    setFileName
 }) => {
 
     const login = useSelector((state) => state.user.login)
     const { isCellPhone, passwordValid, } = UseValidation();
-
-    const [fileName, setFileName] = useState('');
 
     // funcion para colocar primera letra en mayusculas
     const capitalizeFirstLetter = (str) => {
@@ -78,6 +78,7 @@ const Form = ({ open,
                     onChange={(e) => {setFile(e.target.files), setFileName(e.target.files[0].name); }}
                     type="file"
                     style={{ display: 'none' }}
+                    required
                 />
                 <label htmlFor="icon-button-file">
                     <IconButton component="span">
@@ -86,8 +87,8 @@ const Form = ({ open,
                 </label>
             </Grid>
             {fileName && (
-                <Grid item>
-                    <Typography variant="body2" color="secondary">{fileName}</Typography>
+                <Grid item sx={{backgroundColor:'GrayText', padding:2}}>
+                    <Typography variant="body2" color="primary">Cargado:_{fileName}</Typography>
                 </Grid>
             )}
             <Grid item>
@@ -98,7 +99,6 @@ const Form = ({ open,
 
         }
     }
-  console.log(fileName)
     const determineSubmitHandler = () => {
         switch (true) {
             case action === 'register' && role === 'ADMIN':
