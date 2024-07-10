@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,7 +74,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Los correos electronicos no coiciden");
         }
 
-        String documentUrl = saveUploadedFile(document);
+        String documentUrl = saveUploadedFile(document, identification);
 
         var user = User.builder()
                 .firstName(firstName)
@@ -94,18 +93,33 @@ public class UserServiceImpl implements UserService {
                 .role(Role.USER)
                 .build();
 
+        String plainPassword = password;
         User savedUser = userRepository.save(user);
-        sendValidationEmail(savedUser);
+        try {
+            sendValidationEmail(savedUser, plainPassword);
+        } finally {
+            plainPassword = null;
+        }
         String message = "Usuario creado satisfactoriamente";
         return new ApiResponse(200, message);
 
     }
 
-    private String saveUploadedFile(MultipartFile file) throws IOException {
+    private String saveUploadedFile(MultipartFile file, String identification) throws IOException {
 
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        // Validar tipo de archivo
+    if (!file.getContentType().equals("application/pdf")) {
+        throw new IllegalArgumentException("El archivo debe ser un PDF.");
+    }
 
-        String uploadDir = "./server/src/main/resources/static/consentimiento-informado";
+    // Validar tamaño del archivo (máximo 2 MB)
+    long maxFileSize = 2 * 1024 * 1024; // 2 MB en bytes
+    if (file.getSize() > maxFileSize) {
+        throw new IllegalArgumentException("El tamaño del archivo no debe superar los 2 MB.");
+    }
+        String fileName = identification+"_"+file.getOriginalFilename();
+
+        String uploadDir = "./storage/user/consentimiento-informado";
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -117,11 +131,10 @@ public class UserServiceImpl implements UserService {
         return fileName;
     }
 
-    private void sendValidationEmail(User user) throws MessagingException {
+    private void sendValidationEmail(User user, String plainPassword) throws MessagingException {
 
         String email = user.getEmail();
-        String password = user.getPassword();
-        System.out.println("###########"+email);
+        String password = plainPassword;
 
         // send email
         emailService.sendEmail(

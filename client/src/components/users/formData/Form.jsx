@@ -8,6 +8,7 @@ import UseValidation from '../../../helpers/hooks/UseValidation'
 import Conditions from '../../../helpers/components/Conditions';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 
 
@@ -58,6 +59,8 @@ const Form = ({ open,
     const login = useSelector((state) => state.user.login)
     const { isCellPhone, passwordValid, } = UseValidation();
 
+    const [fileName, setFileName] = useState('');
+
     // funcion para colocar primera letra en mayusculas
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -72,7 +75,7 @@ const Form = ({ open,
                 <input
                     accept="application/pdf"
                     id="icon-button-file"
-                    onChange={(e) => setFile(e.target.files)}
+                    onChange={(e) => {setFile(e.target.files), setFileName(e.target.files[0].name); }}
                     type="file"
                     style={{ display: 'none' }}
                 />
@@ -82,14 +85,20 @@ const Form = ({ open,
                     </IconButton>
                 </label>
             </Grid>
+            {fileName && (
+                <Grid item>
+                    <Typography variant="body2" color="secondary">{fileName}</Typography>
+                </Grid>
+            )}
             <Grid item>
                 <Typography variant="body1">Consentimiento informado</Typography>
             </Grid>
+           
         </Grid>
 
         }
     }
-
+  console.log(fileName)
     const determineSubmitHandler = () => {
         switch (true) {
             case action === 'register' && role === 'ADMIN':

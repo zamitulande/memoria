@@ -24,6 +24,19 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .activation-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .activation-link a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -32,8 +45,8 @@
     <p style="font-size: 24px;" th:text="'Hola ' + ${name} + ','"></p>
     <p style="font-size: 24px;">Gracias por registrarse en nuestra plataforma Memoria Oral. A continuación, encontrará sus credenciales para acceder:</p>
     <div class="credentials">
-        <p style="font-size: 24px;" th:text="'su correo: ' + ${email} + ','"></p>
-        <p style="font-size: 24px;" th:text="'su contraseña: ' + ${password} + ','"></p>
+        <p style="font-size: 24px;" th:text="'su correo es: ' + ${email}"></p>
+        <p style="font-size: 24px;" th:text="'su contraseña es: ' + ${password}"></p>
     </div>
     <div class="activation-link" style="font-size: 24px;">
         <a th:href="${confirmationUrl}" target="_blank">Ingresar a la plataforma</a>

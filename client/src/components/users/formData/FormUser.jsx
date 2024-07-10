@@ -170,8 +170,9 @@ const FormUser = ({ action, role }) => {
                     'content-Type': 'multipart/form-data'
                 }
             }
-            const res = await axiosClient.post('/users/register', formData, config);
+           
             try {
+                const res = await axiosClient.post('/users/register', formData, config);
                 const messageResponse = res.data.message;
                 resetForm();
                 setIsLoading(false)
