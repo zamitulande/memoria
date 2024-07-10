@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material'
+import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
@@ -6,7 +6,7 @@ import SelectCity from '../../../helpers/components/SelectCity';
 import { Link } from 'react-router-dom';
 import UseValidation from '../../../helpers/hooks/UseValidation'
 import Conditions from '../../../helpers/components/Conditions';
-import { useEffect } from 'react';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useSelector } from 'react-redux';
 
 
@@ -64,26 +64,32 @@ const Form = ({ open,
     };
 
     let imagen = "";
-    
-    if(login){
-        if(action === 'register' && role === 'ADMIN'){
-            imagen =  <Grid>
-            <FormControl variant="standard" fullWidth >
-                <InputLabel shrink>
-                    Consentimiento informado
-                </InputLabel>
-                <Input
-                    id="document"
-                    name="document"
-                    type="file"
+
+    if (login) {
+        if (action === 'register' && role === 'ADMIN') {
+            imagen =  <Grid container direction="column" alignItems="center">
+            <Grid item>
+                <input
+                    accept="application/pdf"
+                    id="icon-button-file"
                     onChange={(e) => setFile(e.target.files)}
-                    size="small"
+                    type="file"
+                    style={{ display: 'none' }}
                 />
-            </FormControl>
+                <label htmlFor="icon-button-file">
+                    <IconButton component="span">
+                        <CloudUploadIcon fontSize='large' />
+                    </IconButton>
+                </label>
+            </Grid>
+            <Grid item>
+                <Typography variant="body1">Consentimiento informado</Typography>
+            </Grid>
         </Grid>
+
         }
     }
-    
+
     const determineSubmitHandler = () => {
         switch (true) {
             case action === 'register' && role === 'ADMIN':

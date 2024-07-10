@@ -34,6 +34,8 @@ public class EmailService {
         EmailTemplateName emailTemplate,
         String confirmationUrl,
         String activactionCode,
+        String password,
+        String email,
         String subject
     ) throws MessagingException{
         String templateName;
@@ -52,6 +54,8 @@ public class EmailService {
         Map<String, Object> properties = new HashMap<>();
         properties.put("username", username);
         properties.put("name", name);
+        properties.put("email", email);
+        properties.put("password", password);
         properties.put("confirmationUrl", confirmationUrl);
         properties.put("activation_code", activactionCode);
 
