@@ -7,15 +7,17 @@ import Swal from 'sweetalert2';
 import Recaptcha from '../../../helpers/components/Recaptcha';
 
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../../../helpers/components/Loading';
 import { useNavigate } from 'react-router-dom';
 
 import Form from './Form';
+import { setUserId } from '../../../redux/features/userSlice';
 
 const FormUser = ({ action, role }) => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const getFormEditar = useSelector((state) => state.user.formEdit)
     const getToken = useSelector((state) => state.user.token)
 
@@ -176,6 +178,7 @@ const FormUser = ({ action, role }) => {
             try {
                 const res = await axiosClient.post('/users/register', formData, config);
                 const messageResponse = res.data.message;
+                dispatch(setUserId(res.data.id))
                 resetForm();
                 setIsLoading(false);
                 Swal.fire({

@@ -101,8 +101,9 @@ public class UserServiceImpl implements UserService {
         } finally {
             plainPassword = null;
         }
+        Long userId = savedUser.getUserId(); 
         String message = "Usuario creado satisfactoriamente";
-        return new ApiResponse(200, message);
+        return new ApiResponse(200, message, userId);
 
     }
 
