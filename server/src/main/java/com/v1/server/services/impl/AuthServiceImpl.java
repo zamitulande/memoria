@@ -102,6 +102,8 @@ public class AuthServiceImpl implements AuthService {
                 EmailTemplateName.activate_account,
                 activationUrl,
                 newToken,
+                null,
+                null,
                 "Account activation");
     }
 
@@ -200,6 +202,8 @@ public class AuthServiceImpl implements AuthService {
                 user.getFirstName(),
                 EmailTemplateName.forget_password, // Asegúrate de tener esta plantilla en tu servicio de email
                 resetUrl,
+                null,
+                null,
                 null,
                 "Password Reset Request");
     }

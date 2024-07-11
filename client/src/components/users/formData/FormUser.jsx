@@ -48,15 +48,15 @@ const FormUser = ({ action, role }) => {
         municipio = name;
     }
 
-      // Función para verificar la longitud mínima
-      const minLength = (str, length) => {
+    // Función para verificar la longitud mínima
+    const minLength = (str, length) => {
         return str.length >= length;
     };
 
     // Función para verificar la longitud máxima
     const maxLength = (str, length) => {
         return str.length <= length;
-    }; 
+    };
 
     const resetForm = () => {
         setIdentification("")
@@ -148,29 +148,31 @@ const FormUser = ({ action, role }) => {
     const handleSubmitRegisterAdmin = (e) => {
         e.preventDefault();
         setIsLoading(true);
-
-        const formData = new FormData();
-        formData.append('identification', identification)
-        formData.append('email', email)
-        formData.append('confirmEmail', confirmEmail)
-        formData.append('firstName', firstName)
-        formData.append('secondName', secondName)
-        formData.append('firstLastName', firstLastName)
-        formData.append('secondLastName', secondLastName)
-        formData.append('contactNumber', contactNumber)
-        formData.append('department', department)
-        formData.append('municipio', municipio)
-        formData.append('password', password)
-        formData.append('confirmPassword', confirmPassword)
-        formData.append('document', file[0]);
-        const config = {
-            headers: {
-                'content-Type': 'multipart/form-data',
+        const postUser = async () => {
+            const formData = new FormData();
+            formData.append('identification', identification)
+            formData.append('email', email)
+            formData.append('confirmEmail', confirmEmail)
+            formData.append('firstName', firstName)
+            formData.append('secondName', secondName)
+            formData.append('firstLastName', firstLastName)
+            formData.append('secondLastName', secondLastName)
+            formData.append('contactNumber', contactNumber)
+            formData.append('department', department)
+            formData.append('municipio', municipio)
+            formData.append('password', password)
+            formData.append('confirmPassword', confirmPassword)
+            formData.append('document', file[0]);
+            console.log(formData)
+            const config = {
+                headers: {
+                    'Authorization': `Bearer${getToken}`,
+                    'content-Type': 'multipart/form-data'
+                }
             }
-        }
-        axiosClient.post('/users/register', formData, config)
-            .then((response) => {
-                const messageResponse = response.data.message;
+            const res = await axiosClient.post('/users/register', formData, config);
+            try {
+                const messageResponse = res.data.message;
                 resetForm();
                 setIsLoading(false)
                 Swal.fire({
@@ -178,8 +180,7 @@ const FormUser = ({ action, role }) => {
                     icon: "success",
                     title: messageResponse,
                 });
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.log(error)
                 setIsLoading(false);
                 const errorMessage = error.response.data.message
@@ -187,8 +188,11 @@ const FormUser = ({ action, role }) => {
                     icon: "error",
                     text: errorMessage,
                 });
-            });
+            }
+        }
+        postUser();
     }
+
 
     const handleSubmitUpdate = async (e) => {
         e.preventDefault();
@@ -236,40 +240,40 @@ const FormUser = ({ action, role }) => {
         <Box position="relative">
             <Form
                 open={open}
-                setOpen={setOpen} 
+                setOpen={setOpen}
                 showPassword={showPassword}
                 setShowPassword={setShowPassword}
                 showPasswordConfirm={showPasswordConfirm}
                 setShowPasswordConfirm={setShowPasswordConfirm}
-                identification={identification} 
+                identification={identification}
                 setIdentification={setIdentification}
-                email={email} 
+                email={email}
                 setEmail={setEmail}
-                confirmEmail={confirmEmail} 
+                confirmEmail={confirmEmail}
                 setConfirmEmail={setConfirmEmail}
-                firstName={firstName} 
+                firstName={firstName}
                 setFirstName={setFirstName}
-                secondName={secondName} 
+                secondName={secondName}
                 setSecondName={setSecondName}
-                firstLastName={firstLastName} 
+                firstLastName={firstLastName}
                 setFirstLastName={setFirstLastName}
-                secondLastName={secondLastName} 
+                secondLastName={secondLastName}
                 setSecondLastName={setSecondLastName}
-                department={department} 
+                department={department}
                 setDepartment={setDepartment}
-                contactNumber={contactNumber} 
+                contactNumber={contactNumber}
                 setContactNumber={setContactNumber}
-                city={city} 
+                city={city}
                 setCity={setCity}
-                password={password} 
+                password={password}
                 setPassword={setPassword}
-                confirmPassword={confirmPassword} 
+                confirmPassword={confirmPassword}
                 setConfirmPassword={setConfirmPassword}
-                file={file} 
+                file={file}
                 setFile={setFile}
-                recaptchaIsValid={recaptchaIsValid} 
+                recaptchaIsValid={recaptchaIsValid}
                 setRecaptchaIsValid={setRecaptchaIsValid}
-                conditios={conditios} 
+                conditios={conditios}
                 setConditios={setConditios}
                 resetForm={resetForm}
                 isDisable={isDisable}
@@ -281,7 +285,7 @@ const FormUser = ({ action, role }) => {
                 maxLength={maxLength}
                 handleSubmitRegisterAdmin={handleSubmitRegisterAdmin}
                 getFormEditar={getFormEditar}
-                />
+            />
             <Loading isLoading={isLoading} />
         </Box >
 

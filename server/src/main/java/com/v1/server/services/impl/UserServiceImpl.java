@@ -6,8 +6,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,13 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.v1.server.dtos.user.UsersDTO;
-import com.v1.server.entities.Token;
 import com.v1.server.entities.User;
 import com.v1.server.enumerate.EmailTemplateName;
 import com.v1.server.enumerate.Role;
 import com.v1.server.exceptions.ApiResponse;
 import com.v1.server.exceptions.customExceptions.NotFoundException;
-import com.v1.server.repositories.TokenRepository;
 import com.v1.server.repositories.UserRepository;
 import com.v1.server.services.EmailService;
 import com.v1.server.services.UserService;
@@ -40,15 +36,16 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private TokenRepository tokenRepository;
-
-    @Autowired
     private EmailService emailService;
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Value("${activation-url:activationUrl}")
     private String activationUrl;
+
+    @Value("${login-user:loginUser}")
+    private String loginUser;
 
     @Value("${characters-token:characters}")
     private String characters;
@@ -92,7 +89,7 @@ public class UserServiceImpl implements UserService {
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .accountLocked(false)
-                .enabled(false)
+                .enabled(true)
                 .documentUrl(documentUrl)
                 .role(Role.USER)
                 .build();
@@ -121,44 +118,23 @@ public class UserServiceImpl implements UserService {
     }
 
     private void sendValidationEmail(User user) throws MessagingException {
-        var newToken = generateAndSaveActivationToken(user);
+
+        String email = user.getEmail();
+        String password = user.getPassword();
+        System.out.println("###########"+email);
 
         // send email
         emailService.sendEmail(
                 user.getEmail(),
                 user.getUsername(),
                 user.getFirstName(),
-                EmailTemplateName.activate_account,
-                activationUrl,
-                newToken,
-                "Account activation");
+                EmailTemplateName.login_user,
+                loginUser,
+                null,
+                password,
+                email,                
+                "Ingreso plataforma");
     }
-
-    private String generateAndSaveActivationToken(User user) {
-        // generate token
-        String generateToken = generateActivationCode(6);
-        var token = Token.builder()
-                .token(generateToken)
-                .createAt(LocalDateTime.now())
-                .expirateAt(LocalDateTime.now().plusDays(8))
-                .user(user)
-                .build();
-
-        tokenRepository.save(token);
-        return generateToken;
-    }
-
-    // generar codigo para asignar al token
-    private String generateActivationCode(int length) {
-        StringBuilder codebBuilder = new StringBuilder();
-        SecureRandom secureRandom = new SecureRandom();
-        for (int i = 0; i < length; i++) {
-            int randomIndex = secureRandom.nextInt(characters.length());
-            codebBuilder.append(characters.charAt(randomIndex));
-        }
-        return codebBuilder.toString();
-    }
-
 
     @Override
     public Page<UsersDTO> findAllUsers(Pageable pageable) {
