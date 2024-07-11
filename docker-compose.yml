@@ -1,20 +1,7 @@
 version: "3.3"
 
 services:
-#mysql Service
-  mysqldb:
-    image: mysql:8.0.1
-    container_name: oral_db
-    restart: unless-stopped
-    env_file: ./server/.env
-    ports:
-      - "3307:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - app-network
-
-#server Service
+  #server Service
   server:    
     build:
       context: ./server
@@ -27,11 +14,9 @@ services:
     volumes:
       - ./server:/app
       - server-cache:/root/.m2
-    depends_on:
-      - mysqldb
     networks:
       - app-network
-  
+
   #client Service
   client:
     build: ./client
@@ -42,26 +27,10 @@ services:
       - ./client:/app
       - client-cache:/root/.cache/vite
 
-#phpMyAdmin Service
-  phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      container_name: phpmyadminOral
-      ports:
-        - "8082:80"
-      environment:
-        PMA_HOST: mysqldb
-        PMA_PORT: 3306
-      networks:
-        - app-network
-
 volumes:
   client-cache:
   server-cache:
-  db_data:
 
 networks:
   app-network:
     driver: bridge
-
-
-
