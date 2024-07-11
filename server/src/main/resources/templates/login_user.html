@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Memoria Oral</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 10px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .credentials {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Bienvenido a Memoria Oral</h1>
+    <p style="font-size: 24px;" th:text="'Hola ' + ${name} + ','"></p>
+    <p style="font-size: 24px;">Gracias por registrarse en nuestra plataforma Memoria Oral. A continuación, encontrará sus credenciales para acceder:</p>
+    <div class="credentials">
+        <p style="font-size: 24px;" th:text="'su correo: ' + ${email} + ','"></p>
+        <p style="font-size: 24px;" th:text="'su contraseña: ' + ${password} + ','"></p>
+    </div>
+    <div class="activation-link" style="font-size: 24px;">
+        <a th:href="${confirmationUrl}" target="_blank">Ingresar a la plataforma</a>
+    </div>
+    <p style="font-size: 24px;">Le recomendamos cambiar su contraseña después de iniciar sesión por primera vez.</p>
+</div>
+</body>
+</html>
