@@ -7,15 +7,17 @@ import Swal from 'sweetalert2';
 import Recaptcha from '../../../helpers/components/Recaptcha';
 
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../../../helpers/components/Loading';
 import { useNavigate } from 'react-router-dom';
 
 import Form from './Form';
+import { setUserId } from '../../../redux/features/userSlice';
 
 const FormUser = ({ action, role }) => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const getFormEditar = useSelector((state) => state.user.formEdit)
     const getToken = useSelector((state) => state.user.token)
 
@@ -37,7 +39,8 @@ const FormUser = ({ action, role }) => {
     const [city, setCity] = useState("");
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-    const [file, setFile] = useState({})
+    const [file, setFile] = useState(null)
+    const [fileName, setFileName] = useState('');
 
     const [recaptchaIsValid, setRecaptchaIsValid] = useState(false)
     const [conditios, setConditios] = useState(false);
@@ -72,6 +75,7 @@ const FormUser = ({ action, role }) => {
         setCity("")
         setDepartment("")
         setContactNumber("")
+        setFileName('')
     }
 
     const isDisable = () => {
@@ -89,7 +93,8 @@ const FormUser = ({ action, role }) => {
                 !department ||
                 !contactNumber ||
                 !confirmPassword ||
-                !minLength(confirmPassword, 8)
+                !minLength(confirmPassword, 8) ||
+                !file
             );
         } else if (action === 'update') {
             return (
@@ -169,12 +174,13 @@ const FormUser = ({ action, role }) => {
                     'Authorization': `Bearer${getToken}`,
                     'content-Type': 'multipart/form-data'
                 }
-            }
-            const res = await axiosClient.post('/users/register', formData, config);
+            }           
             try {
+                const res = await axiosClient.post('/users/register', formData, config);
                 const messageResponse = res.data.message;
+                dispatch(setUserId(res.data.id))
                 resetForm();
-                setIsLoading(false)
+                setIsLoading(false);
                 Swal.fire({
                     position: "bottom-end",
                     icon: "success",
@@ -285,6 +291,8 @@ const FormUser = ({ action, role }) => {
                 maxLength={maxLength}
                 handleSubmitRegisterAdmin={handleSubmitRegisterAdmin}
                 getFormEditar={getFormEditar}
+                fileName={fileName}
+                setFileName={setFileName}
             />
             <Loading isLoading={isLoading} />
         </Box >

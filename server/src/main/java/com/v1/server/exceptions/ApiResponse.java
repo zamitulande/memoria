@@ -9,10 +9,10 @@ public class ApiResponse {
     
     private int status;
     private String message;
-    private Object data;
+    private Long id;
 
-    public ApiResponse(Object data) {
-        this.data = data;
+    public ApiResponse(Long id) {
+        this.id = id;
     }
 
     public ApiResponse(int status, String message) {
@@ -20,9 +20,9 @@ public class ApiResponse {
         this.message = message;
     }
 
-    public ApiResponse(int status, String message, Object data) {
+    public ApiResponse(int status, String message, Long id) {
         this.status = status;
         this.message = message;
-        this.data = data;
+        this.id = id;
     }
 }

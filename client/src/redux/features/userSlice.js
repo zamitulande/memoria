@@ -44,6 +44,7 @@ export const userSlice = createSlice({
         },
         setUserId: (state, action)=>{
             state.userId = action.payload;
+            console.log(action.payload)
         },
         setFormEdit: (state, action)=>{
             state.formEdit = action.payload;

@@ -8,6 +8,7 @@ import UseValidation from '../../../helpers/hooks/UseValidation'
 import Conditions from '../../../helpers/components/Conditions';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useSelector } from 'react-redux';
+import { useState } from 'react';
 
 
 
@@ -52,7 +53,9 @@ const Form = ({ open,
     minLength,
     maxLength,
     handleSubmitRegisterAdmin,
-    getFormEditar
+    getFormEditar,
+    fileName,
+    setFileName
 }) => {
 
     const login = useSelector((state) => state.user.login)
@@ -72,9 +75,10 @@ const Form = ({ open,
                 <input
                     accept="application/pdf"
                     id="icon-button-file"
-                    onChange={(e) => setFile(e.target.files)}
+                    onChange={(e) => {setFile(e.target.files), setFileName(e.target.files[0].name); }}
                     type="file"
                     style={{ display: 'none' }}
+                    required
                 />
                 <label htmlFor="icon-button-file">
                     <IconButton component="span">
@@ -82,14 +86,19 @@ const Form = ({ open,
                     </IconButton>
                 </label>
             </Grid>
+            {fileName && (
+                <Grid item sx={{backgroundColor:'GrayText', padding:2}}>
+                    <Typography variant="body2" color="primary">Cargado:_{fileName}</Typography>
+                </Grid>
+            )}
             <Grid item>
                 <Typography variant="body1">Consentimiento informado</Typography>
             </Grid>
+           
         </Grid>
 
         }
     }
-
     const determineSubmitHandler = () => {
         switch (true) {
             case action === 'register' && role === 'ADMIN':
