@@ -1,61 +1,9 @@
 
 ##############################PRODUCTION########################333
-version: "3.3"
-
-services:
-  #server Service
-  server:    
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    container_name: oral_server
-    restart: on-failure
-    env_file: ./server/.env
-    ports:
-      - "6868:8080"
-    volumes:
-      - ./server:/app
-      - server-cache:/root/.m2
-    networks:
-      - app-network
-
-  #client Service
-  client:
-    build: ./client
-    env_file: ./client/.env
-    ports:
-      - "3001:3000"
-    volumes:
-      - ./client:/app
-      - client-cache:/root/.cache/vite
-
-volumes:
-  client-cache:
-  server-cache:
-
-networks:
-  app-network:
-    driver: bridge
-
-
-###################################DESARROLLO###################################
 # version: "3.3"
 
 # services:
-# #mysql Service
-#   mysqldb:
-#     image: mysql:8.0.1
-#     container_name: oral_db
-#     restart: unless-stopped
-#     env_file: ./server/.env
-#     ports:
-#       - "3307:3306"
-#     volumes:
-#       - db_data:/var/lib/mysql
-#     networks:
-#       - app-network
-
-# #server Service
+#   #server Service
 #   server:    
 #     build:
 #       context: ./server
@@ -68,11 +16,9 @@ networks:
 #     volumes:
 #       - ./server:/app
 #       - server-cache:/root/.m2
-#     depends_on:
-#       - mysqldb
 #     networks:
 #       - app-network
-  
+
 #   #client Service
 #   client:
 #     build: ./client
@@ -83,23 +29,81 @@ networks:
 #       - ./client:/app
 #       - client-cache:/root/.cache/vite
 
-# #phpMyAdmin Service
-#   phpmyadmin:
-#       image: phpmyadmin/phpmyadmin
-#       container_name: phpmyadminOral
-#       ports:
-#         - "8082:80"
-#       environment:
-#         PMA_HOST: mysqldb
-#         PMA_PORT: 3306
-#       networks:
-#         - app-network
-
 # volumes:
 #   client-cache:
 #   server-cache:
-#   db_data:
 
 # networks:
 #   app-network:
 #     driver: bridge
+
+
+###################################DESARROLLO###################################
+version: "3.3"
+
+services:
+#mysql Service
+  mysqldb:
+    image: mysql:8.0.1
+    container_name: oral_db
+    restart: unless-stopped
+    env_file: ./server/.env.dev
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+#server Service
+  server:    
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: oral_server
+    restart: on-failure
+    env_file: ${ENV_FILE}
+    ports:
+      - "6868:8080"
+    volumes:
+      - ./server:/app
+      - server-cache:/root/.m2
+    depends_on:
+      - mysqldb
+    networks:
+      - app-network
+  
+  #client Service
+  client:
+    build: ./client
+    env_file: ${ENV_FILE}
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./client:/app
+      - client-cache:/root/.cache/vite
+
+#phpMyAdmin Service
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadminOral
+      ports:
+        - "8082:80"
+      environment:
+        PMA_HOST: mysqldb
+        PMA_PORT: 3306
+      networks:
+        - app-network
+      profiles:
+        - dev
+
+volumes:
+  client-cache:
+  server-cache:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge
