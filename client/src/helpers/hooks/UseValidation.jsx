@@ -10,26 +10,31 @@ const UseValidation = () => {
         return regex.test(number);
     };
 
-    const minLength = (text, length) => {
-        const regex = new RegExp(`^.{${length},}$`);
-        return regex.test(text);
+    // Función para verificar la longitud mínima
+    const minLength = (str, length) => {
+        return str.length >= length;
     };
 
-    const maxLength = (text, length) => {
-        const regex = new RegExp(`^.{0,${length}}$`);
-        return regex.test(text);
+    // Función para verificar la longitud máxima
+    const maxLength = (str, length) => {
+        return str.length <= length;
     };
-
     const passwordValid = (text) => {
         const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         return regex.test(text)
     }
 
+    // funcion para colocar primera letra en mayusculas
+    const capitalizeFirstLetter = (str) => {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     return {
         minLength,
         maxLength,
         isCellPhone,
-        passwordValid
+        passwordValid,
+        capitalizeFirstLetter
     }
 }
 

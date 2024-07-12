@@ -5,7 +5,7 @@ import colombia from '../../helpers/components/colombia.json'
 const SelectDepartment = ({ value, onChange }) => {
 
     return (
-        <FormControl color='textField' fullWidth required>
+        <FormControl color='textField' fullWidth>
             <InputLabel id="demo-simple-select-label">Departamento</InputLabel>
             <Select
                 labelId="demo-simple-select-label"

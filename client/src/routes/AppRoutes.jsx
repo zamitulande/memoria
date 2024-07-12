@@ -11,6 +11,7 @@ import Collaborate from "../components/collaborate/Collaborate"
 import ProtectedRoutes from "./ProtectedRoutes"
 import Repository from "../components/testimonies/Repository"
 import Update from "../components/users/Update"
+import RegisterTestimony from "../components/testimonies/registerTestimomy/RegisterTestimony"
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,11 @@ const AppRoutes = () => {
       <Route path='/forget-password' element={<ForgetPassword />} />
       <Route path='/reset-password' element={<ResetPassword />} />
       <Route path='/colaboraciones' element={<Collaborate />} />
+      <Route 
+        path='/repositorio/registrar' 
+        element={<ProtectedRoutes redirectTo="/">
+          <RegisterTestimony/>
+        </ProtectedRoutes>} />
     </Routes>
   )
 }

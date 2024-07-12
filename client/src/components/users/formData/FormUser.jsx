@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 import Form from './Form';
 import { setUserId } from '../../../redux/features/userSlice';
+import UseValidation from '../../../helpers/hooks/UseValidation';
 
 const FormUser = ({ action, role }) => {
 
@@ -51,15 +52,7 @@ const FormUser = ({ action, role }) => {
         municipio = name;
     }
 
-    // Función para verificar la longitud mínima
-    const minLength = (str, length) => {
-        return str.length >= length;
-    };
-
-    // Función para verificar la longitud máxima
-    const maxLength = (str, length) => {
-        return str.length <= length;
-    };
+    const { maxLength, minLength } = UseValidation(); 
 
     const resetForm = () => {
         setIdentification("")
@@ -186,6 +179,7 @@ const FormUser = ({ action, role }) => {
                     icon: "success",
                     title: messageResponse,
                 });
+                navigate('/repositorio/registrar');
             } catch (error) {
                 console.log(error)
                 setIsLoading(false);

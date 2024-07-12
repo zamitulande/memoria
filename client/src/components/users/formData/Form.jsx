@@ -59,12 +59,7 @@ const Form = ({ open,
 }) => {
 
     const login = useSelector((state) => state.user.login)
-    const { isCellPhone, passwordValid, } = UseValidation();
-
-    // funcion para colocar primera letra en mayusculas
-    const capitalizeFirstLetter = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    };
+    const { isCellPhone, passwordValid, capitalizeFirstLetter } = UseValidation(); 
 
     let imagen = "";
 
