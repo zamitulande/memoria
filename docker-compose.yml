@@ -1,44 +1,4 @@
 
-##############################PRODUCTION########################333
-# version: "3.3"
-
-# services:
-#   #server Service
-#   server:    
-#     build:
-#       context: ./server
-#       dockerfile: Dockerfile
-#     container_name: oral_server
-#     restart: on-failure
-#     env_file: ./server/.env
-#     ports:
-#       - "6868:8080"
-#     volumes:
-#       - ./server:/app
-#       - server-cache:/root/.m2
-#     networks:
-#       - app-network
-
-#   #client Service
-#   client:
-#     build: ./client
-#     env_file: ./client/.env
-#     ports:
-#       - "3001:3000"
-#     volumes:
-#       - ./client:/app
-#       - client-cache:/root/.cache/vite
-
-# volumes:
-#   client-cache:
-#   server-cache:
-
-# networks:
-#   app-network:
-#     driver: bridge
-
-
-###################################DESARROLLO###################################
 version: "3.3"
 
 services:
