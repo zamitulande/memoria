@@ -34,6 +34,7 @@ services:
       - server-cache:/root/.m2
     depends_on:
       - mysqldb
+    condition: service_healthy
     networks:
       - app-network
     profiles:
