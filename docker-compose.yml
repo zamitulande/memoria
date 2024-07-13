@@ -33,8 +33,6 @@ services:
     volumes:
       - ./server:/app
       - server-cache:/root/.m2
-    depends_on:
-      - mysqldb
     networks:
       - app-network
     profiles:
