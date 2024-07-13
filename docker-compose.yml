@@ -16,7 +16,6 @@ services:
       - app-network
     profiles:
       - dev
-      - prod
 
 #server Service
   server:    
