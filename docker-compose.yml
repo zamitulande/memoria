@@ -43,15 +43,13 @@ services:
   client:
     build: ./client
     env_file: 
-      - ./client/.env.dev
-      - ./client/.env.prod
+      - ./client/.env
     ports:
       - "3001:3000"
     volumes:
       - ./client:/app
       - client-cache:/root/.cache/vite
     profiles:
-      - dev
       - prod
 
 #phpMyAdmin Service
