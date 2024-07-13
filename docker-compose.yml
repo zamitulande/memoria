@@ -24,7 +24,9 @@ services:
       dockerfile: Dockerfile
     container_name: oral_server
     restart: on-failure
-    env_file: ${ENV_FILE}
+    env_file: 
+      - ./server/.env.dev
+      - ./server/.env.prod
     ports:
       - "6868:8080"
     volumes:
@@ -34,16 +36,24 @@ services:
       - mysqldb
     networks:
       - app-network
+    profiles:
+      - dev
+      - prod
   
   #client Service
   client:
     build: ./client
-    env_file: ${ENV_FILE}
+    env_file: 
+      - ./client/.env.dev
+      - ./client/.env.prod
     ports:
       - "3001:3000"
     volumes:
       - ./client:/app
       - client-cache:/root/.cache/vite
+    profiles:
+      - dev
+      - prod
 
 #phpMyAdmin Service
   phpmyadmin:
