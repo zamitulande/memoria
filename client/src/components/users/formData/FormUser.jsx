@@ -43,6 +43,8 @@ const FormUser = ({ action, role }) => {
     const [file, setFile] = useState(null)
     const [fileName, setFileName] = useState('');
 
+    const [user, setUser] = useState([])
+
     const [recaptchaIsValid, setRecaptchaIsValid] = useState(false)
     const [conditios, setConditios] = useState(false);
 
@@ -107,7 +109,7 @@ const FormUser = ({ action, role }) => {
     const handleSubmitRegisterUser = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        const user = {
+        setUser({
             identification,
             email,
             confirmEmail,
@@ -120,7 +122,7 @@ const FormUser = ({ action, role }) => {
             municipio,
             password,
             confirmPassword
-        }
+        })
         axiosClient.post('/auth/register', user)
             .then((response) => {
                 const messageResponse = response.data.message;
@@ -196,18 +198,18 @@ const FormUser = ({ action, role }) => {
 
     const handleSubmitUpdate = async (e) => {
         e.preventDefault();
-        const updateUser = { ...user };
-        updateUser.identification = user.identification || getFormEditar.identification;
-        updateUser.email = user.email || getFormEditar.email;
-        updateUser.confirmEmail = user.confirmEmail || getFormEditar.confirmEmail;
-        updateUser.firstName = user.firstName || getFormEditar.firstName;
-        updateUser.secondName = user.secondName || getFormEditar.secondName;
-        updateUser.firstLastName = user.firstLastName || getFormEditar.firstLastName;
-        updateUser.secondLastName = user.secondLastName || getFormEditar.secondLastName;
-        updateUser.contactNumber = user.contactNumber || getFormEditar.contactNumber;
-        updateUser.department = user.department || getFormEditar.department;
-        updateUser.municipio = user.municipio || getFormEditar.municipio;
-
+        const updateUser = {...user}
+        updateUser.identification = identification || getFormEditar.identification;
+        updateUser.email = email || getFormEditar.email;
+        updateUser.confirmEmail = confirmEmail || getFormEditar.confirmEmail;
+        updateUser.firstName = firstName || getFormEditar.firstName;
+        updateUser.secondName = secondName || getFormEditar.secondName;
+        updateUser.firstLastName = firstLastName || getFormEditar.firstLastName;
+        updateUser.secondLastName = secondLastName || getFormEditar.secondLastName;
+        updateUser.contactNumber = contactNumber || getFormEditar.contactNumber;
+        updateUser.department = department || getFormEditar.department;
+        updateUser.municipio = municipio || getFormEditar.municipio;
+        
         Swal.fire({
             title: "¿Quieres guardar los cambios?",
             showDenyButton: true,

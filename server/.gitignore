@@ -7,8 +7,6 @@ target/
 storage/
 =======
 storage/user/consentimiento-informado/**
->>>>>>> vps
-src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
