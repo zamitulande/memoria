@@ -25,7 +25,7 @@ services:
     container_name: oral_server
     restart: on-failure
     env_file: 
-      - ./server/.env.${PROFILE}
+      - ./server/.env.dev
     ports:
       - "6868:8080"
     volumes:
