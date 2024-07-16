@@ -18,8 +18,12 @@ const Repository = () => {
   const login = useSelector((state) => state.user.login)
   const role = useSelector((state) => state.user.role)
 
-  const handleRegister = ()=>{
+  const handleRegisterAdmin = ()=>{
     navigate('/usuarios/registrar');
+  }
+
+  const handleRegisterUser = ()=>{
+    navigate('/repositorio/registrar');
   }
 
   useEffect(() => {
@@ -45,7 +49,7 @@ const Repository = () => {
         <Alert severity="info">A continuación puede registrar el testimonio, debera tener los datos de la persona que da el testimonio.</Alert>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="secondary" size="large"  onClick={handleRegister} >
+        <Button variant="contained" color="secondary" size="large"  onClick={handleRegisterAdmin} >
           <span>Registrar Testimonio</span>
         </Button>
       </Grid>
@@ -56,7 +60,7 @@ const Repository = () => {
         <Alert severity="info">A continuación puede registrar su testimonio</Alert>
       </Grid>
       <Grid item>
-        <Button variant="contained" color="secondary" size="large">
+        <Button variant="contained" color="secondary" size="large" onClick={handleRegisterUser}>
           <span>Registrar Testimonio</span>
         </Button>
       </Grid>

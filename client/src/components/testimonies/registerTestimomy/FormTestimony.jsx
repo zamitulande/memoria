@@ -1,8 +1,9 @@
-import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import UseValidation from '../../../helpers/hooks/UseValidation';
 import SelectCity from '../../../helpers/components/SelectCity';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
+import LoadFiles from './LoadFiles';
 
 const FormTestimony = ({ userId }) => {
 
@@ -122,6 +123,10 @@ const FormTestimony = ({ userId }) => {
                         department={department}
                         //department={action === 'register' ? department : getFormEditar.department}
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant='h5'>Elige una forma de guardar el testimonio</Typography>
+                    <LoadFiles/>
                 </Grid>
             </Grid>
 
