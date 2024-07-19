@@ -50,6 +50,8 @@ public class UserServiceImpl implements UserService {
     @Value("${characters-token:characters}")
     private String characters;
 
+    private static final String CONSENTIMIENTO_DIRECTORY = "./storage/user/consentimiento-informado";
+
     //registra admin
     @Override
     public ApiResponse register(
@@ -121,7 +123,7 @@ public class UserServiceImpl implements UserService {
     }
         String fileName = identification+"_"+file.getOriginalFilename();
 
-        String uploadDir = "./storage/user/consentimiento-informado";
+        String uploadDir = CONSENTIMIENTO_DIRECTORY ;
         Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -166,6 +168,7 @@ public class UserServiceImpl implements UserService {
                 .accountLocked(user.isAccountLocked())
                 .municipio(user.getMunicipio())
                 .department(user.getDepartment())
+                .documentUrl(user.getDocumentUrl())
                 .email(user.getEmail())
                 .build());
     }
@@ -236,4 +239,5 @@ public class UserServiceImpl implements UserService {
                     .build();
         return usersDTO;
     }
+   
 }

@@ -1,11 +1,17 @@
 package com.v1.server.controllers;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +39,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    private static final String CONSENTIMIENTO_DIRECTORY = "./storage/user/consentimiento-informado/";
 
     //registra admin
     @PostMapping(path = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -97,5 +105,33 @@ public class UserController {
     public ResponseEntity<UsersDTO> unblockUser(@PathVariable Long userId) {
         UsersDTO unblockedUser = userService.unblockUser(userId);
         return ResponseEntity.ok(unblockedUser);
+    }
+
+    @GetMapping("/consentimiento/{consentimientoName}")
+    public ResponseEntity<Resource> getConsentimiento(@PathVariable String consentimientoName) throws IOException{
+        
+        try {
+        Path pdfPath = Paths.get(CONSENTIMIENTO_DIRECTORY+consentimientoName);
+        System.out.println(pdfPath);
+        Resource resource = new UrlResource(pdfPath.toUri());
+
+        if (resource.exists() && resource.isReadable()) {
+            MediaType contenType = determineContentType(consentimientoName);
+            return ResponseEntity.ok()
+                        .contentType(contenType)
+                        .body(resource);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+       } catch (MalformedURLException e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+       }
+    }
+
+    private MediaType determineContentType(String consentimientoName) {
+        String[] parts = consentimientoName.split("\\.");
+        String extension = parts[parts.length - 1];
+        return MediaType.parseMediaType("image/" + extension.toLowerCase());
     }
 }
