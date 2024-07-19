@@ -23,7 +23,6 @@ const ViewMore = ({ open, setOpen, user }) => {
     ];
     useEffect(()=>{
         const loadPdf = async (url) => {
-            console.log(url)
             try {
                 const config = {
                     headers: {
@@ -32,7 +31,6 @@ const ViewMore = ({ open, setOpen, user }) => {
                     responseType: 'arraybuffer' // responseType debe estar dentro del objeto config
                 };
                 const response = await axiosClient.get(`users/consentimiento/${url}`,config);
-                console.log(response)
                 if(response.data instanceof ArrayBuffer){
                     const blob = new Blob([response.data], {type: response.headers['content-type']});
                     const pdfUrl = URL.createObjectURL(blob);
@@ -48,9 +46,11 @@ const ViewMore = ({ open, setOpen, user }) => {
         }
 
         const loadPdfUrl = async ()=>{
-            if (user?.documentUrl) {
+            if (user?.documentUrl != null) {
                 const pdfUrl = await loadPdf(user.documentUrl);
                 setUrlPdf(pdfUrl);
+            }else{
+                setUrlPdf(null);
             }
         }
         if (open && user) {
