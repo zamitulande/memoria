@@ -1,4 +1,4 @@
-import { Alert, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import UseValidation from '../../../helpers/hooks/UseValidation';
 import SelectCity from '../../../helpers/components/SelectCity';
@@ -16,6 +16,7 @@ const FormTestimony = ({ userId }) => {
     const [city, setCity] = useState("");
     const [department, setDapartmet] = useState("");
     const [descriptionDetail, setDescriptionDetail] = useState("");
+    const [files, setFiles] = useState({ audio: null, video: null, image: null });
 
     const categories = [
         'Conflicto armado',
@@ -24,12 +25,33 @@ const FormTestimony = ({ userId }) => {
         'Patrimonio alimentario',
         'Conflicto social'
     ];
-    const handleSubmit = () => {
 
+    const handleFilesChange = (file, type) => {
+        const newFiles = { ...files };
+        if (type === 0) {
+            newFiles.audio = file;
+        } else if (type === 1) {
+            newFiles.video = file;
+        } else if (type === 2) {
+            newFiles.image = file;
+        }
+        setFiles(newFiles);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!files.image) {
+            alert('Debe cargar una imagen.');
+            return;
+        }
+        if (!files.audio && !files.video && descriptionDetail.length < 1000) {
+            alert('Debe cargar un audio, un video o llenar la descripción detallada.');
+            return;
+        }
     }
     return (
         <form onSubmit={handleSubmit}>
-            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} alignItems="center">
                 <Grid item xs={6}>
                     <FormControl color='textField' fullWidth>
                         <InputLabel id="demo-simple-select-label">Testimonio</InputLabel>
@@ -126,11 +148,11 @@ const FormTestimony = ({ userId }) => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                <Alert sx={{mb:2}} severity="info">Elige la forma de guardar el testimonio.</Alert>
-                    <LoadFiles />
+                    <Alert severity="info">Elige la forma de guardar el testimonio.</Alert>
+                    <LoadFiles onFilesChange={handleFilesChange} />
                 </Grid>
                 <Grid item xs={12}>
-                <Alert sx={{mb:2}} severity="info">Describe de forma detallada los sucesos del testimonio.</Alert>
+                    <Alert sx={{ mb: 2 }} severity="info">Describe de forma detallada los sucesos del testimonio.</Alert>
                     <TextField
                         id="outlined-multiline-static"
                         label="Descripción detallada"
@@ -153,6 +175,16 @@ const FormTestimony = ({ userId }) => {
                         }
                         FormHelperTextProps={{ sx: { color: "error.main" } }}
                     />
+                </Grid>
+                <Grid
+                    container
+                    direction="column"
+                    justifyContent="space-around"
+                    alignItems="center"
+                    mt={4}>
+                    <Grid>
+                        <Button type="submit" variant="contained" color='secondary'>Enviar</Button>
+                    </Grid>
                 </Grid>
             </Grid>
 
