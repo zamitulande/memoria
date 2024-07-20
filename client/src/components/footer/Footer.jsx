@@ -10,7 +10,7 @@ const Footer = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     return (
-        <Container>
+        <Container sx={{mt:8}}>
             <Grid container wrap="nowrap" spacing={2} direction={isMobile ? 'column' : 'row'}>
                 <Grid item xs={12} sm={10}>
                     <Typography>

@@ -1,4 +1,4 @@
-import { Box, IconButton, Modal, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, IconButton, Modal, Typography } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Cancel';
 import React from 'react'
 
@@ -35,9 +35,7 @@ const Conditions = ({ open, setOpen }) => {
                 >
                     <CloseIcon />
                 </IconButton>
-                <Typography id="modal-modal-title" variant="h5" component="h2">
-                    Términos y condiciones
-                </Typography>
+                <Alert sx={{mb:2}} severity="info"> <AlertTitle>Términos y condiciones.</AlertTitle></Alert>
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                     Usted acepta ser participante del proyecto "Memoria Oral" y,
                     en conformidad con la legislación colombiana sobre tratamiento de

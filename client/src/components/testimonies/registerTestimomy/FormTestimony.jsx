@@ -1,4 +1,4 @@
-import { FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import UseValidation from '../../../helpers/hooks/UseValidation';
 import SelectCity from '../../../helpers/components/SelectCity';
@@ -15,6 +15,7 @@ const FormTestimony = ({ userId }) => {
     const [date, setDate] = useState("");
     const [city, setCity] = useState("");
     const [department, setDapartmet] = useState("");
+    const [descriptionDetail, setDescriptionDetail] = useState("");
 
     const categories = [
         'Conflicto armado',
@@ -121,12 +122,37 @@ const FormTestimony = ({ userId }) => {
                         value={city}
                         setCity={setCity}
                         department={department}
-                        //department={action === 'register' ? department : getFormEditar.department}
+                    //department={action === 'register' ? department : getFormEditar.department}
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant='h5'>Elige una forma de guardar el testimonio</Typography>
-                    <LoadFiles/>
+                <Alert sx={{mb:2}} severity="info">Elige la forma de guardar el testimonio.</Alert>
+                    <LoadFiles />
+                </Grid>
+                <Grid item xs={12}>
+                <Alert sx={{mb:2}} severity="info">Describe de forma detallada los sucesos del testimonio.</Alert>
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Descripción detallada"
+                        multiline
+                        rows={8}
+                        color='textField'
+                        name="descripcionDetallada"
+                        type='text'
+                        value={descriptionDetail}
+                        //defaultValue={action === 'update' ? getFormEditar.secondLastName : undefined}
+                        onChange={(e) => setDescriptionDetail(capitalizeFirstLetter(e.target.value))}
+                        fullWidth
+                        inputProps={{ maxLength: 3001 }}
+                        helperText={
+                            (!minLength(descriptionDetail, 1000) && descriptionDetail)
+                                ? "Este campo debe tener al menos 1000 caracteres"
+                                : (!maxLength(descriptionDetail, 3000) && descriptionDetail)
+                                    ? "Este campo no puede ser mayor a 3000 caracteres"
+                                    : ""
+                        }
+                        FormHelperTextProps={{ sx: { color: "error.main" } }}
+                    />
                 </Grid>
             </Grid>
 
