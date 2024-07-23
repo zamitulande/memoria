@@ -4,6 +4,7 @@ import UseValidation from '../../../helpers/hooks/UseValidation';
 import SelectCity from '../../../helpers/components/SelectCity';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
 import LoadFiles from './LoadFiles';
+import Swal from 'sweetalert2';
 
 const FormTestimony = ({ userId }) => {
 
@@ -16,7 +17,7 @@ const FormTestimony = ({ userId }) => {
     const [city, setCity] = useState("");
     const [department, setDapartmet] = useState("");
     const [descriptionDetail, setDescriptionDetail] = useState("");
-    const [files, setFiles] = useState({ audio: null, video: null, image: null });
+    const [files, setFiles] = useState({ audio: [], video: [], image: [] });
 
     const categories = [
         'Conflicto armado',
@@ -26,29 +27,29 @@ const FormTestimony = ({ userId }) => {
         'Conflicto social'
     ];
 
-    const handleFilesChange = (file, type) => {
-        const newFiles = { ...files };
-        if (type === 0) {
-            newFiles.audio = file;
-        } else if (type === 1) {
-            newFiles.video = file;
-        } else if (type === 2) {
-            newFiles.image = file;
-        }
-        setFiles(newFiles);
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!files.image) {
-            alert('Debe cargar una imagen.');
-            return;
+        console.log(files.image)
+        if(files.image  == 0){
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Debe cargar una imagen",
+              });
         }
-        if (!files.audio && !files.video && descriptionDetail.length < 1000) {
-            alert('Debe cargar un audio, un video o llenar la descripción detallada.');
-            return;
+        if(files.audio.length === 0 && files.video.length === 0 && descriptionDetail.length < 1000){
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Debe cargar un audio o video o dilenciar el campo descripción detallada",
+              });
         }
+       console.log(files)
     }
+
+    const handleFilesChange = (updatedFiles) => {
+        setFiles(updatedFiles);
+      };
     return (
         <form onSubmit={handleSubmit}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} alignItems="center">
@@ -149,7 +150,7 @@ const FormTestimony = ({ userId }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <Alert severity="info">Elige la forma de guardar el testimonio.</Alert>
-                    <LoadFiles onFilesChange={handleFilesChange} />
+                    <LoadFiles onFilesChange={handleFilesChange}  />
                 </Grid>
                 <Grid item xs={12}>
                     <Alert sx={{ mb: 2 }} severity="info">Describe de forma detallada los sucesos del testimonio.</Alert>

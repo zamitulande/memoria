@@ -1,50 +1,77 @@
-import { Alert, AlertTitle, Box, Button, Grid, Tab, Tabs } from '@mui/material';
+import { Alert, AlertTitle, Box, Button, Grid, IconButton, Tab, Tabs } from '@mui/material';
 import AudioFileIcon from '@mui/icons-material/AudioFile';
 import VideoFileIcon from '@mui/icons-material/VideoFile';
+import DeleteIcon from '@mui/icons-material/Delete';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import React, { useState } from 'react'
 
 const LoadFiles = ({ onFilesChange }) => {
 
   const [value, setValue] = useState(0);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [files, setFiles] = useState({ audio: [], video: [], image: [] });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    setSelectedFile(null);
-    onFilesChange(null, newValue);
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
-    onFilesChange(file, value);
+    if (file) {
+      const updatedFiles = { ...files };
+      if (value === 0) {
+        updatedFiles.audio.push(file);
+      } else if (value === 1) {
+        updatedFiles.video.push(file);
+      } else if (value === 2) {
+        updatedFiles.image.push(file);
+      }
+      setFiles(updatedFiles);
+      onFilesChange(updatedFiles);
+      event.target.value = '';
+    }
+  };
+
+  const handleFileDelete = (fileTypeKey, index) => {
+    const updatedFiles = { ...files };
+    updatedFiles[fileTypeKey].splice(index, 1);
+    setFiles(updatedFiles);
+    onFilesChange(updatedFiles);
   };
 
   const renderFileInput = () => {
     let accept;
+    let fileTypeKey;
+    let fileType;
     switch (value) {
       case 0:
         accept = 'audio/*';
+        fileTypeKey = 'audio';
+        fileType = 'Audio';
         break;
       case 1:
         accept = 'video/*';
+        fileTypeKey = 'video';
+        fileType = 'Video';
         break;
       case 2:
         accept = 'image/*';
+        fileTypeKey = 'image';
+        fileType = 'Imagen';
         break;
       default:
         accept = '';
+
     }
     return (
       <Grid container mt={1} spacing={2} direction="column" alignItems="center">
         <Grid item xs={12}>
           <Alert severity="info">
             <AlertTitle>
-              {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} del testimonio
+              {fileType} del testimonio
             </AlertTitle>
             A continuación, seleccione el archivo de {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} que contiene el relato del testimonio.
-            El tamaño máximo permitido para {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} es de {value === 0 ? '10' : value === 1 ? '512' : '8'} Megabytes.
+            El tamaño máximo permitido para {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} es de {value === 0 ? '10' : value === 1 ? '512' : '8'} Megabytes,
+            los formatos permitidos son: {value === 0 ? 'WAV, MP3, WMA, ACC.' : value === 1 ? 'MP4, AVI, WMV. ' : 'PNG, JPG, JPEG.'}
           </Alert>
         </Grid>
         <Grid item xs={12}>
@@ -53,22 +80,32 @@ const LoadFiles = ({ onFilesChange }) => {
             accept={accept}
             onChange={handleFileChange}
             style={{ display: 'none' }}
-            required={value === 2}
-            id="file-input"
+            id={`file-input-${value}`}
           />
-          <label htmlFor="file-input">
-            <Button variant="contained" component="span" color="secondary">
-              Cargar {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'}
+          <label htmlFor={`file-input-${value}`}>
+            <Button
+              variant="contained"
+              component="span"
+              color="secondary"
+              disabled={fileTypeKey === 'video' && files.video.length > 0}>
+              Cargar {fileType}
             </Button>
           </label>
         </Grid>
-        {selectedFile && (
-          <Grid item xs={12}>
+        {files[fileTypeKey].map((file, index) => (
+          <Grid item xs={12} key={index}>
             <Box mt={2}>
-              <strong>Archivo {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} :</strong> {selectedFile.name}
+              <strong>Archivo {fileType} :</strong> {file.name}
+              <IconButton
+                aria-label="delete"
+                color="error"
+                onClick={() => handleFileDelete(fileTypeKey, index)}
+              >
+                <DeleteIcon />
+              </IconButton>
             </Box>
           </Grid>
-        )}
+        ))}
       </Grid>
     );
   };
