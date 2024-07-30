@@ -35,8 +35,8 @@ public class TestimonyController {
             @RequestParam String department,
             @RequestParam String municipio,
             @RequestParam String descriptionDetail,
-            @RequestParam("audio") MultipartFile audio,
-            @RequestParam("video") MultipartFile video,
+            @RequestParam(value = "audio", required = false) MultipartFile audio,
+            @RequestParam(value ="video", required = false) MultipartFile video,
             @RequestParam("image") MultipartFile image)
             throws MessagingException, IOException {
             
