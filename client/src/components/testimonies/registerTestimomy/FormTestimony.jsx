@@ -5,16 +5,20 @@ import SelectCity from '../../../helpers/components/SelectCity';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
 import LoadFiles from './LoadFiles';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import axiosClient from '../../../config/Axios';
 
 const FormTestimony = ({ userId }) => {
+
+    const getToken = useSelector((state) => state.user.token)
 
     const { capitalizeFirstLetter, maxLength, minLength } = UseValidation();
 
     const [category, setCategory] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [date, setDate] = useState("");
-    const [city, setCity] = useState("");
+    const [eventDate, setEvenDate] = useState("");
+    const [municipio, setMunicipio] = useState("");
     const [department, setDapartmet] = useState("");
     const [descriptionDetail, setDescriptionDetail] = useState("");
     const [files, setFiles] = useState({ audio: [], video: [], image: [] });
@@ -29,27 +33,57 @@ const FormTestimony = ({ userId }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(files.image)
-        if(files.image  == 0){
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Debe cargar una imagen",
-              });
+
+        const postTestimony = async () => {
+            if (files.image == 0) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Debe cargar una imagen",
+                });
+            }
+            if (files.audio.length === 0 && files.video.length === 0 && descriptionDetail.length < 1000) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Debe cargar un audio o video o dilenciar el campo descripción detallada",
+                });
+            }
+            const { audio, video, image } = files;
+            console.log(audio[0])
+            const formData = new FormData();
+            formData.append("category", category);
+            formData.append("title", title);
+            formData.append("description", description);
+            formData.append("eventDate", eventDate);
+            formData.append("municipio", municipio);
+            formData.append("department", department);
+            formData.append("descriptionDetail", descriptionDetail);
+            formData.append("audio", audio[0]);
+            formData.append("video", video[0]);
+            formData.append("image", image[0]);
+            
+            
+            const config = {
+                headers: {
+                    'Authorization': `Bearer${getToken}`,
+                    'content-Type': 'multipart/form-data'
+                }
+            }
+            console.log(formData)
+            try {
+                const res = await axiosClient.post('/repository/register', formData, config);
+                console.log(res)
+            } catch (error) {
+                console.log(error)
+            }
         }
-        if(files.audio.length === 0 && files.video.length === 0 && descriptionDetail.length < 1000){
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Debe cargar un audio o video o dilenciar el campo descripción detallada",
-              });
-        }
-       console.log(files)
+        postTestimony();
     }
 
     const handleFilesChange = (updatedFiles) => {
         setFiles(updatedFiles);
-      };
+    };
     return (
         <form onSubmit={handleSubmit}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} alignItems="center">
@@ -80,6 +114,7 @@ const FormTestimony = ({ userId }) => {
                         variant="outlined"
                         name="titulo"
                         type='text'
+                        required
                         value={title}
                         //defaultValue={action === 'update' ? getFormEditar.secondLastName : undefined}
                         onChange={(e) => setTitle(capitalizeFirstLetter(e.target.value))}
@@ -101,6 +136,7 @@ const FormTestimony = ({ userId }) => {
                         color='textField'
                         variant="outlined"
                         name="descripcion"
+                        required
                         type='text'
                         value={description}
                         //defaultValue={action === 'update' ? getFormEditar.secondLastName : undefined}
@@ -122,8 +158,9 @@ const FormTestimony = ({ userId }) => {
                         <TextField
                             label="Fecha"
                             type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
+                            required
+                            value={eventDate}
+                            onChange={(e) => setEvenDate(e.target.value)}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -142,15 +179,15 @@ const FormTestimony = ({ userId }) => {
                 <Grid item xs={6}>
                     <SelectCity
                         //value={action === 'register' ? city : getFormEditar.municipio}
-                        value={city}
-                        setCity={setCity}
+                        value={municipio}
+                        setCity={setMunicipio}
                         department={department}
                     //department={action === 'register' ? department : getFormEditar.department}
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <Alert severity="info">Elige la forma de guardar el testimonio.</Alert>
-                    <LoadFiles onFilesChange={handleFilesChange}  />
+                    <LoadFiles onFilesChange={handleFilesChange} />
                 </Grid>
                 <Grid item xs={12}>
                     <Alert sx={{ mb: 2 }} severity="info">Describe de forma detallada los sucesos del testimonio.</Alert>

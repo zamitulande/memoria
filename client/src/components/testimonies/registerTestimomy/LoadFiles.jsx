@@ -71,7 +71,7 @@ const LoadFiles = ({ onFilesChange }) => {
             </AlertTitle>
             A continuación, seleccione el archivo de {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} que contiene el relato del testimonio.
             El tamaño máximo permitido para {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} es de {value === 0 ? '10' : value === 1 ? '512' : '8'} Megabytes,
-            los formatos permitidos son: {value === 0 ? 'WAV, MP3, WMA, ACC.' : value === 1 ? 'MP4, AVI, WMV. ' : 'PNG, JPG, JPEG.'}
+            los formatos permitidos son: {value === 0 ? 'WAV, MP3, WMA, ACC.' : value === 1 ? 'MP4, AVI, WMV, WEBM. ' : 'PNG, JPG, JPEG.'}
           </Alert>
         </Grid>
         <Grid item xs={12}>
@@ -87,7 +87,7 @@ const LoadFiles = ({ onFilesChange }) => {
               variant="contained"
               component="span"
               color="secondary"
-              disabled={fileTypeKey === 'video' && files.video.length > 0}>
+              disabled={fileTypeKey === 'video' && files.video.length > 0 || fileTypeKey === 'image' && files.image.length > 0}>
               Cargar {fileType}
             </Button>
           </label>
