@@ -13,8 +13,10 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.v1.server.entities.Testimony;
+import com.v1.server.entities.User;
 import com.v1.server.exceptions.ApiResponse;
 import com.v1.server.repositories.TestimonyRepository;
+import com.v1.server.repositories.UserRepository;
 import com.v1.server.services.TestimonyService;
 
 import jakarta.mail.MessagingException;
@@ -25,12 +27,16 @@ public class TestimonyServiceImpl implements TestimonyService {
     @Autowired
     private TestimonyRepository testimonyRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private static final String AUDIO_DIRECTORY = "./storage/testimony/audio";
     private static final String VIDEO_DIRECTORY = "./storage/testimony/video";
     private static final String IMAGE_DIRECTORY = "./storage/testimony/image";
 
     @Override
     public ApiResponse register(
+            Long userId,
             String category,
             String title,
             String description,
@@ -43,11 +49,15 @@ public class TestimonyServiceImpl implements TestimonyService {
             MultipartFile image)
             throws MessagingException, IOException {
 
+        User user = userRepository.findById(userId)
+                    .orElseThrow(()-> new IllegalArgumentException("Usuario no encontrado"));
+
         String audioUrl = saveUploadedFileAudio(audio, title);
         String videoUrl = saveUploadedFileVideo(video, title);
         String imageUrl = saveUploadedFileImage(image, title);
 
         var testimony = Testimony.builder()
+                    .user(user)
                     .category(category)
                     .title(title)
                     .description(description)

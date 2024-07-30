@@ -27,6 +27,7 @@ public class TestimonyController {
     // registra admin
     @PostMapping(path = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse register(
+            @RequestParam Long userId,
             @RequestParam String category,
             @RequestParam String title,
             @RequestParam String description,
@@ -40,6 +41,7 @@ public class TestimonyController {
             throws MessagingException, IOException {
             
         return testimonyService.register(
+                userId,
                 category,
                 title,
                 description,

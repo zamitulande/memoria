@@ -18,10 +18,16 @@ const FormTestimony = ({ userId }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [eventDate, setEvenDate] = useState("");
-    const [municipio, setMunicipio] = useState("");
+    const [city, setCity] = useState("");
     const [department, setDapartmet] = useState("");
     const [descriptionDetail, setDescriptionDetail] = useState("");
     const [files, setFiles] = useState({ audio: [], video: [], image: [] });
+
+    let municipio;
+    if (city) {
+        const { name } = city;
+        municipio = name;
+    }
 
     const categories = [
         'Conflicto armado',
@@ -30,7 +36,7 @@ const FormTestimony = ({ userId }) => {
         'Patrimonio alimentario',
         'Conflicto social'
     ];
-
+    
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -49,9 +55,11 @@ const FormTestimony = ({ userId }) => {
                     text: "Debe cargar un audio o video o dilenciar el campo descripción detallada",
                 });
             }
+            
             const { audio, video, image } = files;
             console.log(audio[0])
             const formData = new FormData();
+            formData.append("userId", userId);
             formData.append("category", category);
             formData.append("title", title);
             formData.append("description", description);
@@ -179,8 +187,8 @@ const FormTestimony = ({ userId }) => {
                 <Grid item xs={6}>
                     <SelectCity
                         //value={action === 'register' ? city : getFormEditar.municipio}
-                        value={municipio}
-                        setCity={setMunicipio}
+                        value={city}
+                        setCity={setCity}
                         department={department}
                     //department={action === 'register' ? department : getFormEditar.department}
                     />

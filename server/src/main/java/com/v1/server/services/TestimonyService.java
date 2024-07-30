@@ -13,6 +13,7 @@ import jakarta.mail.MessagingException;
 public interface TestimonyService {
 
     ApiResponse register(
+            Long userId,
             String category,
             String title,
             String description,
