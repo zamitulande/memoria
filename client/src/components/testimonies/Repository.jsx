@@ -7,11 +7,13 @@ import slider4 from '../../assets/slider/slider4.png'
 import slider5 from '../../assets/slider/slider5.png'
 import LoadingGif from '../../assets/loading/loading.gif'
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategory } from '../../redux/features/TestimonySlice';
 
 const Repository = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,12 +35,11 @@ const Repository = () => {
   }, [])
 
   const images = [
-    { src: slider1, title: "Conflicto armado", description: "Vivencias en los territorios con el flagelo de la guerra. ", link: "/page1" },
-    { src: slider2, title: "Covid 19", description: "Superacion y resignación durante la pandemia.", link: "/page2" },
-    { src: slider3, title: "Gastronomia", description: "Sabores, olores y la cocina tipica de Colombia.", link: "/page3" },
-    { src: slider4, title: "Turismo", description: "Lugares para descubrir y recordar.", link: "/page4" },
-    { src: slider5, title: "Mitos y leyendas", description: "Cuentos ancestrales llenos de suspenso.", link: "/page5" },
-    { src: slider1, title: "Artesanos", description: "Historias contadas en sus manos.", link: "/page5" }
+    { src: slider1, title: "Conflicto armado", description: "Vivencias en los territorios con el flagelo de la guerra. ", category: "conflicto-armado"},
+    { src: slider2, title: "Covid 19", description: "Superacion y resignación durante la pandemia.", category: "pandemia" },
+    { src: slider3, title: "Conflicto social", description: "Sabores, olores y la cocina tipica de Colombia.", category: "conflicto-social" },
+    { src: slider4, title: "Cultura", description: "Lugares para descubrir y recordar.", category: "cultura" },
+    { src: slider5, title: "Patrimonio alimentario", description: "Cuentos ancestrales llenos de suspenso.", category: "patrimonio-alimentario" }
   ];
 
   let message = "";
@@ -65,6 +66,11 @@ const Repository = () => {
         </Button>
       </Grid>
     </Grid>
+  }
+
+  const handleSelectCategory =(category)=>{
+    navigate(`/repositorio/${category}`);
+    dispatch(setCategory(category));
   }
 
   return (
@@ -98,11 +104,9 @@ const Repository = () => {
                 </CardContent>
               </CardActionArea>
               <CardActions>
-                <Link to={image.link}>
-                  <Button size="small" color="secondary" variant="contained">
+                  <Button size="small" color="secondary" variant="contained" onClick={() => handleSelectCategory(image.category)}>
                     Ver más
                   </Button>
-                </Link>
               </CardActions>
             </Card>
           </Grid>

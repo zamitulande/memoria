@@ -9,10 +9,13 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.v1.server.dtos.testimony.TestimonysDTO;
 import com.v1.server.entities.Testimony;
 import com.v1.server.entities.User;
 import com.v1.server.exceptions.ApiResponse;
@@ -146,5 +149,23 @@ public class TestimonyServiceImpl implements TestimonyService {
             os.write(file.getBytes());
         }
         return fileName;
+    }
+
+    @Override
+    public Page<TestimonysDTO> findTestimonyByCategory(String category, Pageable pageable) {
+        Page<Testimony> testimonyPage = testimonyRepository.findByCategory(category, pageable); 
+        return testimonyPage.map(testimony -> TestimonysDTO.builder()
+                        .testimonyId(testimony.getTestimonyId())
+                        .category(testimony.getCategory())
+                        .title(testimony.getTitle())
+                        .description(testimony.getDescription())
+                        .evenDate(testimony.getEvenDate())
+                        .municipio(testimony.getMunicipio())
+                        .department(testimony.getDepartment())
+                        .descriptionDetail(testimony.getDescriptionDetail())
+                        .audioUrl(testimony.getAudioUrl())
+                        .videoUrl(testimony.getVideoUrl())
+                        .imageUrl(testimony.getImageUrl())
+                        .build());
     }
 }

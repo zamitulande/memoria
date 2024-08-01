@@ -2,9 +2,12 @@ package com.v1.server.services;
 
 import java.io.IOException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.v1.server.dtos.testimony.TestimonysDTO;
 import com.v1.server.exceptions.ApiResponse;
 
 import jakarta.mail.MessagingException;
@@ -25,4 +28,6 @@ public interface TestimonyService {
             MultipartFile video,
             MultipartFile image)
             throws MessagingException, IOException;
+
+    Page<TestimonysDTO> findTestimonyByCategory(String category, Pageable pageable);
 }

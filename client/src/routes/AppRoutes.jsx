@@ -12,8 +12,11 @@ import ProtectedRoutes from "./ProtectedRoutes"
 import Repository from "../components/testimonies/Repository"
 import Update from "../components/users/Update"
 import RegisterTestimony from "../components/testimonies/registerTestimomy/RegisterTestimony"
+import Testimony from "../components/testimonies/Testimony"
+import { useSelector } from "react-redux"
 
 const AppRoutes = () => {
+  const category = useSelector((state) => state.testimony.category);
   return (
     <Routes>
       <Route path='/' element={<Home />} />
@@ -23,24 +26,27 @@ const AppRoutes = () => {
       <Route
         path='/usuarios'
         element={<ProtectedRoutes redirectTo="/">
-          <Users/>
+          <Users />
         </ProtectedRoutes>} />
       <Route path='/usuarios/registrar' element={<Register />} />
-      <Route 
-        path='/usuarios/editar' 
+      <Route
+        path='/usuarios/editar'
         element={<ProtectedRoutes redirectTo="/">
-          <Update/>
+          <Update />
         </ProtectedRoutes>} />
       <Route path='/activate-account' element={<ActivateAccount />} />
       <Route path='/forget-password' element={<ForgetPassword />} />
       <Route path='/reset-password' element={<ResetPassword />} />
       <Route path='/colaboraciones' element={<Collaborate />} />
       {/* <Route path='/repositorio/registrar' element={<RegisterTestimony/>}/> */}
-      <Route 
-        path='/repositorio/registrar' 
+      <Route
+        path='/repositorio/registrar'
         element={<ProtectedRoutes redirectTo="/">
-          <RegisterTestimony/>
+          <RegisterTestimony />
         </ProtectedRoutes>} />
+        {category ? (
+           <Route path={`/repositorio/${category}`}  element={<Testimony />} />
+        ): null}
     </Routes>
   )
 }
