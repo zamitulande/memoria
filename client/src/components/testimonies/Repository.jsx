@@ -57,7 +57,7 @@ const Repository = () => {
   } else if(login == true && role == "USER"){
     message = <Grid container spacing={1} justifyContent="space-evenly" mb={2}>
       <Grid item>
-        <Alert severity="info">A continuación puede registrar su testimonio</Alert>
+        <Alert severity="info">A continuación puede registrar su testimonio, para que su testimonio sea publico debera esperar la autorización del adminstrador.</Alert>
       </Grid>
       <Grid item>
         <Button variant="contained" color="secondary" size="large" onClick={handleRegisterUser}>

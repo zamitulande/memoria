@@ -4,12 +4,13 @@ import { useSelector } from 'react-redux'
 import FormTestimony from './FormTestimony'
 
 const RegisterTestimony = () => {
-    const userId = useSelector((state) => state.user.userId)
-    console.log(userId)
+
+  const userId = useSelector((state) => state.user.userId)
+
   return (
-    <Container sx={{mt:4}}>
-      <Alert sx={{mb:2}} icon={false} severity="info"><AlertTitle>Registro de testimonio.</AlertTitle></Alert>
-      <FormTestimony action="register" userId={userId}/>
+    <Container sx={{ mt: 4 }}>
+      <Alert sx={{ mb: 2 }} icon={false} severity="info"><AlertTitle>Registro de testimonio.</AlertTitle></Alert>
+      <FormTestimony action="register" userId={userId} />
     </Container>
   )
 }

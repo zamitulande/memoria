@@ -26,7 +26,7 @@ public class RateLimitingFilter implements Filter {
     private final ObjectMapper objectMapper;
 
     public RateLimitingFilter() {
-        Bandwidth limit = Bandwidth.classic(3, Refill.greedy(3, Duration.ofMinutes(10)));
+        Bandwidth limit = Bandwidth.classic(3, Refill.greedy(3, Duration.ofMinutes(5)));
         this.bucket = Bucket.builder().addLimit(limit).build();
         this.objectMapper = new ObjectMapper();
     }
@@ -43,7 +43,7 @@ public class RateLimitingFilter implements Filter {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
              ErrorMessage errorMessage = new ErrorMessage(
-                "Demaciados intentos fallidos, Click en Olvide Contraseña",
+                "Demaciados intentos fallidos, espere 5 minutos para volver a intentar o click en Olvide Contraseña",
                 HttpServletResponse.SC_MULTIPLE_CHOICES,
                 HttpStatus.TOO_MANY_REQUESTS,
                 httpServletRequest.getRequestURI()
