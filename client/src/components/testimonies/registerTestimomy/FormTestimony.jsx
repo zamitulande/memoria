@@ -1,11 +1,11 @@
 import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import UseValidation from '../../../helpers/hooks/UseValidation';
 import SelectCity from '../../../helpers/components/SelectCity';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
 import LoadFiles from './LoadFiles';
 import Swal from 'sweetalert2';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../../config/Axios';
 
 const FormTestimony = ({ userId }) => {
@@ -22,6 +22,7 @@ const FormTestimony = ({ userId }) => {
     const [department, setDapartmet] = useState("");
     const [descriptionDetail, setDescriptionDetail] = useState("");
     const [files, setFiles] = useState({ audio: [], video: [], image: [] });
+    const [path, setPath] = useState("")
 
     let municipio;
     if (city) {
@@ -36,7 +37,30 @@ const FormTestimony = ({ userId }) => {
         'Patrimonio alimentario',
         'Conflicto social'
     ];
-    
+    console.log(path)
+    useEffect(() => {
+        switch (category) {
+            case "Conflicto armado":
+                setPath("conflicto-armado");
+                break;
+            case "Pandemia":
+                setPath("pandemia");
+                break;
+            case "Cultura":
+                setPath("cultura");
+                break;
+            case "Patrimonio alimentario":
+                setPath("patrimonio-alimentario");
+                break;
+            case "Conflicto social":
+                setPath("conflicto-social");
+                break;
+            default:
+                setPath("default-path"); // Valor de respaldo
+                break;
+        }
+    }, [category]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -55,7 +79,7 @@ const FormTestimony = ({ userId }) => {
                     text: "Debe cargar un audio o video o dilenciar el campo descripción detallada",
                 });
             }
-            
+
             const { audio, video, image } = files;
             console.log(audio[0])
             const formData = new FormData();
@@ -67,11 +91,12 @@ const FormTestimony = ({ userId }) => {
             formData.append("municipio", municipio);
             formData.append("department", department);
             formData.append("descriptionDetail", descriptionDetail);
+            formData.append("path", path);
             formData.append("audio", audio[0]);
             formData.append("video", video[0]);
             formData.append("image", image[0]);
-            
-            
+
+
             const config = {
                 headers: {
                     'Authorization': `Bearer${getToken}`,

@@ -24,10 +24,11 @@ public interface TestimonyService {
             String department,
             String municipio,
             String descriptionDetail,
+            String path,
             MultipartFile audio,
             MultipartFile video,
             MultipartFile image)
             throws MessagingException, IOException;
 
-    Page<TestimonysDTO> findTestimonyByCategory(String category, Pageable pageable);
+    Page<TestimonysDTO> findTestimonyByCategory(String path, Pageable pageable);
 }

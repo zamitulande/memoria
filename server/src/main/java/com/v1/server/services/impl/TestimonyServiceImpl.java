@@ -48,6 +48,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             String department,
             String municipio,
             String descriptionDetail,
+            String path,
             MultipartFile audio,
             MultipartFile video,
             MultipartFile image)
@@ -81,6 +82,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .department(department)
                 .municipio(municipio)
                 .descriptionDetail(descriptionDetail)
+                .path(path)
                 .audioUrl(audioUrl)
                 .videoUrl(videoUrl)
                 .imageUrl(imageUrl)
@@ -152,8 +154,8 @@ public class TestimonyServiceImpl implements TestimonyService {
     }
 
     @Override
-    public Page<TestimonysDTO> findTestimonyByCategory(String category, Pageable pageable) {
-        Page<Testimony> testimonyPage = testimonyRepository.findByCategory(category, pageable); 
+    public Page<TestimonysDTO> findTestimonyByCategory(String path, Pageable pageable) {
+        Page<Testimony> testimonyPage = testimonyRepository.findByPath(path, pageable); 
         return testimonyPage.map(testimony -> TestimonysDTO.builder()
                         .testimonyId(testimony.getTestimonyId())
                         .category(testimony.getCategory())
@@ -163,6 +165,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                         .municipio(testimony.getMunicipio())
                         .department(testimony.getDepartment())
                         .descriptionDetail(testimony.getDescriptionDetail())
+                        .path(testimony.getPath())
                         .audioUrl(testimony.getAudioUrl())
                         .videoUrl(testimony.getVideoUrl())
                         .imageUrl(testimony.getImageUrl())

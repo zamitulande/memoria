@@ -8,7 +8,7 @@ import slider5 from '../../assets/slider/slider5.png'
 import LoadingGif from '../../assets/loading/loading.gif'
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCategory } from '../../redux/features/TestimonySlice';
+import { setCategories } from '../../redux/features/TestimonySlice';
 
 const Repository = () => {
 
@@ -36,7 +36,7 @@ const Repository = () => {
 
   const images = [
     { src: slider1, title: "Conflicto armado", description: "Vivencias en los territorios con el flagelo de la guerra. ", category: "conflicto-armado"},
-    { src: slider2, title: "Covid 19", description: "Superacion y resignación durante la pandemia.", category: "pandemia" },
+    { src: slider2, title: "Pandemia", description: "Superacion y resignación durante la pandemia.", category: "pandemia" },
     { src: slider3, title: "Conflicto social", description: "Sabores, olores y la cocina tipica de Colombia.", category: "conflicto-social" },
     { src: slider4, title: "Cultura", description: "Lugares para descubrir y recordar.", category: "cultura" },
     { src: slider5, title: "Patrimonio alimentario", description: "Cuentos ancestrales llenos de suspenso.", category: "patrimonio-alimentario" }
@@ -70,7 +70,7 @@ const Repository = () => {
 
   const handleSelectCategory =(category)=>{
     navigate(`/repositorio/${category}`);
-    dispatch(setCategory(category));
+    dispatch(setCategories(category));
   }
 
   return (

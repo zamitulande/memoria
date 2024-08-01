@@ -40,6 +40,7 @@ public class TestimonyController {
             @RequestParam String department,
             @RequestParam String municipio,
             @RequestParam String descriptionDetail,
+            @RequestParam String path,
             @RequestParam(value = "audio", required = false) MultipartFile audio,
             @RequestParam(value = "video", required = false) MultipartFile video,
             @RequestParam("image") MultipartFile image)
@@ -54,18 +55,19 @@ public class TestimonyController {
                 department,
                 municipio,
                 descriptionDetail,
+                path,
                 audio,
                 video,
                 image);
     }
 
-    @GetMapping("/show/{category}")
+    @GetMapping("/show/{path}")
     public ResponseEntity<Page<TestimonysDTO>> findTestimonyByCategory(
-            @PathVariable String category,
+            @PathVariable String path,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(category,pageable);
+        Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(path,pageable);
         return ResponseEntity.ok(testimonyPage);
     }
 }

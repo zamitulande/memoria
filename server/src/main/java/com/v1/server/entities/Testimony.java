@@ -43,6 +43,9 @@ public class Testimony {
     
     private String descriptionDetail;
 
+    @NotBlank
+    private String path;
+
     private String audioUrl;
 
     private String videoUrl;

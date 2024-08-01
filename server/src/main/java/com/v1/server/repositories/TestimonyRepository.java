@@ -10,5 +10,5 @@ import com.v1.server.entities.Testimony;
 @Repository
 public interface TestimonyRepository extends JpaRepository<Testimony, Long> {
     
-    Page<Testimony> findByCategory(String category, Pageable pageable);
+    Page<Testimony> findByPath(String path, Pageable pageable);
 }
