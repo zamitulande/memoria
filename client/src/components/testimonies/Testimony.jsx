@@ -10,26 +10,48 @@ const Testimony = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
-    
-    let path;
-    path=category;
+    const [data, setData] = useState([])
 
-    useEffect(()=>{
+    let path;
+    path = category;
+
+    useEffect(() => {
         setIsLoading(true);
-        const fetchData = async () =>{
+        const fetchData = async () => {
             console.log(category)
             try {
                 const response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
+                setData(response.data.content)
                 console.log(response)
             } catch (error) {
                 console.log(error)
             }
         }
         fetchData();
-    },[])
+    }, [])
 
     return (
-        <div>Testimony {category}</div>
+        <div>
+            {data.map((testimony) => (
+                <div key={testimony.testimonyId}>
+                    <h3>{testimony.title}</h3>
+                    <p>{testimony.description}</p>
+                    <p>{testimony.evenDate}</p>
+                    <p>{testimony.municipio}, {testimony.department}</p>
+                    <p>{testimony.descriptionDetail}</p>
+                    <div>
+                        {testimony.imageUrl && (
+                            <img
+                                src={testimony.imageUrl}
+                                alt={testimony.title}
+                                style={{ width: '100px', height: 'auto' }}
+                            />
+                        )}
+                    </div>
+                </div>
+            ))}
+        </div>
+
     )
 }
 

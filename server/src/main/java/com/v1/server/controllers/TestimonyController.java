@@ -1,8 +1,12 @@
 package com.v1.server.controllers;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -69,5 +73,22 @@ public class TestimonyController {
         Pageable pageable = PageRequest.of(page, size);
         Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(path,pageable);
         return ResponseEntity.ok(testimonyPage);
+    }
+
+    private final String FILE_DIRECTORY = "storage/testimony/"; 
+
+    @GetMapping("/show/image/{filename}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        System.out.println(filename);
+        Path file = Paths.get(FILE_DIRECTORY).resolve("image").resolve(filename);
+        Resource resource = new FileSystemResource(file.toFile());
+        return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG) 
+            .body(resource);
+    }
+
+    @GetMapping("/show/image/hola")
+    public String hola(){
+        return "hola mundo";
     }
 }

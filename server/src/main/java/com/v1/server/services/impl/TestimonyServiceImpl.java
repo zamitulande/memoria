@@ -38,6 +38,8 @@ public class TestimonyServiceImpl implements TestimonyService {
     private static final String VIDEO_DIRECTORY = "./storage/testimony/video";
     private static final String IMAGE_DIRECTORY = "./storage/testimony/image";
 
+    private static final String FILE_SERVER_URL = "http://localhost:6868/api/v1/repository/show"; 
+
     @Override
     public ApiResponse register(
             Long userId,
@@ -166,9 +168,9 @@ public class TestimonyServiceImpl implements TestimonyService {
                         .department(testimony.getDepartment())
                         .descriptionDetail(testimony.getDescriptionDetail())
                         .path(testimony.getPath())
-                        .audioUrl(testimony.getAudioUrl())
-                        .videoUrl(testimony.getVideoUrl())
-                        .imageUrl(testimony.getImageUrl())
+                        .audioUrl(FILE_SERVER_URL + "/audio/" + testimony.getAudioUrl())
+                        .videoUrl(FILE_SERVER_URL + "/video/" + testimony.getVideoUrl())
+                        .imageUrl(FILE_SERVER_URL + "/image/" + testimony.getImageUrl())
                         .build());
     }
 }
