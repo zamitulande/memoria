@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,8 @@ public class TestimonyServiceImpl implements TestimonyService {
     private static final String VIDEO_DIRECTORY = "./storage/testimony/video";
     private static final String IMAGE_DIRECTORY = "./storage/testimony/image";
 
-    private static final String FILE_SERVER_URL = "http://localhost:6868/api/v1/repository/show"; 
+    @Value("${path-load-file:pathFile}")
+    private String pathFile;
 
     @Override
     public ApiResponse register(
@@ -168,9 +170,9 @@ public class TestimonyServiceImpl implements TestimonyService {
                         .department(testimony.getDepartment())
                         .descriptionDetail(testimony.getDescriptionDetail())
                         .path(testimony.getPath())
-                        .audioUrl(FILE_SERVER_URL + "/audio/" + testimony.getAudioUrl())
-                        .videoUrl(FILE_SERVER_URL + "/video/" + testimony.getVideoUrl())
-                        .imageUrl(FILE_SERVER_URL + "/image/" + testimony.getImageUrl())
+                        .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
+                        .videoUrl(pathFile+ "/video/" + testimony.getVideoUrl())
+                        .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                         .build());
     }
 }

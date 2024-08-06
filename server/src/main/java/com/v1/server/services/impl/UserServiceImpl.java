@@ -47,9 +47,6 @@ public class UserServiceImpl implements UserService {
     @Value("${login-user:loginUser}")
     private String loginUser;
 
-    @Value("${characters-token:characters}")
-    private String characters;
-
     private static final String CONSENTIMIENTO_DIRECTORY = "./storage/user/consentimiento-informado";
 
     //registra admin

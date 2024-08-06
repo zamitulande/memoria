@@ -69,7 +69,7 @@ public class TestimonyController {
     public ResponseEntity<Page<TestimonysDTO>> findTestimonyByCategory(
             @PathVariable String path,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "1") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(path,pageable);
         return ResponseEntity.ok(testimonyPage);
@@ -79,16 +79,10 @@ public class TestimonyController {
 
     @GetMapping("/show/image/{filename}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
-        System.out.println(filename);
         Path file = Paths.get(FILE_DIRECTORY).resolve("image").resolve(filename);
         Resource resource = new FileSystemResource(file.toFile());
         return ResponseEntity.ok()
             .contentType(MediaType.IMAGE_JPEG) 
             .body(resource);
-    }
-
-    @GetMapping("/show/image/hola")
-    public String hola(){
-        return "hola mundo";
     }
 }

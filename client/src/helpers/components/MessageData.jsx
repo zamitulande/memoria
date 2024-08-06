@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Snackbar from '@mui/material/Snackbar';
 import { Alert, Box } from '@mui/material';
 
-const MessageData = () => {
+const MessageData = ({action}) => {
 
     const [open, setOpen] = useState(true);
     
@@ -12,6 +12,13 @@ const MessageData = () => {
         }
         setOpen(false);
     };
+    let message;
+    
+    if(action === "testimony"){
+        message = "testimonios"
+    }else{
+        message = "usuarios"
+    } 
 
     return (
         <Box>
@@ -31,7 +38,8 @@ const MessageData = () => {
                         '& .MuiAlert-icon': { fontSize: '1.5em' },
                     }}
                 >
-                    No hay usuarios registrados.
+                    {}
+                    No hay {message} registrados.
                 </Alert>
             </Snackbar>
         </Box>
