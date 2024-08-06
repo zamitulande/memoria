@@ -69,7 +69,7 @@ public class TestimonyController {
     public ResponseEntity<Page<TestimonysDTO>> findTestimonyByCategory(
             @PathVariable String path,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "1") int size) {
+            @RequestParam(defaultValue = "6") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(path,pageable);
         return ResponseEntity.ok(testimonyPage);

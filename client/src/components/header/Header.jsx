@@ -2,9 +2,6 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import LoginIcon from '@mui/icons-material/Login';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {
     BottomNavigation,
     BottomNavigationAction,
@@ -18,8 +15,6 @@ import {
     Typography,
     Menu,
     Container,
-    Popper,
-    Chip,
     useMediaQuery,
 } from '@mui/material';
 import { Fragment, useState } from 'react';

@@ -24,7 +24,7 @@ const Testimony = () => {
         const fetchData = async () => {
             console.log(category)
             try {
-                const response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=1`)
+                const response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
                 setData(response.data.content)
                 setTotalPages(response.data.totalPages);
                 setTotalElements(response.data.totalElements)
@@ -87,7 +87,7 @@ const Testimony = () => {
                     </Grid>
                 ))}
             </Grid>
-            {totalElements > 1 && (
+            {totalElements > 6 && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                     <Button variant="contained" disabled={currentPage === 0} onClick={handlePreviousPage}>
                         Anterior
