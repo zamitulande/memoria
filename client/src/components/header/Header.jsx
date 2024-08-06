@@ -48,7 +48,6 @@ const Header = () => {
         { item: 'Sena', id: 1, path: 'https://www.sena.edu.co/es-co/Paginas/default.aspx' },
         { item: 'Sennova', id: 2, path: 'https://www.sena.edu.co/es-co/formacion/paginas/tecnologia-innovacion.aspx' },
         { item: 'Tecnoparque', id: 3, path: 'https://sena.edu.co/es-co/formacion/Paginas/tecnoparques.aspx' },
-        { item: 'Contactenos', id: 4 },
     ]
 
     const buttonsAuth = [
@@ -62,7 +61,6 @@ const Header = () => {
     const [openResetPassword, setOpenResetPassword] = useState(false);
     const [anchorElNav, setAnchorElNav] = useState(null)
     const [anchorElUser, setAnchorElUser] = useState(null)
-    const [anchorElContact, setAnchorElContact] = useState(null);
     const [valuePage, setValuePage] = useState(0)
 
     const login = useSelector((state) => state.user.login)
@@ -76,18 +74,6 @@ const Header = () => {
     const handleMenuClose = (setter) => () => {
         setter(null);
     };
-
-    const contactClick = (event) => {
-        setAnchorElContact(anchorElContact ? null : event.currentTarget);
-    }
-
-    const openInfo = Boolean(anchorElContact);
-    const id = openInfo ? 'simple-popper' : undefined;
-    if (anchorElContact) {
-        setTimeout(() => {
-            setAnchorElContact(null)
-        }, 5000)
-    }
 
     const handleLogout = () => {
         dispatch(setLogin(false))
@@ -106,16 +92,10 @@ const Header = () => {
 
     const renderButtonGroup = (items) => (
         <ButtonGroup disableElevation variant="contained" aria-label="button group">
-            {items.map((item) => (
-                item.path ? (
+            {items.map((item) => (                
                     <Link to={item.path} target="_blank" rel="noopener noreferrer" key={item.id}>
                         <Button size="small">{item.item}</Button>
-                    </Link>
-                ) : (
-                    <Button onClick={contactClick} size="small" key={item.id}>
-                        {item.item}
-                    </Button>
-                )
+                    </Link>                
             ))}
         </ButtonGroup>
     );
@@ -319,15 +299,6 @@ const Header = () => {
                     {/* :::END MOVIL FIRST LOGIN:: */}
                 </Toolbar>
             </Container>
-            {openInfo && (
-                <Popper id={id} open={openInfo} anchorEl={anchorElContact} color="primary">
-                    <Box>
-                        <Chip icon={<MailOutlineIcon />} label="memoriaoralsena@gmail.com" />
-                        <Chip icon={<PhoneAndroidIcon />} label="+57 (2) 8205108 – 8205903 - Ext. 22408 - 22029" />
-                        <Chip icon={<LocationOnIcon />} label="Calle 4 #2-80 - Popayán (Cauca)" />
-                    </Box>
-                </Popper>
-            )}
         </AppBar>
         {isMobile ? <Box sx={{  height: '60px' }} />:<Box sx={{  height: '150px' }} />}
        </>
