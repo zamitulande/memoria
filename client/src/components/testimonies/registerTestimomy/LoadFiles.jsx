@@ -3,9 +3,9 @@ import AudioFileIcon from '@mui/icons-material/AudioFile';
 import VideoFileIcon from '@mui/icons-material/VideoFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-const LoadFiles = ({ onFilesChange }) => {
+const LoadFiles = ({ onFilesChange, resetTrigger }) => {
 
   const [value, setValue] = useState(0);
   const [files, setFiles] = useState({ audio: [], video: [], image: [] });
@@ -109,6 +109,13 @@ const LoadFiles = ({ onFilesChange }) => {
       </Grid>
     );
   };
+
+  useEffect(() => {
+    if (resetTrigger) {
+      setFiles({ audio: [], video: [], image: [] });
+    }
+  }, [resetTrigger]);
+
 
   return (
     <Box mt={2}>

@@ -38,15 +38,14 @@ const AppRoutes = () => {
       <Route path='/forget-password' element={<ForgetPassword />} />
       <Route path='/reset-password' element={<ResetPassword />} />
       <Route path='/colaboraciones' element={<Collaborate />} />
-      <Route path='/repositorio/registrar' element={<RegisterTestimony/>}/>
-      {/* <Route
+      <Route
         path='/repositorio/registrar'
         element={<ProtectedRoutes redirectTo="/">
           <RegisterTestimony />
-        </ProtectedRoutes>} /> */}
-        {category ? (
-           <Route path={`/repositorio/${category}`}  element={<Testimony />} />
-        ): null}
+        </ProtectedRoutes>} />
+      {category ? (
+        <Route path={`/repositorio/${category}`} element={<Testimony />} />
+      ) : null}
     </Routes>
   )
 }

@@ -5,14 +5,22 @@ import SelectCity from '../../../helpers/components/SelectCity';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
 import LoadFiles from './LoadFiles';
 import Swal from 'sweetalert2';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import axiosClient from '../../../config/Axios';
+import { useNavigate } from 'react-router-dom';
+import {animateScroll} from 'react-scroll';
+import ViewTestimony from '../../../helpers/components/ViewTestimony';
 
 const FormTestimony = ({ userId }) => {
 
     const getToken = useSelector((state) => state.user.token)
 
+    const navigate = useNavigate();
+
     const { capitalizeFirstLetter, maxLength, minLength } = UseValidation();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const [category, setCategory] = useState("");
     const [title, setTitle] = useState("");
@@ -23,6 +31,8 @@ const FormTestimony = ({ userId }) => {
     const [descriptionDetail, setDescriptionDetail] = useState("");
     const [files, setFiles] = useState({ audio: [], video: [], image: [] });
     const [path, setPath] = useState("")
+    const [resetTrigger, setResetTrigger] = useState(false);
+
 
     let municipio;
     if (city) {
@@ -37,7 +47,6 @@ const FormTestimony = ({ userId }) => {
         'Patrimonio alimentario',
         'Conflicto social'
     ];
-    console.log(path)
     useEffect(() => {
         switch (category) {
             case "Conflicto armado":
@@ -61,11 +70,35 @@ const FormTestimony = ({ userId }) => {
         }
     }, [category]);
 
+    const resetForm = () => {
+        setCategory("")
+        setTitle("")
+        setDescription("")
+        setEvenDate("")
+        setCity("")
+        setDapartmet("")
+        setDescriptionDetail("")
+        setFiles({ audio: [], video: [], image: [] })
+        setResetTrigger((prev) => !prev);
+    }
+
+    const isDisable = () => {
+        return (
+        !title ||
+        !minLength(title, 10) ||
+        !description ||
+        !minLength(description, 30) ||
+        !eventDate ||
+        !city ||
+        !department
+        )
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        setIsLoading(true);
         const postTestimony = async () => {
             if (files.image == 0) {
+                setOpen(false)
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
@@ -73,15 +106,15 @@ const FormTestimony = ({ userId }) => {
                 });
             }
             if (files.audio.length === 0 && files.video.length === 0 && descriptionDetail.length < 1000) {
+                setOpen(false)
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     text: "Debe cargar un audio o video o dilenciar el campo descripción detallada",
                 });
+                
             }
-
             const { audio, video, image } = files;
-            console.log(audio[0])
             const formData = new FormData();
             formData.append("userId", userId);
             formData.append("category", category);
@@ -95,18 +128,35 @@ const FormTestimony = ({ userId }) => {
             formData.append("audio", audio[0]);
             formData.append("video", video[0]);
             formData.append("image", image[0]);
-
-
             const config = {
                 headers: {
                     'Authorization': `Bearer${getToken}`,
                     'content-Type': 'multipart/form-data'
                 }
             }
-            console.log(formData)
             try {
                 const res = await axiosClient.post('/repository/register', formData, config);
-                console.log(res)
+                const messageResponse = res.data.message;
+                setIsLoading(false)
+                setOpen(false)
+                resetForm();
+                Swal.fire({
+                    title: messageResponse,
+                    icon: "success",
+                    text: "Desea crear otro testimonio para este mismo usuario?",
+                    confirmButtonText: "Si",
+                    cancelButtonText: "No",
+                    showCancelButton: true,
+                    showCloseButton: true
+                  }).then((result)=>{
+                    if(!result.isConfirmed){
+                        resetForm();
+                        navigate('/repositorio')
+                    }else{
+                        resetForm();
+                        animateScroll.scrollToTop()
+                    }
+                  })
             } catch (error) {
                 console.log(error)
             }
@@ -220,7 +270,7 @@ const FormTestimony = ({ userId }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <Alert severity="info">Elige la forma de guardar el testimonio.</Alert>
-                    <LoadFiles onFilesChange={handleFilesChange} />
+                    <LoadFiles onFilesChange={handleFilesChange} resetTrigger={resetTrigger}/>
                 </Grid>
                 <Grid item xs={12}>
                     <Alert sx={{ mb: 2 }} severity="info">Describe de forma detallada los sucesos del testimonio.</Alert>
@@ -254,9 +304,12 @@ const FormTestimony = ({ userId }) => {
                     alignItems="center"
                     mt={4}>
                     <Grid>
-                        <Button type="submit" variant="contained" color='secondary'>Enviar</Button>
+                        <Button onClick={(e)=>setOpen(true)} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button>
                     </Grid>
                 </Grid>
+                {open && (
+                    <ViewTestimony submit={handleSubmit} open={open} setOpen={setOpen} category={category} files={files}/>
+                )}
             </Grid>
 
         </form>
