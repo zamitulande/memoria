@@ -38,7 +38,7 @@ const Repository = () => {
     { src: slider1, title: "Conflicto armado", description: "Vivencias en los territorios con el flagelo de la guerra. ", category: "conflicto-armado"},
     { src: slider2, title: "Pandemia", description: "Superacion y resignación durante la pandemia.", category: "pandemia" },
     { src: slider3, title: "Conflicto social", description: "Sabores, olores y la cocina tipica de Colombia.", category: "conflicto-social" },
-    { src: slider4, title: "Cultura", description: "Lugares para descubrir y recordar.", category: "cultura" },
+    { src: slider4, title: "Cultura", description: "Lugares para descubrir y recordar del Cauca.", category: "cultura" },
     { src: slider5, title: "Patrimonio alimentario", description: "Cuentos ancestrales llenos de suspenso.", category: "patrimonio-alimentario" }
   ];
 
@@ -74,11 +74,11 @@ const Repository = () => {
   }
 
   return (
-    <Container>
+    <>
       {message}
-      <Grid container spacing={1} mb={6}>
+      <Grid container spacing={2} mb={6} sx={{padding:8}}>
         {images.map((image, index) => (
-          <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
+          <Grid item key={index} xs={12} sm={6} md={4} lg={2.4}>
             <Card sx={{
               boxShadow: 8,
               transition: 'transform 0.3s, box-shadow 0.3s',
@@ -119,7 +119,7 @@ const Repository = () => {
                     </Box>
                 )
             } */}
-    </Container>
+    </>
 
   )
 }

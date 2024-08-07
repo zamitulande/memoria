@@ -86,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
 
         User savedUser = userRepository.save(user);
         sendValidationEmail(savedUser);
-        String message = "Usuario creado satisfactoriamente";
+        String message = "Usuario creado satisfactoriamente, recibira un correo electronico de validación";
         return new ApiResponse(200, message);
 
     }

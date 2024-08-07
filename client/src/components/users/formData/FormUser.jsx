@@ -54,7 +54,7 @@ const FormUser = ({ action, role }) => {
         municipio = name;
     }
 
-    const { maxLength, minLength } = UseValidation(); 
+    const { maxLength, minLength } = UseValidation();
 
     const resetForm = () => {
         setIdentification("")
@@ -74,42 +74,37 @@ const FormUser = ({ action, role }) => {
     }
 
     const isDisable = () => {
+        const commonConditions = () => (
+            !identification ||
+            !minLength(identification, 8) ||
+            !firstName ||
+            !minLength(firstName, 3) ||
+            !firstLastName ||
+            !minLength(firstLastName, 3) ||
+            !city ||
+            !department ||
+            !contactNumber
+        );
         if (action === 'register') {
-            return (
-                !identification ||
-                !minLength(identification, 8) ||
-                !firstName ||
-                !minLength(firstName, 3) ||
-                !firstLastName ||
-                !minLength(firstLastName, 3) ||
+            const registerConditions = () => (
                 !password ||
                 !minLength(password, 8) ||
-                !city ||
-                !department ||
-                !contactNumber ||
                 !confirmPassword ||
-                !minLength(confirmPassword, 8) ||
-                !file
+                !minLength(confirmPassword, 8)
             );
+
+            if (role === "ADMIN") {
+                return commonConditions() || registerConditions() || !file;
+            }
+
         } else if (action === 'update') {
-            return (
-                !identification ||
-                !minLength(identification, 8) ||
-                !firstName ||
-                !minLength(firstName, 3) ||
-                !firstLastName ||
-                !minLength(firstLastName, 3) ||
-                !city ||
-                !department ||
-                !contactNumber
-            );
+            return commonConditions();
         }
     }
-
     const handleSubmitRegisterUser = (e) => {
         e.preventDefault();
         setIsLoading(true);
-        setUser({
+        const userData = {
             identification,
             email,
             confirmEmail,
@@ -122,8 +117,8 @@ const FormUser = ({ action, role }) => {
             municipio,
             password,
             confirmPassword
-        })
-        axiosClient.post('/auth/register', user)
+        }
+        axiosClient.post('/auth/register', userData)
             .then((response) => {
                 const messageResponse = response.data.message;
                 resetForm();
@@ -135,7 +130,6 @@ const FormUser = ({ action, role }) => {
                 });
             })
             .catch((error) => {
-                console.log(error)
                 setIsLoading(false);
                 const errorMessage = error.response.data.message
                 Swal.fire({
@@ -163,13 +157,12 @@ const FormUser = ({ action, role }) => {
             formData.append('password', password)
             formData.append('confirmPassword', confirmPassword)
             formData.append('document', file[0]);
-            console.log(formData)
             const config = {
                 headers: {
                     'Authorization': `Bearer${getToken}`,
                     'content-Type': 'multipart/form-data'
                 }
-            }           
+            }
             try {
                 const res = await axiosClient.post('/users/register', formData, config);
                 const messageResponse = res.data.message;
@@ -183,7 +176,6 @@ const FormUser = ({ action, role }) => {
                 });
                 navigate('/repositorio/registrar');
             } catch (error) {
-                console.log(error)
                 setIsLoading(false);
                 const errorMessage = error.response.data.message
                 Swal.fire({
@@ -198,7 +190,7 @@ const FormUser = ({ action, role }) => {
 
     const handleSubmitUpdate = async (e) => {
         e.preventDefault();
-        const updateUser = {...user}
+        const updateUser = { ...user }
         updateUser.identification = identification || getFormEditar.identification;
         updateUser.email = email || getFormEditar.email;
         updateUser.confirmEmail = confirmEmail || getFormEditar.confirmEmail;
@@ -209,7 +201,7 @@ const FormUser = ({ action, role }) => {
         updateUser.contactNumber = contactNumber || getFormEditar.contactNumber;
         updateUser.department = department || getFormEditar.department;
         updateUser.municipio = municipio || getFormEditar.municipio;
-        
+
         Swal.fire({
             title: "¿Quieres guardar los cambios?",
             showDenyButton: true,
@@ -228,7 +220,6 @@ const FormUser = ({ action, role }) => {
                     Swal.fire("¡Guardado!", "Los cambios han sido guardados exitosamente.", "success");
                     navigate('/usuarios');
                 } catch (error) {
-                    console.log(error)
                     Swal.fire("Error", error.response.data.message, "error");
                 }
             } else if (result.isDenied) {
