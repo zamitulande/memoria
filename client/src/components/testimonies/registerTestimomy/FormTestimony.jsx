@@ -308,7 +308,18 @@ const FormTestimony = ({ userId }) => {
                     </Grid>
                 </Grid>
                 {open && (
-                    <ViewTestimony submit={handleSubmit} open={open} setOpen={setOpen} category={category} files={files}/>
+                    <ViewTestimony 
+                    submit={handleSubmit} 
+                    open={open} 
+                    setOpen={setOpen} 
+                    category={category} 
+                    title={title}
+                    description={description}
+                    eventDate={eventDate}
+                    municipio={municipio}
+                    department={department}
+                    descriptionDetail={descriptionDetail}
+                    files={files}/>
                 )}
             </Grid>
 
