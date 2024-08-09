@@ -46,8 +46,9 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/api/v1/auth/activate-account"),
                 new AntPathRequestMatcher("/api/v1/auth/forget-password"),
                 new AntPathRequestMatcher("/api/v1/auth/reset-password"),
-                new AntPathRequestMatcher("/api/v1/repository/show/*"),
-                new AntPathRequestMatcher("/api/v1/repository/show/**")
+                new AntPathRequestMatcher("/api/v1/repository/show/**"),
+                new AntPathRequestMatcher("/api/v1/repository/files/show/video/*"),
+                new AntPathRequestMatcher("/api/v1/repository/files/show/image/*")
         );
     }
 }

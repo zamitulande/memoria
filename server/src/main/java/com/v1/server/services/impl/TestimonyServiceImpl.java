@@ -103,7 +103,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             return null;
         }
         String[] allowedTypes = { "audio/wav", "audio/mpeg", "audio/x-ms-wma", "audio/acc" };
-        long maxFileSize = 20 * 1024 * 1024; // 20 MB en bytes
+        long maxFileSize = 3 * 1024 * 1024; // 20 MB en bytes
         String uploadDir = AUDIO_DIRECTORY;
         return saveUploadedFile(audio, title, allowedTypes, maxFileSize, uploadDir);
     }
@@ -113,7 +113,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             return null;
         }
         String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
-        long maxFileSize = 50 * 1024 * 1024; // 50 MB en bytes
+        long maxFileSize = 500 * 1024 * 1024; // 50 MB en bytes
         String uploadDir = VIDEO_DIRECTORY;
         return saveUploadedFile(video, title, allowedTypes, maxFileSize, uploadDir);
     }

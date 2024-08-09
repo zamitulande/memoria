@@ -5,22 +5,23 @@ import SelectCity from '../../../helpers/components/SelectCity';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
 import LoadFiles from './LoadFiles';
 import Swal from 'sweetalert2';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../../config/Axios';
 import { useNavigate } from 'react-router-dom';
-import {animateScroll} from 'react-scroll';
+import { animateScroll } from 'react-scroll';
 import ViewTestimony from '../../../helpers/components/ViewTestimony';
+import { setOpenViewTestimony } from '../../../redux/features/TestimonySlice';
 
 const FormTestimony = ({ userId }) => {
 
     const getToken = useSelector((state) => state.user.token)
-
+    const openViewTestimony = useSelector((state) => state.testimony.openViewTestimony)
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const { capitalizeFirstLetter, maxLength, minLength } = UseValidation();
 
     const [isLoading, setIsLoading] = useState(false);
-    const [open, setOpen] = useState(false);
 
     const [category, setCategory] = useState("");
     const [title, setTitle] = useState("");
@@ -32,6 +33,7 @@ const FormTestimony = ({ userId }) => {
     const [files, setFiles] = useState({ audio: [], video: [], image: [] });
     const [path, setPath] = useState("")
     const [resetTrigger, setResetTrigger] = useState(false);
+    const [messageResponse, setMessageResponse]= useState("");
 
 
     let municipio;
@@ -84,13 +86,13 @@ const FormTestimony = ({ userId }) => {
 
     const isDisable = () => {
         return (
-        !title ||
-        !minLength(title, 10) ||
-        !description ||
-        !minLength(description, 30) ||
-        !eventDate ||
-        !city ||
-        !department
+            !title ||
+            !minLength(title, 10) ||
+            !description ||
+            !minLength(description, 30) ||
+            !eventDate ||
+            !city ||
+            !department
         )
     }
     const handleSubmit = (e) => {
@@ -98,7 +100,7 @@ const FormTestimony = ({ userId }) => {
         setIsLoading(true);
         const postTestimony = async () => {
             if (files.image == 0) {
-                setOpen(false)
+                dispatch(setOpenViewTestimony(false))
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
@@ -106,13 +108,13 @@ const FormTestimony = ({ userId }) => {
                 });
             }
             if (files.audio.length === 0 && files.video.length === 0 && descriptionDetail.length < 1000) {
-                setOpen(false)
+                dispatch(setOpenViewTestimony(false))
                 Swal.fire({
                     icon: "error",
                     title: "Oops...",
                     text: "Debe cargar un audio o video o dilenciar el campo descripción detallada",
                 });
-                
+
             }
             const { audio, video, image } = files;
             const formData = new FormData();
@@ -138,7 +140,7 @@ const FormTestimony = ({ userId }) => {
                 const res = await axiosClient.post('/repository/register', formData, config);
                 const messageResponse = res.data.message;
                 setIsLoading(false)
-                setOpen(false)
+                dispatch(setOpenViewTestimony(false))
                 resetForm();
                 Swal.fire({
                     title: messageResponse,
@@ -148,18 +150,26 @@ const FormTestimony = ({ userId }) => {
                     cancelButtonText: "No",
                     showCancelButton: true,
                     showCloseButton: true
-                  }).then((result)=>{
-                    if(!result.isConfirmed){
+                }).then((result) => {
+                    if (!result.isConfirmed) {
                         resetForm();
                         navigate('/repositorio')
-                    }else{
+                    } else {
                         resetForm();
                         animateScroll.scrollToTop()
                     }
-                  })
+                })
             } catch (error) {
-                console.log(error)
+                const messageError =error.response.data.message;
+                Swal.fire({
+                    icon: "error",
+                    title: messageError,
+                    customClass: {
+                        container: 'my-swal'
+                    }
+                  });
             }
+            setMessageResponse("")
         }
         postTestimony();
     }
@@ -270,7 +280,7 @@ const FormTestimony = ({ userId }) => {
                 </Grid>
                 <Grid item xs={12}>
                     <Alert severity="info">Elige la forma de guardar el testimonio.</Alert>
-                    <LoadFiles onFilesChange={handleFilesChange} resetTrigger={resetTrigger}/>
+                    <LoadFiles onFilesChange={handleFilesChange} resetTrigger={resetTrigger} />
                 </Grid>
                 <Grid item xs={12}>
                     <Alert sx={{ mb: 2 }} severity="info">Describe de forma detallada los sucesos del testimonio.</Alert>
@@ -304,22 +314,24 @@ const FormTestimony = ({ userId }) => {
                     alignItems="center"
                     mt={4}>
                     <Grid>
-                        <Button onClick={(e)=>setOpen(true)} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button>
+                        <Button onClick={(e) => dispatch(setOpenViewTestimony(true))} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button>
                     </Grid>
                 </Grid>
-                {open && (
-                    <ViewTestimony 
-                    submit={handleSubmit} 
-                    open={open} 
-                    setOpen={setOpen} 
-                    category={category} 
-                    title={title}
-                    description={description}
-                    eventDate={eventDate}
-                    municipio={municipio}
-                    department={department}
-                    descriptionDetail={descriptionDetail}
-                    files={files}/>
+                {openViewTestimony && (
+                    <ViewTestimony
+                        submit={handleSubmit}
+                        dataPreview={
+                            {category, 
+                                title, 
+                                description, 
+                                eventDate,
+                                municipio, 
+                                department,
+                                descriptionDetail,
+                                files
+                            }
+                        }
+                        action="preview" />
                 )}
             </Grid>
 

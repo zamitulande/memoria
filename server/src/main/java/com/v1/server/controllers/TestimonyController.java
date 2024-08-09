@@ -74,15 +74,4 @@ public class TestimonyController {
         Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(path,pageable);
         return ResponseEntity.ok(testimonyPage);
     }
-
-    private final String FILE_DIRECTORY = "storage/testimony/"; 
-
-    @GetMapping("/show/image/{filename}")
-    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
-        Path file = Paths.get(FILE_DIRECTORY).resolve("image").resolve(filename);
-        Resource resource = new FileSystemResource(file.toFile());
-        return ResponseEntity.ok()
-            .contentType(MediaType.IMAGE_JPEG) 
-            .body(resource);
-    }
 }

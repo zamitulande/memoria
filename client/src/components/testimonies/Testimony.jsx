@@ -1,21 +1,27 @@
 import { Card, Container, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert } from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../config/Axios';
 import Loading from '../../helpers/components/Loading';
 import MessageData from '../../helpers/components/MessageData';
 import Menu from '../../helpers/components/Menu';
+import { setOpenViewTestimony } from '../../redux/features/TestimonySlice';
+import ViewTestimony from '../../helpers/components/ViewTestimony';
 
 const Testimony = () => {
 
+    const dispatch = useDispatch();
+
     const category = useSelector((state) => state.testimony.categories);
+    const openViewTestimony = useSelector((state) => state.testimony.openViewTestimony);
 
     const [isLoading, setIsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [data, setData] = useState([])
+    const [selectedTestimony, setSelectedTestimony] = useState({})
 
     let path;
     path = category;
@@ -29,13 +35,16 @@ const Testimony = () => {
                 setTotalPages(response.data.totalPages);
                 setTotalElements(response.data.totalElements)
                 setIsLoading(false);
-                console.log(response)
             } catch (error) {
                 console.log(error)
             }
         }
         fetchData();
     }, [currentPage, path])
+
+    useEffect(()=>{
+        setCurrentPage(0)
+    },[path])
 
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
@@ -47,6 +56,11 @@ const Testimony = () => {
         if (currentPage > 0) {
             setCurrentPage(prevPage => prevPage - 1);
         }
+    };
+
+    const handleViewMore = (testimony) => {
+        setSelectedTestimony(testimony); // Establecer el testimonio seleccionado
+        dispatch(setOpenViewTestimony(true)); // Despachar la acción para abrir el modal o vista de detalles
     };
 
     return (
@@ -90,7 +104,7 @@ const Testimony = () => {
                                     </CardContent>
                                 </CardActionArea>
                                 <CardActions>
-                                    <Button size="small" color="secondary" variant="contained">
+                                    <Button size="small" color="secondary" variant="contained" onClick={()=>handleViewMore(testimony)}>
                                         Ver más
                                     </Button>
                                 </CardActions>
@@ -112,6 +126,11 @@ const Testimony = () => {
                 {totalElements < 1 && (
                     <MessageData action="testimony" />
                 )}
+                {openViewTestimony && (
+                    <ViewTestimony
+                    dataView={selectedTestimony}
+                    action="view"/>
+                )}                 
             </Grid>
         </Grid>
     )

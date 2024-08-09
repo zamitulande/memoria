@@ -1,20 +1,24 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-const initialState = {
-    categories: localStorage.getItem('categories') || "",
-  }
+
 
 export const TestimonySlice = createSlice({
     name: "testimony",
-    initialState,
+    initialState:{
+        categories: localStorage.getItem('categories') || "",
+        openViewTestimony: false,
+    },
     reducers:{
         setCategories: (state, action)=>{
             state.categories = action.payload;
             localStorage.setItem('categories', action.payload);
+        },
+        setOpenViewTestimony: (state, action) =>{
+            state.openViewTestimony = action.payload;
         }
     }
 });
 
-export const {setCategories} = TestimonySlice.actions;
+export const {setCategories, setOpenViewTestimony} = TestimonySlice.actions;
 
 export default TestimonySlice.reducer;
