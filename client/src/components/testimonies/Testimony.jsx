@@ -23,7 +23,6 @@ const Testimony = () => {
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
-            console.log(category)
             try {
                 const response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
                 setData(response.data.content)
@@ -36,7 +35,7 @@ const Testimony = () => {
             }
         }
         fetchData();
-    }, [currentPage])
+    }, [currentPage, path])
 
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
@@ -52,7 +51,14 @@ const Testimony = () => {
 
     return (
         <Grid container spacing={1} mb={6} justifyContent="center">
-            <Grid item xs={12} sm={2}>
+            <Grid item
+                xs={12}
+                sm={2}
+                sx={{
+                    position: 'sticky',
+                    top:150,
+                    alignSelf: 'flex-start'
+                }}>
                 <Menu />
             </Grid>
             <Grid item xs={12} sm={8}>
