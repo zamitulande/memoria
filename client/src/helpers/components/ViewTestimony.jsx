@@ -1,9 +1,11 @@
 import { Alert, Box, Grid, IconButton, Modal, Skeleton, Stack, Typography } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Cancel';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { setOpenViewTestimony } from '../../redux/features/TestimonySlice';
+import Video from './Video';
 
 const style = {
     position: 'absolute',
@@ -23,12 +25,14 @@ const style = {
 const ViewTestimony = ({
     dataPreview,
     submit,
-    action,
     dataView
 }) => {
 
     const dispatch = useDispatch();
     const openViewTestimony = useSelector((state) => state.testimony.openViewTestimony)
+
+    const login = useSelector((state) => state.user.login);
+    const role = useSelector((state) => state.user.role);
 
     const handleCloseModal = () => {
         dispatch(setOpenViewTestimony(false))
@@ -45,7 +49,7 @@ const ViewTestimony = ({
             return 'audio';
         }
     };
-    
+
     if (dataView) {
         return (
             <Modal
@@ -55,64 +59,60 @@ const ViewTestimony = ({
                 aria-describedby="modal-modal-description">
 
                 <Box sx={style}>
-                    <Grid container spacing={2} justifyContent="center">
-                        <Grid item xs={12}>
-                            <Alert severity="info">
-                                Esta es una previsualización del testimonio que se guardará, valide que la información sea correcta.
-                            </Alert>
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleCloseModal}
+                        sx={{
+                            marginTop: -5,
+                            left: '97%',
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={12} md={12} lg={8}>
+                            <Video video={dataView.videoUrl} />
                         </Grid>
-                        <Grid item xs={12}>
-                        {dataView.videoUrl && (
-                            <video width="100%" controls>
-                                <source src={dataView.videoUrl} type="video/mp4" />
-                                Tu navegador no soporta la etiqueta de video.
-                            </video>
-                        )}
-                    </Grid>
-                        <img src={dataView.imageUrl} style={{ maxWidth: '100%', height: 'auto' }} />
-                        <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Categoria</Typography>
-                            <Typography variant='body'>{dataView.category}</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Fecha</Typography>
-                            <Typography variant='body'>{dataView.eventDate}</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Lugar</Typography>
-                            <Typography variant='body'>{dataView.municipio}-{dataView.department}</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Titulo</Typography>
-                            <Typography >{dataView.title}</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Descripción</Typography>
-                            <Typography variant='body'>{dataView.description}</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={12}>
-                            <Typography variant='h6'>Descripción Detallada</Typography>
-                            <Typography variant='body'>{dataView.descriptionDetail}</Typography>
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
-                            <IconButton onClick={() => handleCloseModal()}>
-                                <EditIcon />
-                                Editar
-                            </IconButton>
-                        </Grid>
-                        <Grid item xs={12} sm={2}>
-                            <IconButton onClick={(e) => submit(e)}>
-                                <SaveIcon />
-                                Guardar
-                            </IconButton>
+                        <Grid item xs={12} sm={6} md={4}>
+                            <Box display="flex" alignItems="center">
+                                <Typography variant="h5">{dataView.title}</Typography>
+                            </Box>
+
+                            <Box display="flex" alignItems="center" mt={5}>
+                                <Typography variant="h6">Categoria:&nbsp;</Typography>
+                                <Typography variant="body">{dataView.category}</Typography>
+                            </Box>
+                            <Box display="flex" alignItems="center">
+                                <Typography variant="h6">Fecha:&nbsp;</Typography>
+                                <Typography variant="body">{dataView.evenDate}</Typography>
+                            </Box>
+
+                            <Box display="flex" alignItems="center">
+                                <Typography variant="h6">Descripción:&nbsp;</Typography>
+                                <Typography variant="body">{dataView.description}</Typography>
+                            </Box>
+                            <Box display="flex" alignItems="center">
+                                <Typography variant="h6">Descripción Detallada:&nbsp;</Typography>
+                                <Typography variant="body">{dataView.descriptionDetail}</Typography>
+                            </Box>
                         </Grid>
                     </Grid>
+                    {login && role === 'ADMIN' && (
+                        <Grid container justifyContent="end">
+                            <Grid item xs={12} sm={2}>
+                                <IconButton onClick={() => handleCloseModal()}>
+                                    <EditIcon />
+                                    Editar
+                                </IconButton>
+                            </Grid>
+                        </Grid>
+                    )}
                 </Box>
             </Modal>
         )
     }
     if (dataPreview) {
-        const {image, video, audio} = dataPreview.files;
+        const { image, video, audio } = dataPreview.files;
         return (
             <Modal
                 open={openViewTestimony}
