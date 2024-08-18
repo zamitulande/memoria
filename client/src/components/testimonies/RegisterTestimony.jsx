@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, Container, Typography } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import FormTestimony from './FormTestimony'
+import FormTestimony from './DataTestimomy/FormTestimony'
 
 const RegisterTestimony = () => {
 

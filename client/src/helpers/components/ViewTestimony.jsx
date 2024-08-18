@@ -4,8 +4,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Cancel';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { setOpenViewTestimony } from '../../redux/features/TestimonySlice';
+import { setFormEditTestimony, setOpenViewTestimony, setTestimonyId } from '../../redux/features/TestimonySlice';
 import Video from './Video';
+import { useNavigate } from 'react-router-dom';
 
 const style = {
     position: 'absolute',
@@ -29,6 +30,7 @@ const ViewTestimony = ({
 }) => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const openViewTestimony = useSelector((state) => state.testimony.openViewTestimony)
 
     const login = useSelector((state) => state.user.login);
@@ -49,6 +51,13 @@ const ViewTestimony = ({
             return 'audio';
         }
     };
+
+    const handleUpdate = (dataView) => {
+        navigate('/repositorio/editar');
+        dispatch(setFormEditTestimony(dataView))
+        dispatch(setTestimonyId(dataView))
+        dispatch(setOpenViewTestimony(false))
+      }
 
     if (dataView) {
         return (
@@ -86,21 +95,26 @@ const ViewTestimony = ({
                                 <Typography variant="h6">Fecha:&nbsp;</Typography>
                                 <Typography variant="body">{dataView.evenDate}</Typography>
                             </Box>
-
+                            <Box display="flex" alignItems="center">
+                                <Typography variant="h6">Ubicación:&nbsp;</Typography>
+                                <Typography variant="body">{dataView.municipio}-{dataView.department}</Typography>
+                            </Box>
                             <Box display="flex" alignItems="center">
                                 <Typography variant="h6">Descripción:&nbsp;</Typography>
                                 <Typography variant="body">{dataView.description}</Typography>
                             </Box>
-                            <Box display="flex" alignItems="center">
+                            {dataView.descriptionDetail && (
+                                <Box display="flex" alignItems="center">
                                 <Typography variant="h6">Descripción Detallada:&nbsp;</Typography>
                                 <Typography variant="body">{dataView.descriptionDetail}</Typography>
                             </Box>
+                            )}
                         </Grid>
                     </Grid>
                     {login && role === 'ADMIN' && (
                         <Grid container justifyContent="end">
                             <Grid item xs={12} sm={2}>
-                                <IconButton onClick={() => handleCloseModal()}>
+                                <IconButton onClick={() => handleUpdate(dataView)}>
                                     <EditIcon />
                                     Editar
                                 </IconButton>

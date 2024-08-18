@@ -31,4 +31,6 @@ public interface TestimonyService {
             throws MessagingException, IOException;
 
     Page<TestimonysDTO> findTestimonyByCategory(String path, Pageable pageable);
+
+    TestimonysDTO updateTestimony(Long testimonyId, TestimonysDTO testimonyUpdateDTO);
 }

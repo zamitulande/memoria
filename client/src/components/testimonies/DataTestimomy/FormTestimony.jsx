@@ -1,4 +1,4 @@
-import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, Button, FormControl, Grid, InputLabel, Link, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import UseValidation from '../../../helpers/hooks/UseValidation';
 import SelectCity from '../../../helpers/components/SelectCity';
@@ -12,10 +12,11 @@ import { animateScroll } from 'react-scroll';
 import ViewTestimony from '../../../helpers/components/ViewTestimony';
 import { setOpenViewTestimony } from '../../../redux/features/TestimonySlice';
 
-const FormTestimony = ({ userId }) => {
+const FormTestimony = ({ userId, action }) => {
 
     const getToken = useSelector((state) => state.user.token)
     const openViewTestimony = useSelector((state) => state.testimony.openViewTestimony)
+    const getformEditTestimony = useSelector((state) => state.testimony.formEditTestimony)
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -26,15 +27,16 @@ const FormTestimony = ({ userId }) => {
     const [category, setCategory] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [eventDate, setEvenDate] = useState("");
+    const [evenDate, setEvenDate] = useState("");
     const [city, setCity] = useState("");
     const [department, setDapartmet] = useState("");
     const [descriptionDetail, setDescriptionDetail] = useState("");
     const [files, setFiles] = useState({ audio: [], video: [], image: [] });
     const [path, setPath] = useState("")
     const [resetTrigger, setResetTrigger] = useState(false);
-    const [messageResponse, setMessageResponse]= useState("");
+    const [messageResponse, setMessageResponse] = useState("");
 
+    const [testimony, setTestimony] = useState([])
 
     let municipio;
     if (city) {
@@ -90,7 +92,7 @@ const FormTestimony = ({ userId }) => {
             !minLength(title, 10) ||
             !description ||
             !minLength(description, 30) ||
-            !eventDate ||
+            !evenDate ||
             !city ||
             !department
         )
@@ -122,7 +124,7 @@ const FormTestimony = ({ userId }) => {
             formData.append("category", category);
             formData.append("title", title);
             formData.append("description", description);
-            formData.append("eventDate", eventDate);
+            formData.append("evenDate", evenDate);
             formData.append("municipio", municipio);
             formData.append("department", department);
             formData.append("descriptionDetail", descriptionDetail);
@@ -160,16 +162,15 @@ const FormTestimony = ({ userId }) => {
                     }
                 })
             } catch (error) {
-                const messageError =error.response.data.message;
+                const messageError = error.response.data.message;
                 Swal.fire({
                     icon: "error",
                     title: messageError,
                     customClass: {
                         container: 'my-swal'
                     }
-                  });
+                });
             }
-            setMessageResponse("")
         }
         postTestimony();
     }
@@ -177,8 +178,66 @@ const FormTestimony = ({ userId }) => {
     const handleFilesChange = (updatedFiles) => {
         setFiles(updatedFiles);
     };
+
+    const handleSubmitUpdate = async (e) => {
+        e.preventDefault();
+        const updateTestimony = { ...testimony }
+        updateTestimony.category = category || getformEditTestimony.category;
+        updateTestimony.title = title || getformEditTestimony.title;
+        updateTestimony.description = description || getformEditTestimony.description;
+        updateTestimony.evenDate = evenDate || getformEditTestimony.evenDate;
+        updateTestimony.department = department || getformEditTestimony.department;
+        updateTestimony.municipio = municipio || getformEditTestimony.municipio;
+
+        Swal.fire({
+            title: "¿Quieres guardar los cambios?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Guardar",
+            denyButtonText: `No guardar`
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const config = {
+                        headers: {
+                            'Authorization': `Bearer${getToken}`
+                        }
+                    }
+                    const response = await axiosClient.put(`repository/update/${getformEditTestimony.testimonyId}`, updateTestimony, config);
+                    Swal.fire("¡Guardado!", "Los cambios han sido guardados exitosamente.", "success");
+                    //navigate('/usuarios');
+                } catch (error) {
+                    Swal.fire("Error", error.response.data.message, "error");
+                }
+            } else if (result.isDenied) {
+                Swal.fire("Cambios no guardados", "Los cambios no han sido guardados.", "info");
+                //navigate('/usuarios');
+            }
+        });
+    }
+    console.log(getformEditTestimony)
+    const determineSubmitHandler = () => {
+        switch (true) {
+            case action === 'register':
+                return handleSubmit;
+            case action === 'update':
+                return handleSubmitUpdate;
+            default:
+                return (event) => event.preventDefault(); // Default handler
+        }
+    };
+
+    let messageFiles = ""
+    if (action === 'update') {
+        messageFiles = <Grid item xs={12}>
+            <Alert severity="info">A continuacion se listan los archivos (audio, video o imagen) ya cargados, si desea modificar estos archivos puede seleccionar los nuevo archivos.</Alert>
+            <Link href={getformEditTestimony.videoUrl} underline="none">
+                {'underline="none"'}
+            </Link>
+        </Grid>
+    }
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={determineSubmitHandler()}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} alignItems="center">
                 <Grid item xs={6}>
                     <FormControl color='textField' fullWidth>
@@ -187,7 +246,7 @@ const FormTestimony = ({ userId }) => {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             label="Categoria"
-                            value={category}
+                            value={action === 'register' ? category : getformEditTestimony.category}
                             onChange={(e) => {
                                 setCategory(e.target.value);
                             }}
@@ -208,8 +267,8 @@ const FormTestimony = ({ userId }) => {
                         name="titulo"
                         type='text'
                         required
-                        value={title}
-                        //defaultValue={action === 'update' ? getFormEditar.secondLastName : undefined}
+                        value={action === 'register' ? title : undefined}
+                        defaultValue={action === 'update' ? getformEditTestimony.title : undefined}
                         onChange={(e) => setTitle(capitalizeFirstLetter(e.target.value))}
                         fullWidth
                         inputProps={{ maxLength: 41 }}
@@ -231,8 +290,8 @@ const FormTestimony = ({ userId }) => {
                         name="descripcion"
                         required
                         type='text'
-                        value={description}
-                        //defaultValue={action === 'update' ? getFormEditar.secondLastName : undefined}
+                        value={action === 'register' ? description : undefined}
+                        defaultValue={action === 'update' ? getformEditTestimony.description : undefined}
                         onChange={(e) => setDescription(capitalizeFirstLetter(e.target.value))}
                         fullWidth
                         inputProps={{ maxLength: 81 }}
@@ -252,7 +311,8 @@ const FormTestimony = ({ userId }) => {
                             label="Fecha"
                             type="date"
                             required
-                            value={eventDate}
+                            value={action === 'register' ? evenDate : undefined}
+                            defaultValue={action === 'update' ? getformEditTestimony.evenDate : undefined}
                             onChange={(e) => setEvenDate(e.target.value)}
                             InputLabelProps={{
                                 shrink: true,
@@ -262,8 +322,7 @@ const FormTestimony = ({ userId }) => {
                 </Grid>
                 <Grid item xs={6}>
                     <SelectDepartment
-                        //value={action === 'register' ? department : getFormEditar.department}
-                        value={department}
+                        value={action === 'register' ? department : getformEditTestimony.department}
                         onChange={(e, item) => {
                             setDapartmet(e.target.value);
                         }}
@@ -271,16 +330,26 @@ const FormTestimony = ({ userId }) => {
                 </Grid>
                 <Grid item xs={6}>
                     <SelectCity
-                        //value={action === 'register' ? city : getFormEditar.municipio}
-                        value={city}
+                        value={action === 'register' ? city : getformEditTestimony.municipio}
                         setCity={setCity}
-                        department={department}
-                    //department={action === 'register' ? department : getFormEditar.department}
+                        department={action === 'register' ? department : getformEditTestimony.department}
                     />
                 </Grid>
+                {messageFiles}
                 <Grid item xs={12}>
-                    <Alert severity="info">Elige la forma de guardar el testimonio.</Alert>
-                    <LoadFiles onFilesChange={handleFilesChange} resetTrigger={resetTrigger} />
+                    {action === 'register' ?
+                        <Alert severity="info">Elige la forma de guardar el testimonio.</Alert>
+                        :
+                        <Alert severity="info">Elige la forma de editar el testimonio.</Alert>
+                    }
+
+                    <LoadFiles
+                        onFilesChange={handleFilesChange}
+                        resetTrigger={resetTrigger}
+                        action={action}
+                        videoUpdate={getformEditTestimony.videoUrl}
+                        imageUpdate={getformEditTestimony.imageUrl}
+                    />
                 </Grid>
                 <Grid item xs={12}>
                     <Alert sx={{ mb: 2 }} severity="info">Describe de forma detallada los sucesos del testimonio.</Alert>
@@ -292,8 +361,8 @@ const FormTestimony = ({ userId }) => {
                         color='textField'
                         name="descripcionDetallada"
                         type='text'
-                        value={descriptionDetail}
-                        //defaultValue={action === 'update' ? getFormEditar.secondLastName : undefined}
+                        value={action === 'register' ? descriptionDetail : undefined}
+                        defaultValue={action === 'update' ? getformEditTestimony.undefined : undefined}
                         onChange={(e) => setDescriptionDetail(capitalizeFirstLetter(e.target.value))}
                         fullWidth
                         inputProps={{ maxLength: 3001 }}
@@ -321,11 +390,12 @@ const FormTestimony = ({ userId }) => {
                     <ViewTestimony
                         submit={handleSubmit}
                         dataPreview={
-                            {category, 
-                                title, 
-                                description, 
-                                eventDate,
-                                municipio, 
+                            {
+                                category,
+                                title,
+                                description,
+                                evenDate,
+                                municipio,
                                 department,
                                 descriptionDetail,
                                 files

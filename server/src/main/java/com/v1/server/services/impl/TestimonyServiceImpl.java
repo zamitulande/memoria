@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import com.v1.server.dtos.testimony.TestimonysDTO;
 import com.v1.server.entities.Testimony;
 import com.v1.server.entities.User;
 import com.v1.server.exceptions.ApiResponse;
+import com.v1.server.exceptions.customExceptions.NotFoundException;
 import com.v1.server.repositories.TestimonyRepository;
 import com.v1.server.repositories.UserRepository;
 import com.v1.server.services.TestimonyService;
@@ -174,5 +176,37 @@ public class TestimonyServiceImpl implements TestimonyService {
                         .videoUrl(pathFile+ "/video/" + testimony.getVideoUrl())
                         .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                         .build());
+    }
+
+    @Override
+    public TestimonysDTO updateTestimony(Long testimonyId, TestimonysDTO testimonyUpdateDTO) {
+       
+         
+        Optional<Testimony> testimonyOption = testimonyRepository.findById(testimonyId);
+        if (testimonyOption.isPresent()) {
+            Testimony testimony = testimonyOption.get();
+            testimony.setCategory(testimonyUpdateDTO.getCategory());
+            testimony.setTitle(testimonyUpdateDTO.getTitle());
+            testimony.setDescription(testimonyUpdateDTO.getDescription());
+            testimony.setEvenDate(testimonyUpdateDTO.getEvenDate());
+            testimony.setMunicipio(testimonyUpdateDTO.getMunicipio());
+            testimony.setDepartment(testimonyUpdateDTO.getDepartment());
+            testimony.setDescriptionDetail(testimonyUpdateDTO.getDescriptionDetail());
+            testimonyRepository.save(testimony);
+
+            TestimonysDTO updateDTO = TestimonysDTO.builder()
+                    .category(testimony.getCategory())
+                    .title(testimony.getTitle())
+                    .description(testimony.getDescription())
+                    .evenDate(testimony.getEvenDate())
+                    .municipio(testimony.getMunicipio())
+                    .department(testimony.getDepartment())
+                    .descriptionDetail(testimony.getDescriptionDetail())
+                    .build();
+
+            return updateDTO;
+        } else {
+            throw new NotFoundException("Testimonio no encontrado.");
+        }
     }
 }

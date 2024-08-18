@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import React, { useEffect, useState } from 'react'
 
-const LoadFiles = ({ onFilesChange, resetTrigger }) => {
+const LoadFiles = ({ onFilesChange, resetTrigger, videoUpdate, imageUpdate, action }) => {
 
   const [value, setValue] = useState(0);
   const [files, setFiles] = useState({ audio: [], video: [], image: [] });
@@ -122,7 +122,7 @@ const LoadFiles = ({ onFilesChange, resetTrigger }) => {
       <Tabs
         sx={{ backgroundColor: 'gray' }}
         variant="fullWidth"
-        value={value}
+        value={value}        
         onChange={handleChange}
         aria-label="icon label tabs example"
       >

@@ -11,9 +11,10 @@ import Collaborate from "../components/collaborate/Collaborate"
 import ProtectedRoutes from "./ProtectedRoutes"
 import Repository from "../components/testimonies/Repository"
 import Update from "../components/users/Update"
-import RegisterTestimony from "../components/testimonies/registerTestimomy/RegisterTestimony"
+import RegisterTestimony from "../components/testimonies/RegisterTestimony"
 import Testimony from "../components/testimonies/Testimony"
 import { useSelector } from "react-redux"
+import UpdateTestimony from "../components/testimonies/UpdateTestimony"
 
 const AppRoutes = () => {
   const category = useSelector((state) => state.testimony.categories);
@@ -46,6 +47,11 @@ const AppRoutes = () => {
       {category ? (
         <Route path={`/repositorio/${category}`} element={<Testimony />} />
       ) : null}
+      <Route
+        path="/repositorio/editar"
+        element={<ProtectedRoutes redirectTo="/">
+          <UpdateTestimony />
+        </ProtectedRoutes>} />
     </Routes>
   )
 }

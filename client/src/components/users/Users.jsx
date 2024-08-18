@@ -158,6 +158,7 @@ const Users = () => {
               </TableRow>
             </TableHead>
           )}
+          
           <TableBody>
           {users.map((user) => (
             <TableRow key={user.userId} sx={{ display: isMobile ? 'block' : 'table-row', borderBottom: isMobile ? '3px solid ' : 'none' }}>
