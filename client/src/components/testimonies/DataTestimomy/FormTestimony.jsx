@@ -1,4 +1,4 @@
-import { Alert, Button, FormControl, Grid, InputLabel, Link, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import UseValidation from '../../../helpers/hooks/UseValidation';
 import SelectCity from '../../../helpers/components/SelectCity';
@@ -7,7 +7,7 @@ import LoadFiles from './LoadFiles';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../../config/Axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { animateScroll } from 'react-scroll';
 import ViewTestimony from '../../../helpers/components/ViewTestimony';
 import { setOpenViewTestimony } from '../../../redux/features/TestimonySlice';
@@ -69,7 +69,7 @@ const FormTestimony = ({ userId, action }) => {
                 setPath("conflicto-social");
                 break;
             default:
-                setPath("default-path"); // Valor de respaldo
+                setPath(""); // Valor de respaldo
                 break;
         }
     }, [category]);
@@ -162,6 +162,7 @@ const FormTestimony = ({ userId, action }) => {
                     }
                 })
             } catch (error) {
+                console.log(error)
                 const messageError = error.response.data.message;
                 Swal.fire({
                     icon: "error",
@@ -179,49 +180,71 @@ const FormTestimony = ({ userId, action }) => {
         setFiles(updatedFiles);
     };
 
-    const handleSubmitUpdate = async (e) => {
+    const updateTestimony = async (e) => {
         e.preventDefault();
-        const updateTestimony = { ...testimony }
-        updateTestimony.category = category || getformEditTestimony.category;
-        updateTestimony.title = title || getformEditTestimony.title;
-        updateTestimony.description = description || getformEditTestimony.description;
-        updateTestimony.evenDate = evenDate || getformEditTestimony.evenDate;
-        updateTestimony.department = department || getformEditTestimony.department;
-        updateTestimony.municipio = municipio || getformEditTestimony.municipio;
+        setIsLoading(true);
 
-        Swal.fire({
-            title: "¿Quieres guardar los cambios?",
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: "Guardar",
-            denyButtonText: `No guardar`
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                try {
-                    const config = {
-                        headers: {
-                            'Authorization': `Bearer${getToken}`
-                        }
-                    }
-                    const response = await axiosClient.put(`repository/update/${getformEditTestimony.testimonyId}`, updateTestimony, config);
-                    Swal.fire("¡Guardado!", "Los cambios han sido guardados exitosamente.", "success");
-                    //navigate('/usuarios');
-                } catch (error) {
-                    Swal.fire("Error", error.response.data.message, "error");
-                }
-            } else if (result.isDenied) {
-                Swal.fire("Cambios no guardados", "Los cambios no han sido guardados.", "info");
-                //navigate('/usuarios');
+        const { audio, video, image } = files;
+        console.log(image.length)
+        const formData = new FormData();
+        if(path.length === 0){
+            setCategory("")
+        }
+        formData.append("category", category || getformEditTestimony.category);
+        formData.append("title", title || getformEditTestimony.title);
+        formData.append("description", description || getformEditTestimony.description);
+        formData.append("evenDate", evenDate || getformEditTestimony.evenDate);
+        formData.append("department", department || getformEditTestimony.department);
+        formData.append("municipio", municipio || getformEditTestimony.municipio);
+        formData.append("descriptionDetail", descriptionDetail || getformEditTestimony.descriptionDetail);
+        formData.append("path", path || getformEditTestimony.path);
+
+        // Solo adjuntar archivos si son nuevos
+        if (audio.length > 0) {
+            formData.append("audio", audio[0]);
+        }
+        if (video.length > 0) {
+            formData.append("video", video[0]);
+        }
+        if (image.length > 0) {
+            formData.append("image", image[0]);
+        }
+        const config = {
+            headers: {
+                'Authorization': `Bearer${getToken}`,
+                'content-Type': 'multipart/form-data'
             }
-        });
-    }
-    console.log(getformEditTestimony)
+        };
+        try {
+            const res = await axiosClient.put(`/repository/update/${getformEditTestimony.testimonyId}`, formData, config);
+            const messageResponse = res.data.message;
+            setIsLoading(false);
+            dispatch(setOpenViewTestimony(false));
+            Swal.fire({
+                title: messageResponse,
+                icon: "success",
+            }).then(() => {
+                navigate('/repositorio');
+            });
+        } catch (error) {
+            console.log(error)
+            const messageError = error.response.data.message;
+            Swal.fire({
+                icon: "error",
+                title: messageError,
+                customClass: {
+                    container: 'my-swal'
+                }
+            });
+        };
+    };
+
     const determineSubmitHandler = () => {
         switch (true) {
             case action === 'register':
                 return handleSubmit;
             case action === 'update':
-                return handleSubmitUpdate;
+                return updateTestimony;
             default:
                 return (event) => event.preventDefault(); // Default handler
         }
@@ -229,10 +252,19 @@ const FormTestimony = ({ userId, action }) => {
 
     let messageFiles = ""
     if (action === 'update') {
-        messageFiles = <Grid item xs={12}>
-            <Alert severity="info">A continuacion se listan los archivos (audio, video o imagen) ya cargados, si desea modificar estos archivos puede seleccionar los nuevo archivos.</Alert>
-            <Link href={getformEditTestimony.videoUrl} underline="none">
-                {'underline="none"'}
+        messageFiles = <Grid item xs={12} container
+            direction="row"
+            justifyContent="space-around"
+            alignItems="center">
+            <Alert severity="info" style={{ marginBottom: 10 }}>A continuacion se listan los archivos (audio, video o imagen) ya cargados, si desea modificar estos archivos puede seleccionar los nuevo archivos.</Alert>
+            <Link to={getformEditTestimony.videoUrl} target="_blank">
+                <Button variant='contained' color='secondary'>video</Button>
+            </Link>
+            <Link to={getformEditTestimony.imageUrl} target="_blank">
+                <Button variant='contained' color='secondary'>imagen</Button>
+            </Link>
+            <Link to={getformEditTestimony.audioUrl} target="_blank">
+                <Button variant='contained' color='secondary'>audio</Button>
             </Link>
         </Grid>
     }
@@ -246,7 +278,13 @@ const FormTestimony = ({ userId, action }) => {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             label="Categoria"
-                            value={action === 'register' ? category : getformEditTestimony.category}
+                            value={
+                                action === 'register'
+                                    ? category
+                                    : action === 'update'
+                                        ? category || getformEditTestimony.category // Si hay un cambio, toma category; si no, toma el valor original.
+                                        : ''
+                            }
                             onChange={(e) => {
                                 setCategory(e.target.value);
                             }}
@@ -322,7 +360,13 @@ const FormTestimony = ({ userId, action }) => {
                 </Grid>
                 <Grid item xs={6}>
                     <SelectDepartment
-                        value={action === 'register' ? department : getformEditTestimony.department}
+                        value={
+                            action === 'register'
+                                ? department
+                                : action === 'update'
+                                    ? department || getformEditTestimony.department // Si hay un cambio, toma category; si no, toma el valor original.
+                                    : ''
+                        }
                         onChange={(e, item) => {
                             setDapartmet(e.target.value);
                         }}
@@ -330,9 +374,19 @@ const FormTestimony = ({ userId, action }) => {
                 </Grid>
                 <Grid item xs={6}>
                     <SelectCity
-                        value={action === 'register' ? city : getformEditTestimony.municipio}
+                        value={
+                            action === 'register'
+                                ? municipio
+                                : action === 'update'
+                                    ? municipio || getformEditTestimony.municipio // Si hay un cambio, toma category; si no, toma el valor original.
+                                    : ''
+                        }
                         setCity={setCity}
-                        department={action === 'register' ? department : getformEditTestimony.department}
+                        department={action === 'register'
+                            ? department
+                            : action === 'update'
+                                ? department || getformEditTestimony.department // Si hay un cambio, toma category; si no, toma el valor original.
+                                : ''}
                     />
                 </Grid>
                 {messageFiles}
@@ -383,7 +437,11 @@ const FormTestimony = ({ userId, action }) => {
                     alignItems="center"
                     mt={4}>
                     <Grid>
-                        <Button onClick={(e) => dispatch(setOpenViewTestimony(true))} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button>
+                        {action === "register" ?
+                            <Button onClick={(e) => dispatch(setOpenViewTestimony(true))} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button>
+                            :
+                            <Button onClick={updateTestimony} variant="contained" color='secondary'>Editar</Button>
+                        }
                     </Grid>
                 </Grid>
                 {openViewTestimony && (

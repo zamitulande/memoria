@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +37,7 @@ public class TestimonyController {
             @RequestParam String category,
             @RequestParam String title,
             @RequestParam String description,
-            @RequestParam String eventDate,
+            @RequestParam String evenDate,
             @RequestParam String department,
             @RequestParam String municipio,
             @RequestParam String descriptionDetail,
@@ -53,7 +52,7 @@ public class TestimonyController {
                 category,
                 title,
                 description,
-                eventDate,
+                evenDate,
                 department,
                 municipio,
                 descriptionDetail,
@@ -69,14 +68,45 @@ public class TestimonyController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(path,pageable);
+        Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(path, pageable);
         return ResponseEntity.ok(testimonyPage);
     }
 
-     @PutMapping("/update/{testimonyId}")
-    public ResponseEntity<TestimonysDTO> update(@PathVariable Long testimonyId, @RequestBody TestimonysDTO testimonyUpdateDTO) {
-        TestimonysDTO updatedTestimonyDTO = testimonyService.updateTestimony(testimonyId, testimonyUpdateDTO);
-        return ResponseEntity.ok(updatedTestimonyDTO);
+    @PutMapping("/update/{testimonyId}")
+    public ResponseEntity<?> update(
+            @PathVariable Long testimonyId,
+            @RequestParam String category,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam String evenDate,
+            @RequestParam String department,
+            @RequestParam String municipio,
+            @RequestParam String descriptionDetail,
+            @RequestParam String path,
+            @RequestParam(value = "audio", required = false) MultipartFile audio,
+            @RequestParam(value = "video", required = false) MultipartFile video,
+            @RequestParam(value = "image", required = false) MultipartFile image)
+            throws MessagingException, IOException {
+        try {
+            return ResponseEntity.ok(
+                    testimonyService.updateTestimony(
+                            testimonyId,
+                            category,
+                            title,
+                            description,
+                            evenDate,
+                            department,
+                            municipio,
+                            descriptionDetail,
+                            path,
+                            audio,
+                            video,
+                            image));
+        } catch (MessagingException | IOException e) {
+            return ResponseEntity.status(500).body("Error al actualizar el testimonio: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
     }
 }

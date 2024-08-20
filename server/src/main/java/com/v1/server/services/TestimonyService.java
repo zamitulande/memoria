@@ -20,7 +20,7 @@ public interface TestimonyService {
             String category,
             String title,
             String description,
-            String eventDate,
+            String evenDate,
             String department,
             String municipio,
             String descriptionDetail,
@@ -32,5 +32,18 @@ public interface TestimonyService {
 
     Page<TestimonysDTO> findTestimonyByCategory(String path, Pageable pageable);
 
-    TestimonysDTO updateTestimony(Long testimonyId, TestimonysDTO testimonyUpdateDTO);
+    ApiResponse updateTestimony(
+            Long testimonyId,
+            String category,
+            String title,
+            String description,
+            String evenDate,
+            String department,
+            String municipio,
+            String descriptionDetail,
+            String path,
+            MultipartFile audio,
+            MultipartFile video,
+            MultipartFile image)
+            throws MessagingException, IOException;
 }

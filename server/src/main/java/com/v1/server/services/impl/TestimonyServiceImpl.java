@@ -7,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +49,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             String category,
             String title,
             String description,
-            String eventDate,
+            String evenDate,
             String department,
             String municipio,
             String descriptionDetail,
@@ -84,7 +83,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .category(category)
                 .title(title)
                 .description(description)
-                .evenDate(eventDate)
+                .evenDate(evenDate)
                 .department(department)
                 .municipio(municipio)
                 .descriptionDetail(descriptionDetail)
@@ -161,52 +160,86 @@ public class TestimonyServiceImpl implements TestimonyService {
 
     @Override
     public Page<TestimonysDTO> findTestimonyByCategory(String path, Pageable pageable) {
-        Page<Testimony> testimonyPage = testimonyRepository.findByPath(path, pageable); 
+        Page<Testimony> testimonyPage = testimonyRepository.findByPath(path, pageable);
         return testimonyPage.map(testimony -> TestimonysDTO.builder()
-                        .testimonyId(testimony.getTestimonyId())
-                        .category(testimony.getCategory())
-                        .title(testimony.getTitle())
-                        .description(testimony.getDescription())
-                        .evenDate(testimony.getEvenDate())
-                        .municipio(testimony.getMunicipio())
-                        .department(testimony.getDepartment())
-                        .descriptionDetail(testimony.getDescriptionDetail())
-                        .path(testimony.getPath())
-                        .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
-                        .videoUrl(pathFile+ "/video/" + testimony.getVideoUrl())
-                        .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
-                        .build());
+                .testimonyId(testimony.getTestimonyId())
+                .category(testimony.getCategory())
+                .title(testimony.getTitle())
+                .description(testimony.getDescription())
+                .evenDate(testimony.getEvenDate())
+                .municipio(testimony.getMunicipio())
+                .department(testimony.getDepartment())
+                .descriptionDetail(testimony.getDescriptionDetail())
+                .path(testimony.getPath())
+                .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
+                .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
+                .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
+                .build());
     }
 
     @Override
-    public TestimonysDTO updateTestimony(Long testimonyId, TestimonysDTO testimonyUpdateDTO) {
-       
-         
-        Optional<Testimony> testimonyOption = testimonyRepository.findById(testimonyId);
-        if (testimonyOption.isPresent()) {
-            Testimony testimony = testimonyOption.get();
-            testimony.setCategory(testimonyUpdateDTO.getCategory());
-            testimony.setTitle(testimonyUpdateDTO.getTitle());
-            testimony.setDescription(testimonyUpdateDTO.getDescription());
-            testimony.setEvenDate(testimonyUpdateDTO.getEvenDate());
-            testimony.setMunicipio(testimonyUpdateDTO.getMunicipio());
-            testimony.setDepartment(testimonyUpdateDTO.getDepartment());
-            testimony.setDescriptionDetail(testimonyUpdateDTO.getDescriptionDetail());
-            testimonyRepository.save(testimony);
+    public ApiResponse updateTestimony(
+            Long testimonyId,
+            String category,
+            String title,
+            String description,
+            String evenDate,
+            String department,
+            String municipio,
+            String descriptionDetail,
+            String path,
+            MultipartFile audio,
+            MultipartFile video,
+            MultipartFile image) throws IOException {
 
-            TestimonysDTO updateDTO = TestimonysDTO.builder()
-                    .category(testimony.getCategory())
-                    .title(testimony.getTitle())
-                    .description(testimony.getDescription())
-                    .evenDate(testimony.getEvenDate())
-                    .municipio(testimony.getMunicipio())
-                    .department(testimony.getDepartment())
-                    .descriptionDetail(testimony.getDescriptionDetail())
-                    .build();
+        Testimony existingTestimony = testimonyRepository.findById(testimonyId)
+                .orElseThrow(() -> new NotFoundException("Testimonio no encontrado"));
 
-            return updateDTO;
-        } else {
-            throw new NotFoundException("Testimonio no encontrado.");
+        existingTestimony.setCategory(category);
+        existingTestimony.setTitle(title);
+        existingTestimony.setDescription(description);
+        existingTestimony.setEvenDate(evenDate);
+        existingTestimony.setDepartment(department);
+        existingTestimony.setMunicipio(municipio);
+        existingTestimony.setDescriptionDetail(descriptionDetail);
+        existingTestimony.setPath(path);
+
+        if (audio != null && !audio.isEmpty()) {
+            if (existingTestimony.getAudioUrl() != null) {
+                deleteFile(AUDIO_DIRECTORY, existingTestimony.getAudioUrl());
+            }
+            String newAudioUrl = saveUploadedFileAudio(audio, title);
+            existingTestimony.setAudioUrl(newAudioUrl);
+        }
+
+        if (video != null && !video.isEmpty()) {
+            if (existingTestimony.getVideoUrl() != null) {
+                deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
+            }
+            String newVideoUrl = saveUploadedFileVideo(video, title);
+            existingTestimony.setVideoUrl(newVideoUrl);
+        }
+
+        if (image != null && !image.isEmpty()) {
+            if (existingTestimony.getImageUrl() != null) {
+                deleteFile(IMAGE_DIRECTORY, existingTestimony.getImageUrl());
+            }
+            String newImageUrl = saveUploadedFileImage(image, title);
+            existingTestimony.setImageUrl(newImageUrl);
+        }
+
+        testimonyRepository.save(existingTestimony);
+
+        String message = "Testimonio actualizado satisfactoriamente";
+        return new ApiResponse(200, message);
+    }
+
+    private void deleteFile(String directory, String fileName) {
+        Path filePath = Paths.get(directory).resolve(fileName);
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new IllegalStateException("No se pudo eliminar el archivo: " + fileName, e);
         }
     }
 }

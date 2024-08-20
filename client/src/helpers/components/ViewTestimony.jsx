@@ -176,7 +176,7 @@ const ViewTestimony = ({
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
                             <Typography variant='h6'>Fecha</Typography>
-                            <Typography variant='body'>{dataPreview.eventDate}</Typography>
+                            <Typography variant='body'>{dataPreview.evenDate}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
                             <Typography variant='h6'>Lugar</Typography>
