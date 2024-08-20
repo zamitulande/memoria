@@ -52,6 +52,8 @@ public class Testimony {
 
     private String imageUrl;
 
+    private boolean enabled;
+
     @ManyToOne
     @JoinColumn(name = "user_Id")
     private User user;

@@ -29,6 +29,8 @@ public class TestimonysDTO {
 
     private String path;
 
+    private boolean enabled;
+
     private String audioUrl;
 
     private String videoUrl;

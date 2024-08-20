@@ -54,6 +54,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             String municipio,
             String descriptionDetail,
             String path,
+            boolean enabled,
             MultipartFile audio,
             MultipartFile video,
             MultipartFile image)
@@ -88,6 +89,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .municipio(municipio)
                 .descriptionDetail(descriptionDetail)
                 .path(path)
+                .enabled(enabled)
                 .audioUrl(audioUrl)
                 .videoUrl(videoUrl)
                 .imageUrl(imageUrl)
@@ -160,7 +162,7 @@ public class TestimonyServiceImpl implements TestimonyService {
 
     @Override
     public Page<TestimonysDTO> findTestimonyByCategory(String path, Pageable pageable) {
-        Page<Testimony> testimonyPage = testimonyRepository.findByPath(path, pageable);
+        Page<Testimony> testimonyPage = testimonyRepository.findByPathAndEnabledFalse(path, pageable);
         return testimonyPage.map(testimony -> TestimonysDTO.builder()
                 .testimonyId(testimony.getTestimonyId())
                 .category(testimony.getCategory())
@@ -171,6 +173,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .department(testimony.getDepartment())
                 .descriptionDetail(testimony.getDescriptionDetail())
                 .path(testimony.getPath())
+                .enabled(testimony.isEnabled())
                 .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
                 .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
@@ -188,6 +191,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             String municipio,
             String descriptionDetail,
             String path,
+            boolean enabled,
             MultipartFile audio,
             MultipartFile video,
             MultipartFile image) throws IOException {
@@ -203,6 +207,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         existingTestimony.setMunicipio(municipio);
         existingTestimony.setDescriptionDetail(descriptionDetail);
         existingTestimony.setPath(path);
+        existingTestimony.setEnabled(enabled);
 
         if (audio != null && !audio.isEmpty()) {
             if (existingTestimony.getAudioUrl() != null) {

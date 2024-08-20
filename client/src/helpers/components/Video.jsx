@@ -9,11 +9,9 @@ const Video = ({video}) => {
     const handleVideoPlayPause = (e) => {
         const video = e.target;
         if (!video.pause) {
-            console.log("play")
             video.play();
             setIsPlaying(true);
         } else if (video.pause) {
-            console.log("pause")
             video.pause;
             setIsPlaying(false);
         }

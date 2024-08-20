@@ -185,7 +185,7 @@ const FormTestimony = ({ userId, action }) => {
         setIsLoading(true);
 
         const { audio, video, image } = files;
-        console.log(image.length)
+        
         const formData = new FormData();
         if(path.length === 0){
             setCategory("")
