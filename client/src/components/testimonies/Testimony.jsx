@@ -17,6 +17,7 @@ const Testimony = () => {
     const category = useSelector((state) => state.testimony.categories);
     const openViewTestimony = useSelector((state) => state.testimony.openViewTestimony);
     const dataTestimonies = useSelector((state) => state.testimony.testimonies)
+    const testimonyIsEnable = useSelector((state) => state.testimony.testimonyIsEnable)
     const getToken = useSelector((state) => state.user.token)
     const getRole = useSelector((state)=> state.user.role)
 
@@ -57,7 +58,7 @@ const Testimony = () => {
             }
         }
         fetchData();
-    }, [currentPage, path, getRole])
+    }, [currentPage, path, getRole, testimonyIsEnable ])
 
     useEffect(()=>{
         setCurrentPage(0)

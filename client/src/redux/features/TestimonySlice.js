@@ -1,29 +1,30 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 
 
 export const TestimonySlice = createSlice({
     name: "testimony",
-    initialState:{
+    initialState: {
         categories: localStorage.getItem('categories') || "",
         openViewTestimony: false,
-        formEditTestimony: [], 
+        formEditTestimony: [],
         testimonyId: null,
-        testimonies: []
+        testimonies: [],
+        testimonyIsEnable: null
     },
-    reducers:{
-        setCategories: (state, action)=>{
+    reducers: {
+        setCategories: (state, action) => {
             state.categories = action.payload;
             localStorage.setItem('categories', action.payload);
         },
-        setOpenViewTestimony: (state, action) =>{
+        setOpenViewTestimony: (state, action) => {
             state.openViewTestimony = action.payload;
         },
-        setFormEditTestimony: (state, action) =>{
+        setFormEditTestimony: (state, action) => {
             state.formEditTestimony = action.payload;
             console.log(action.payload)
         },
-        setTestimonyId: (state, action) =>{
+        setTestimonyId: (state, action) => {
             state.testimonyId = action.payload;
         },
         setTestimonies: (state, action) => {
@@ -31,10 +32,19 @@ export const TestimonySlice = createSlice({
         },
         clearTestimonies: (state) => { // Nueva acción para limpiar testimonios
             state.testimonies = [];
+        },
+        setTestimonyIsEnable: (state, action) => {
+            state.testimonyIsEnable = action.payload;
         }
     }
 });
 
-export const {setCategories, setOpenViewTestimony, setFormEditTestimony, setTestimonyId, setTestimonies, clearTestimonies} = TestimonySlice.actions;
+export const { setCategories,
+    setOpenViewTestimony,
+    setFormEditTestimony,
+    setTestimonyId,
+    setTestimonies,
+    clearTestimonies,
+    setTestimonyIsEnable } = TestimonySlice.actions;
 
 export default TestimonySlice.reducer;

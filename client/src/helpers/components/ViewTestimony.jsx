@@ -8,7 +8,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import DoneIcon from '@mui/icons-material/Done';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { setFormEditTestimony, setOpenViewTestimony, setTestimonyId } from '../../redux/features/TestimonySlice';
+import { setFormEditTestimony, setOpenViewTestimony, setTestimonyId, setTestimonyIsEnable } from '../../redux/features/TestimonySlice';
 import Video from './Video';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../config/Axios';
@@ -61,6 +61,7 @@ const ViewTestimony = ({
             const response = await axiosClient.put(`/repository/${action}/${dataView.testimonyId}`, {}, config);
             if (response && response.data) {
                 setEnable(response.data.enabled);
+                dispatch(setTestimonyIsEnable(response.data.enabled))
             }
             Swal.fire({
                 icon: "success",
