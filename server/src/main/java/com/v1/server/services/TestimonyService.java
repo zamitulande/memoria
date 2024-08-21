@@ -15,37 +15,45 @@ import jakarta.mail.MessagingException;
 @Service
 public interface TestimonyService {
 
-    ApiResponse register(
-            Long userId,
-            String category,
-            String title,
-            String description,
-            String evenDate,
-            String department,
-            String municipio,
-            String descriptionDetail,
-            String path,
-            boolean enabled,
-            MultipartFile audio,
-            MultipartFile video,
-            MultipartFile image)
-            throws MessagingException, IOException;
+        ApiResponse register(
+                        Long userId,
+                        String category,
+                        String title,
+                        String description,
+                        String evenDate,
+                        String department,
+                        String municipio,
+                        String descriptionDetail,
+                        String path,
+                        boolean enabled,
+                        MultipartFile audio,
+                        MultipartFile video,
+                        MultipartFile image)
+                        throws MessagingException, IOException;
 
-    Page<TestimonysDTO> findTestimonyByCategory(String path, Pageable pageable);
+        Page<TestimonysDTO> findTestimonyByCategoryAdmin(String path, Pageable pageable);
 
-    ApiResponse updateTestimony(
-            Long testimonyId,
-            String category,
-            String title,
-            String description,
-            String evenDate,
-            String department,
-            String municipio,
-            String descriptionDetail,
-            String path,
-            boolean enabled,
-            MultipartFile audio,
-            MultipartFile video,
-            MultipartFile image)
-            throws MessagingException, IOException;
+        Page<TestimonysDTO> findTestimonyByCategoryUser(String path, Pageable pageable);
+
+        Page<TestimonysDTO> findTestimonyByCategoryAnonymous(String path, Pageable pageable);
+
+        ApiResponse updateTestimony(
+                        Long testimonyId,
+                        String category,
+                        String title,
+                        String description,
+                        String evenDate,
+                        String department,
+                        String municipio,
+                        String descriptionDetail,
+                        String path,
+                        boolean enabled,
+                        MultipartFile audio,
+                        MultipartFile video,
+                        MultipartFile image)
+                        throws MessagingException, IOException;
+
+        TestimonysDTO privateTestimony(Long testimonyId);
+
+        TestimonysDTO publicTestimony(Long testimonyId);
 }

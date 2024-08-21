@@ -6,8 +6,9 @@ import axiosClient from '../../config/Axios';
 import Loading from '../../helpers/components/Loading';
 import MessageData from '../../helpers/components/MessageData';
 import Menu from '../../helpers/components/Menu';
-import { setOpenViewTestimony } from '../../redux/features/TestimonySlice';
+import { setOpenViewTestimony, setTestimonies } from '../../redux/features/TestimonySlice';
 import ViewTestimony from '../../helpers/components/ViewTestimony';
+import Swal from 'sweetalert2';
 
 const Testimony = () => {
 
@@ -15,32 +16,48 @@ const Testimony = () => {
 
     const category = useSelector((state) => state.testimony.categories);
     const openViewTestimony = useSelector((state) => state.testimony.openViewTestimony);
+    const dataTestimonies = useSelector((state) => state.testimony.testimonies)
+    const getToken = useSelector((state) => state.user.token)
+    const getRole = useSelector((state)=> state.user.role)
 
     const [isLoading, setIsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
-    const [data, setData] = useState([])
     const [selectedTestimony, setSelectedTestimony] = useState({})
 
-    let path;
-    path = category;
+    let path= category;
 
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
+            const config = {
+                headers: {
+                  'Authorization': `Bearer ${getToken}`
+                }
+              };
             try {
-                const response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
-                setData(response.data.content)
+                let response;
+                if(getRole === "ADMIN" || getRole === "USER"){
+                    response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`, config)
+                }else{
+                    response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
+                }
+                dispatch(setTestimonies(response.data.content))
                 setTotalPages(response.data.totalPages);
                 setTotalElements(response.data.totalElements)
                 setIsLoading(false);
             } catch (error) {
-                console.log(error)
+                Swal.fire({
+                    icon: "error",
+                    title: error.message,
+                    text: "No hay conexión con el servidor.",
+                  });
+                  setIsLoading(false);
             }
         }
         fetchData();
-    }, [currentPage, path])
+    }, [currentPage, path, getRole])
 
     useEffect(()=>{
         setCurrentPage(0)
@@ -77,7 +94,7 @@ const Testimony = () => {
             </Grid>
             <Grid item xs={12} sm={8}>
                 <Grid container spacing={2}>
-                    {data.map((testimony, index) => (
+                    {dataTestimonies.map((testimony, index) => (
                         <Grid item key={index} xs={12} sm={8} md={6} lg={4}>
                             <Card sx={{
                                 boxShadow: 8,

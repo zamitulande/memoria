@@ -51,7 +51,12 @@ const Users = () => {
         setIsLoading(false);
 
       } catch (error) {
-        console.log(error)
+        Swal.fire({
+          icon: "error",
+          title: error.message,
+          text: "No hay conexión con el servidor.",
+        });
+        setIsLoading(false);
       }
     }
     fetchData();
@@ -117,9 +122,9 @@ const Users = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Si, Eliminar",
       cancelButtonText: "Cancelar"
-    }).then(async (result)=>{
+    }).then(async (result) => {
       try {
-        if(result.isConfirmed){
+        if (result.isConfirmed) {
           const config = {
             headers: {
               'Authorization': `Bearer${getToken}`
@@ -145,68 +150,68 @@ const Users = () => {
   return (
     <Container>
       <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto' }}>
-        <Table  aria-label="sticky table">
+        <Table aria-label="sticky table">
           {!isMobile && (
             <TableHead >
               <TableRow >
                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Identificacion</TableCell>
-                <TableCell align='center'  sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nombres</TableCell>
-                <TableCell align='center'  sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Apellidos</TableCell>
-                <TableCell align='center'  sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Telefono</TableCell>
-                <TableCell align='center'  sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Correo</TableCell>
-                <TableCell align='center'  sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Acciones</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nombres</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Apellidos</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Telefono</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Correo</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Acciones</TableCell>
               </TableRow>
             </TableHead>
           )}
-          
+
           <TableBody>
-          {users.map((user) => (
-            <TableRow key={user.userId} sx={{ display: isMobile ? 'block' : 'table-row', borderBottom: isMobile ? '3px solid ' : 'none' }}>
-              <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Identificacion:</Box>}
-                {user.identification}
-              </TableCell>
-              <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Nombres:</Box>}
-                {user.firstName}
-              </TableCell>
-              <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Apellidos:</Box>}
-                {user.firstLastName}
-              </TableCell>
-              <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Telefono:</Box>}
-                {user.contactNumber}
-              </TableCell>
-              <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Correo:</Box>}
-                {user.email}
-              </TableCell>
-              <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Acciones:</Box>}
-                <Tooltip title="Ver más">
-                  <IconButton onClick={() => handleOpenModal(user)}>
-                    <VisibilityIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Editar">
-                  <IconButton onClick={() => handleUpdate(user)}>
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Eliminar">
-                  <IconButton onClick={() => handleDelete(user)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={user.accountLocked ? "Desbloquear" : "Bloquear"}>
-                  <IconButton onClick={() => handleBlockUnblock(user)}>
-                    {user.accountLocked ? <LockIcon /> : <LockOpenIcon />}
-                  </IconButton>
-                </Tooltip>
-              </TableCell>
-            </TableRow>
-          ))}
+            {users.map((user) => (
+              <TableRow key={user.userId} sx={{ display: isMobile ? 'block' : 'table-row', borderBottom: isMobile ? '3px solid ' : 'none' }}>
+                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Identificacion:</Box>}
+                  {user.identification}
+                </TableCell>
+                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Nombres:</Box>}
+                  {user.firstName}
+                </TableCell>
+                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Apellidos:</Box>}
+                  {user.firstLastName}
+                </TableCell>
+                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Telefono:</Box>}
+                  {user.contactNumber}
+                </TableCell>
+                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Correo:</Box>}
+                  {user.email}
+                </TableCell>
+                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Acciones:</Box>}
+                  <Tooltip title="Ver más">
+                    <IconButton onClick={() => handleOpenModal(user)}>
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Editar">
+                    <IconButton onClick={() => handleUpdate(user)}>
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Eliminar">
+                    <IconButton onClick={() => handleDelete(user)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={user.accountLocked ? "Desbloquear" : "Bloquear"}>
+                    <IconButton onClick={() => handleBlockUnblock(user)}>
+                      {user.accountLocked ? <LockIcon /> : <LockOpenIcon />}
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -223,7 +228,7 @@ const Users = () => {
       <ViewMore open={open} setOpen={setOpen} user={selectedUser} />
       <Loading isLoading={isLoading} />
       {totalElements < 1 && (
-        <MessageData action="user"/>
+        <MessageData action="user" />
       )}
     </Container>
   )

@@ -161,8 +161,48 @@ public class TestimonyServiceImpl implements TestimonyService {
     }
 
     @Override
-    public Page<TestimonysDTO> findTestimonyByCategory(String path, Pageable pageable) {
-        Page<Testimony> testimonyPage = testimonyRepository.findByPathAndEnabledFalse(path, pageable);
+    public Page<TestimonysDTO> findTestimonyByCategoryAdmin(String path, Pageable pageable) {
+        Page<Testimony> testimonyPage = testimonyRepository.findByPath(path, pageable);
+        return testimonyPage.map(testimony -> TestimonysDTO.builder()
+                .testimonyId(testimony.getTestimonyId())
+                .category(testimony.getCategory())
+                .title(testimony.getTitle())
+                .description(testimony.getDescription())
+                .evenDate(testimony.getEvenDate())
+                .municipio(testimony.getMunicipio())
+                .department(testimony.getDepartment())
+                .descriptionDetail(testimony.getDescriptionDetail())
+                .path(testimony.getPath())
+                .enabled(testimony.isEnabled())
+                .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
+                .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
+                .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
+                .build());
+    }
+
+    @Override
+    public Page<TestimonysDTO> findTestimonyByCategoryUser(String path, Pageable pageable) {
+        Page<Testimony> testimonyPage = testimonyRepository.findByPath(path, pageable);
+        return testimonyPage.map(testimony -> TestimonysDTO.builder()
+                .testimonyId(testimony.getTestimonyId())
+                .category(testimony.getCategory())
+                .title(testimony.getTitle())
+                .description(testimony.getDescription())
+                .evenDate(testimony.getEvenDate())
+                .municipio(testimony.getMunicipio())
+                .department(testimony.getDepartment())
+                .descriptionDetail(testimony.getDescriptionDetail())
+                .path(testimony.getPath())
+                .enabled(testimony.isEnabled())
+                .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
+                .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
+                .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
+                .build());
+    }
+
+    @Override
+    public Page<TestimonysDTO> findTestimonyByCategoryAnonymous(String path, Pageable pageable) {
+        Page<Testimony> testimonyPage = testimonyRepository.findByPathAndEnabledTrue(path, pageable);
         return testimonyPage.map(testimony -> TestimonysDTO.builder()
                 .testimonyId(testimony.getTestimonyId())
                 .category(testimony.getCategory())
@@ -247,4 +287,28 @@ public class TestimonyServiceImpl implements TestimonyService {
             throw new IllegalStateException("No se pudo eliminar el archivo: " + fileName, e);
         }
     }
+
+
+    public TestimonysDTO privateTestimony(Long testimonyId) {
+        Testimony testimony = testimonyRepository.findById(testimonyId).orElseThrow(() -> new NotFoundException("Testimonio no encontrado"));
+        testimony.setEnabled(false);
+        testimonyRepository.save(testimony);
+
+        TestimonysDTO testimonysDTO = TestimonysDTO.builder()
+                    .enabled(testimony.isEnabled())
+                    .build();
+        return testimonysDTO;
+    }
+
+    public TestimonysDTO publicTestimony(Long testimonyId) {
+        Testimony testimony= testimonyRepository.findById(testimonyId).orElseThrow(() -> new NotFoundException("Testimonio no encontrado"));
+        testimony.setEnabled(true);
+        testimonyRepository.save(testimony);
+
+        TestimonysDTO testimonysDTO = TestimonysDTO.builder()
+                    .enabled(testimony.isEnabled())
+                    .build();
+        return testimonysDTO;
+    }
+   
 }

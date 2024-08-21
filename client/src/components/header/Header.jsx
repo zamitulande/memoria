@@ -24,6 +24,7 @@ import Login from '../../auth/Login';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogin } from '../../redux/features/userSlice';
 import ResetPassword from '../../auth/ResetPassword';
+import { clearTestimonies } from '../../redux/features/TestimonySlice';
 
 const Header = () => {
 
@@ -72,6 +73,7 @@ const Header = () => {
 
     const handleLogout = () => {
         dispatch(setLogin(false))
+        dispatch(clearTestimonies());
     }
 
     const filteredPages = pages.filter(page => {

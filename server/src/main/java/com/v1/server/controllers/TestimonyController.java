@@ -8,6 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,8 +73,31 @@ public class TestimonyController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategory(path, pageable);
-        return ResponseEntity.ok(testimonyPage);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Verifica si el usuario está autenticado o no
+        if (authentication != null && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken)) {
+            // El usuario está autenticado
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+            boolean isUser = authentication.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_USER"));
+            if (isAdmin) {
+                Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategoryAdmin(path, pageable);
+                return ResponseEntity.ok(testimonyPage);
+            } else if (isUser) {
+                Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategoryUser(path, pageable);
+                return ResponseEntity.ok(testimonyPage);
+            }
+        } else {
+            Page<TestimonysDTO> testimonyPage = testimonyService.findTestimonyByCategoryAnonymous(path, pageable);
+            return ResponseEntity.ok(testimonyPage);
+
+        }
+        return null;
+
     }
 
     @PutMapping("/update/{testimonyId}")
@@ -112,5 +138,17 @@ public class TestimonyController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
+    }
+
+    @PutMapping("/private/{testimonyId}")
+    public ResponseEntity<TestimonysDTO> blockUser(@PathVariable Long testimonyId) {
+        TestimonysDTO privateTestimony = testimonyService.privateTestimony(testimonyId);
+        return ResponseEntity.ok(privateTestimony);
+    }
+
+    @PutMapping("/public/{testimonyId}")
+    public ResponseEntity<TestimonysDTO> unblockUser(@PathVariable Long testimonyId) {
+        TestimonysDTO publicTestimony = testimonyService.publicTestimony(testimonyId);
+        return ResponseEntity.ok(publicTestimony);
     }
 }

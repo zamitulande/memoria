@@ -1,12 +1,18 @@
-import { Alert, Box, Grid, IconButton, Modal, Skeleton, Stack, Typography } from '@mui/material'
+import { Alert, Box, Grid, IconButton, Modal, Skeleton, Stack, Tooltip, Typography } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Cancel';
+import FaceRetouchingOffIcon from '@mui/icons-material/FaceRetouchingOff';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import DoneIcon from '@mui/icons-material/Done';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { setFormEditTestimony, setOpenViewTestimony, setTestimonyId } from '../../redux/features/TestimonySlice';
 import Video from './Video';
 import { useNavigate } from 'react-router-dom';
+import axiosClient from '../../config/Axios';
+import Swal from 'sweetalert2';
 
 const style = {
     position: 'absolute',
@@ -35,11 +41,39 @@ const ViewTestimony = ({
 
     const login = useSelector((state) => state.user.login);
     const role = useSelector((state) => state.user.role);
+    const getToken = useSelector((state) => state.user.token)
+
+    const [enable, setEnable] = useState(dataView.enabled)
 
     const handleCloseModal = () => {
         dispatch(setOpenViewTestimony(false))
     }
 
+    const handleEnabled = async (dataView) => {
+        const action = enable ? 'private' : 'public';
+        const actionText = enable ? 'privado' : 'publico';
+        try {
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${getToken}`
+                }
+            };
+            const response = await axiosClient.put(`/repository/${action}/${dataView.testimonyId}`, {}, config);
+            if (response && response.data) {
+                setEnable(response.data.enabled);
+            }
+            Swal.fire({
+                icon: "success",
+                text: `El testimonio ahora es ${actionText}.`,
+                customClass: {
+                    container: 'my-swal'
+                },
+            });
+        } catch (error) {
+            console.log(error)
+
+        }
+    };
     const getFileType = (file) => {
         if (file.type.startsWith('video')) {
             return 'video';
@@ -57,7 +91,7 @@ const ViewTestimony = ({
         dispatch(setFormEditTestimony(dataView))
         dispatch(setTestimonyId(dataView))
         dispatch(setOpenViewTestimony(false))
-      }
+    }
 
     if (dataView) {
         return (
@@ -105,9 +139,9 @@ const ViewTestimony = ({
                             </Box>
                             {dataView.descriptionDetail && (
                                 <Box display="flex" alignItems="center">
-                                <Typography variant="h6">Descripción Detallada:&nbsp;</Typography>
-                                <Typography variant="body">{dataView.descriptionDetail}</Typography>
-                            </Box>
+                                    <Typography variant="h6">Descripción Detallada:&nbsp;</Typography>
+                                    <Typography variant="body">{dataView.descriptionDetail}</Typography>
+                                </Box>
                             )}
                         </Grid>
                     </Grid>
@@ -118,6 +152,14 @@ const ViewTestimony = ({
                                     <EditIcon />
                                     Editar
                                 </IconButton>
+                            </Grid>
+                            <Grid item xs={12} sm={2}>
+                                <Tooltip title={enable ? "Hacer Privado" : "Hacer Publico "}>
+                                    <IconButton onClick={() => handleEnabled(dataView)}>
+                                        {enable ? <LockIcon /> : <LockOpenIcon />}
+                                        {enable ? "Privatizar" : "Publicar"}
+                                    </IconButton>
+                                </Tooltip>
                             </Grid>
                         </Grid>
                     )}

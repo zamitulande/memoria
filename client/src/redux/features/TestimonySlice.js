@@ -8,7 +8,8 @@ export const TestimonySlice = createSlice({
         categories: localStorage.getItem('categories') || "",
         openViewTestimony: false,
         formEditTestimony: [], 
-        testimonyId: null
+        testimonyId: null,
+        testimonies: []
     },
     reducers:{
         setCategories: (state, action)=>{
@@ -24,10 +25,16 @@ export const TestimonySlice = createSlice({
         },
         setTestimonyId: (state, action) =>{
             state.testimonyId = action.payload;
+        },
+        setTestimonies: (state, action) => {
+            state.testimonies = action.payload;
+        },
+        clearTestimonies: (state) => { // Nueva acción para limpiar testimonios
+            state.testimonies = [];
         }
     }
 });
 
-export const {setCategories, setOpenViewTestimony, setFormEditTestimony, setTestimonyId} = TestimonySlice.actions;
+export const {setCategories, setOpenViewTestimony, setFormEditTestimony, setTestimonyId, setTestimonies, clearTestimonies} = TestimonySlice.actions;
 
 export default TestimonySlice.reducer;
