@@ -82,13 +82,13 @@ const Testimony = () => {
     };
 
     return (
-        <Grid container spacing={1} mb={6} justifyContent="center">
+        <Grid container spacing={1} mb={6} mt={10} justifyContent="center">
             <Grid item
                 xs={12}
                 sm={2}
                 sx={{
                     position: 'sticky',
-                    top:150,
+                    top:190,
                     alignSelf: 'flex-start'
                 }}>
                 <Menu />

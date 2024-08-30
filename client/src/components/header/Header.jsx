@@ -2,6 +2,7 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import LoginIcon from '@mui/icons-material/Login';
+import chiva from '../../assets/header/Chiva.png'
 import {
     BottomNavigation,
     BottomNavigationAction,
@@ -16,6 +17,7 @@ import {
     Menu,
     Container,
     useMediaQuery,
+    Grid,
 } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { useTheme } from '@emotion/react';
@@ -89,216 +91,250 @@ const Header = () => {
 
     const renderButtonGroup = (items) => (
         <ButtonGroup disableElevation variant="contained" aria-label="button group">
-            {items.map((item) => (                
-                    <Link to={item.path} target="_blank" rel="noopener noreferrer" key={item.id}>
-                        <Button size="small">{item.item}</Button>
-                    </Link>                
+            {items.map((item) => (
+                <Link to={item.path} target="_blank" rel="noopener noreferrer" key={item.id}>
+                    <Button size="small" color='secondary'>{item.item}</Button>
+                </Link>
             ))}
         </ButtonGroup>
     );
 
     return (
-       <>
-         <AppBar position="fixed">
-            <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
-                <Box>{renderButtonGroup(about)}</Box>
-                {login ? <Typography>hola {userName}</Typography> : null}
-            </Toolbar>
-            <Container maxWidth="xl">
-                <Toolbar disableGutters>
-                    <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="a"
-                        href="#app-bar-with-responsive-menu"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'none', md: 'flex' },
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        LOGO
-                    </Typography>
-
-                    {/* :::START MOVIL FIRST NAVBAR:: */}
-
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={handleMenuOpen(setAnchorElNav)}
-                            color="inherit"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorElNav}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'left',
-                            }}
-                            open={Boolean(anchorElNav)}
-                            onClose={handleMenuClose(setAnchorElNav)}
-                            sx={{
-                                display: { xs: 'block', md: 'none' },
-                            }}
-                        >
-                            <ButtonGroup orientation="vertical" variant="contained" aria-label="Vertical button group">
-                                {filteredPages.map((page) => (
-                                    <Link
-                                        to={page.path}
-                                        key={page.id}>
-                                        <Button
-                                            onClick={handleMenuClose(setAnchorElNav)}
-                                        >
-                                            {page.item}
-                                        </Button>
-                                    </Link>
-                                ))}
-                            </ButtonGroup>
-                        </Menu>
-                    </Box>
-                    <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        component="a"
-                        href="#app-bar-with-responsive-menu"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'flex', md: 'none' },
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        LOGO
-                    </Typography>
-
-                    {/* :::END MOVIL FIRST NAVBAR:: */}
-
-                    <Box mt={2} sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
-                        <BottomNavigation
-                            showLabels
-                            value={valuePage}
-                            onChange={(event, newValue) => {
-                                setValuePage(newValue);
-                            }}>
-                            {filteredPages.map((page) => (
-                                <BottomNavigationAction
-                                    sx={{
-                                        color: theme.palette.bottomNavigation.selected,
-                                        '&.Mui-selected': {
-                                            color: theme.palette.bottomNavigation.unselected,
-                                        },
-                                        '.MuiBottomNavigationAction-label': {
-                                            fontSize: '0.9rem',
-                                        },
-                                    }}
-                                    key={page.id}
-                                    component={Link}
-                                    to={page.path}
-                                    label={page.item}
-                                >
-                                </BottomNavigationAction>
-                            ))}
-                        </BottomNavigation>
-                    </Box>
-
-                    {/* :::START MOVIL FIRST LOGIN:: */}
-
-                    <Box sx={{ display: { xs: 'flex' } }}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleMenuOpen(setAnchorElUser)} sx={{ p: 0 }}>
-                                <Typography sx={{ display: { xs: 'none', md: 'flex' } }}>
-                                    {login ? 'Opciones' : 'Acceder'}
-                                </Typography>
-                                <LoginIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            sx={{ mt: '45px' }}
-                            id="menu-appbar"
-                            anchorEl={anchorElUser}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorElUser)}
-                            onClose={handleMenuClose(setAnchorElUser)}
-                        >
-                            <ButtonGroup orientation="vertical" variant="contained" aria-label="Vertical button group">
-                                {filteredAuth.map((button) => (
-                                    <Fragment key={button.id}>
-                                        {button.id === 1 ? (
-                                            <>
-                                                <Button
-                                                    onClick={(e) => {
-                                                        setOpen(true)
-                                                        handleMenuClose(setAnchorElUser)();
-                                                    }}
-                                                    size="small"
-                                                >
-                                                    {button.item}
-                                                </Button>
-                                                <Login open={open} setOpen={setOpen} />
-                                            </>
-                                        ) : button.path ? (
-                                            <Link to={button.path}>
-                                                <Button
-                                                    onClick={handleMenuClose(setAnchorElUser)}
-                                                    size="small"
-                                                >
-                                                    {button.item}
-                                                </Button>
-                                            </Link>
-                                        ) : (
-                                            <>
-                                                <Button
-                                                    onClick={() => {
-                                                        if (button.id === 4) handleLogout();
-                                                        if (button.id === 3) setOpenResetPassword(true);
-                                                        handleMenuClose(setAnchorElUser)();
-                                                    }}
-                                                    size="small"
-                                                >
-                                                    {button.item}
-                                                </Button>
-                                                <ResetPassword open={openResetPassword} setOpen={setOpenResetPassword} />
-                                            </>
-                                        )}
-                                    </Fragment>
-                                ))}
-                            </ButtonGroup>
-                        </Menu>
-                    </Box>
-                    {/* :::END MOVIL FIRST LOGIN:: */}
+        <>
+            <AppBar position="fixed"
+                style={{
+                    backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.1)), url(${chiva})`,
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center',
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',                    
+                }}>
+                <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
+                    <Box>{renderButtonGroup(about)}</Box>
+                    {login ? <Typography sx={{ color: '#fff', fontWeight: 'bold' }}>Bienvenido: {userName}</Typography> : null}
                 </Toolbar>
-            </Container>
-        </AppBar>
-        {isMobile ? <Box sx={{  height: '60px' }} />:<Box sx={{  height: '150px' }} />}
-       </>
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters>
+                        <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1, color: '#fff' }} />
+                        <Typography
+                            variant="h6"
+                            noWrap
+                            component="a"
+                            href="#app-bar-with-responsive-menu"
+                            sx={{
+                                mr: 2,
+                                display: { xs: 'none', md: 'flex' },
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                letterSpacing: '.3rem',
+                                color: '#fff',
+                                textDecoration: 'none',
+                            }}
+                        >
+                            LOGO
+                        </Typography>
+
+                        {/* :::START MOVIL FIRST NAVBAR:: */}
+
+                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                            <IconButton
+                                size="large"
+                                aria-label="menu"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleMenuOpen(setAnchorElNav)}
+                                color="inherit"
+                                sx={{ color: '#fff' }}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorElNav}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'left',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'left',
+                                }}
+                                open={Boolean(anchorElNav)}
+                                onClose={handleMenuClose(setAnchorElNav)}
+                                sx={{
+                                    display: { xs: 'block', md: 'none' },
+                                }}
+                            >
+                                <ButtonGroup
+                                    orientation="vertical"
+                                    variant="contained"
+                                    aria-label="Vertical button group"
+                                    sx={{ backgroundColor: '#fff', color: 'secondary' }}
+                                >
+                                    {filteredPages.map((page) => (
+                                        <Link
+                                            to={page.path}
+                                            key={page.id}>
+                                            <Button
+                                                onClick={handleMenuClose(setAnchorElNav)}
+                                                sx={{
+                                                    color: 'secondary',
+                                                    '&:hover': {
+                                                        backgroundColor: '#d7eccf',
+                                                        color: '#000',
+                                                    }
+                                                }}
+                                            >
+                                                {page.item}
+                                            </Button>
+                                        </Link>
+                                    ))}
+                                </ButtonGroup>
+                            </Menu>
+                        </Box>
+                        <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1, color: '#fff' }} />
+                        <Typography
+                            variant="h5"
+                            noWrap
+                            component="a"
+                            href="#app-bar-with-responsive-menu"
+                            sx={{
+                                mr: 2,
+                                display: { xs: 'flex', md: 'none' },
+                                flexGrow: 1,
+                                fontFamily: 'monospace',
+                                fontWeight: 700,
+                                letterSpacing: '.3rem',
+                                color: '#fff',
+                                textDecoration: 'none',
+                            }}
+                        >
+                            LOGO
+                        </Typography>
+
+                        {/* :::END MOVIL FIRST NAVBAR:: */}
+
+                        <Box p={13} sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
+                            <Grid container direction="column" alignItems="center" spacing={2}>
+                                <Grid item>
+                                    <Typography variant='h2' color='secondary' fontWeight='bold'>Memoria Oral</Typography>
+                                </Grid>
+                                <Grid item sx={{ width: '100%' }}>
+                                    <BottomNavigation
+                                        style={{ backgroundColor: "transparent"}}
+                                        showLabels
+                                        value={valuePage}
+                                        onChange={(event, newValue) => {
+                                            setValuePage(newValue);
+                                        }}>
+                                        {filteredPages.map((page) => (
+                                            <BottomNavigationAction
+
+                                                sx={{
+                                                    fontWeight: '600',
+                                                    color: theme.palette.bottomNavigation.selected,
+                                                    '&.Mui-selected': {
+                                                        color: theme.palette.bottomNavigation.unselected,
+                                                        fontWeight: '900',
+                                                    },
+                                                    '.MuiBottomNavigationAction-label': {
+                                                        fontSize: '1rem',
+                                                    },
+                                                }}
+                                                key={page.id}
+                                                component={Link}
+                                                to={page.path}
+                                                label={page.item}
+                                            >
+                                            </BottomNavigationAction>
+                                        ))}
+                                    </BottomNavigation>
+                                </Grid>
+                            </Grid>
+                        </Box>
+
+                        {/* :::START MOVIL FIRST LOGIN:: */}
+
+                        <Box sx={{ display: { xs: 'flex', alignItems: 'center' } }}>
+                            <Tooltip title="Abrir opciones.">
+                                <IconButton onClick={handleMenuOpen(setAnchorElUser)} sx={{ p: 0 }}>
+                                    <Button color='secondary' variant="contained" sx={{ display: { xs: 'none', md: 'flex' }}}>
+                                        {login ? 'Opciones' : 'Acceder'}
+                                    </Button>
+                                    <LoginIcon sx={{ display: { xs: 'flex', md: 'none' }, color: '#fff' }} />
+                                </IconButton>
+                            </Tooltip>
+                            <Menu
+                                sx={{ mt: '45px' }}
+                                id="menu-appbar"
+                                anchorEl={anchorElUser}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorElUser)}
+                                onClose={handleMenuClose(setAnchorElUser)}
+                            >
+                                <ButtonGroup orientation="vertical" variant="contained" aria-label="Vertical button group">
+                                    {filteredAuth.map((button) => (
+                                        <Fragment key={button.id}>
+                                            {button.id === 1 ? (
+                                                <>
+                                                    <Button
+                                                        onClick={(e) => {
+                                                            setOpen(true)
+                                                            handleMenuClose(setAnchorElUser)();
+                                                        }}
+                                                        size="small"
+                                                        sx={{ color: '#333', '&:hover': { backgroundColor: '#f1f1f1' } }}
+                                                    >
+                                                        {button.item}
+                                                    </Button>
+                                                    <Login open={open} setOpen={setOpen} />
+                                                </>
+                                            ) : button.path ? (
+                                                <Link to={button.path}>
+                                                    <Button
+                                                        onClick={handleMenuClose(setAnchorElUser)}
+                                                        size="small"
+                                                        sx={{ color: '#333', '&:hover': { backgroundColor: '#f1f1f1' } }}
+                                                    >
+                                                        {button.item}
+                                                    </Button>
+                                                </Link>
+                                            ) : (
+                                                <>
+                                                    <Button
+                                                        onClick={() => {
+                                                            if (button.id === 4) handleLogout();
+                                                            if (button.id === 3) setOpenResetPassword(true);
+                                                            handleMenuClose(setAnchorElUser)();
+                                                        }}
+                                                        size="small"
+                                                        sx={{ color: '#333', '&:hover': { backgroundColor: '#f1f1f1' } }}
+                                                    >
+                                                        {button.item}
+                                                    </Button>
+                                                    <ResetPassword open={openResetPassword} setOpen={setOpenResetPassword} />
+                                                </>
+                                            )}
+                                        </Fragment>
+                                    ))}
+                                </ButtonGroup>
+                            </Menu>
+                        </Box>
+                        {/* :::END MOVIL FIRST LOGIN:: */}
+                    </Toolbar>
+                </Container>
+            </AppBar>
+            {isMobile ? <Box sx={{ height: '60px' }} /> : <Box sx={{ height: '400px' }} />}
+        </>
     )
 }
 
