@@ -43,7 +43,16 @@ const ViewTestimony = ({
     const role = useSelector((state) => state.user.role);
     const getToken = useSelector((state) => state.user.token)
 
-    const [enable, setEnable] = useState(dataView.enabled)
+    let isEnabled;
+
+    if(dataView){
+        isEnabled = dataView.enable
+    }
+    if(dataPreview){
+        isEnabled = dataPreview.enable 
+    }
+
+    const [enable, setEnable] = useState(isEnabled)
 
     const handleCloseModal = () => {
         dispatch(setOpenViewTestimony(false))

@@ -25,7 +25,6 @@ public interface TestimonyService {
                         String municipio,
                         String descriptionDetail,
                         String path,
-                        boolean enabled,
                         MultipartFile audio,
                         MultipartFile video,
                         MultipartFile image)
@@ -47,7 +46,6 @@ public interface TestimonyService {
                         String municipio,
                         String descriptionDetail,
                         String path,
-                        boolean enabled,
                         MultipartFile audio,
                         MultipartFile video,
                         MultipartFile image)

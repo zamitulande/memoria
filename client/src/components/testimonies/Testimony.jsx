@@ -19,7 +19,7 @@ const Testimony = () => {
     const dataTestimonies = useSelector((state) => state.testimony.testimonies)
     const testimonyIsEnable = useSelector((state) => state.testimony.testimonyIsEnable)
     const getToken = useSelector((state) => state.user.token)
-    const getRole = useSelector((state)=> state.user.role)
+    const getRole = useSelector((state) => state.user.role)
 
     const [isLoading, setIsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
@@ -27,21 +27,21 @@ const Testimony = () => {
     const [totalElements, setTotalElements] = useState(0);
     const [selectedTestimony, setSelectedTestimony] = useState({})
 
-    let path= category;
+    let path = category;
 
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
             const config = {
                 headers: {
-                  'Authorization': `Bearer ${getToken}`
+                    'Authorization': `Bearer ${getToken}`
                 }
-              };
+            };
             try {
                 let response;
-                if(getRole === "ADMIN" || getRole === "USER"){
+                if (getRole === "ADMIN" || getRole === "USER") {
                     response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`, config)
-                }else{
+                } else {
                     response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
                 }
                 dispatch(setTestimonies(response.data.content))
@@ -53,16 +53,16 @@ const Testimony = () => {
                     icon: "error",
                     title: error.message,
                     text: "No hay conexión con el servidor.",
-                  });
-                  setIsLoading(false);
+                });
+                setIsLoading(false);
             }
         }
         fetchData();
-    }, [currentPage, path, getRole, testimonyIsEnable ])
+    }, [currentPage, path, getRole, testimonyIsEnable])
 
-    useEffect(()=>{
+    useEffect(() => {
         setCurrentPage(0)
-    },[path])
+    }, [path])
 
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
@@ -82,13 +82,13 @@ const Testimony = () => {
     };
 
     return (
-        <Grid container spacing={1} mb={6} mt={10} justifyContent="center">
+        <Grid container spacing={1} mb={6} justifyContent="center">
             <Grid item
                 xs={12}
                 sm={2}
                 sx={{
                     position: 'sticky',
-                    top:190,
+                    top: 190,
                     alignSelf: 'flex-start'
                 }}>
                 <Menu />
@@ -112,17 +112,28 @@ const Testimony = () => {
                                         image={testimony.imageUrl}
                                         alt={testimony.category}
                                     />
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="div">
+                                    <CardContent style={{
+                                         position: 'absolute',
+                                         top: 0,
+                                         left: 0,
+                                         width: '100%',
+                                         height: '85%',
+                                         display: 'flex',
+                                         flexDirection: 'column',  // Posiciona los elementos en columna
+                                         justifyContent: 'center',  // Centra verticalmente
+                                         backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                                         color: '#fff',
+                                    }}>
+                                        <Typography gutterBottom fontSize={25} style={{ padding: '20px 80px 0px 0px' }}>
                                             {testimony.title}
                                         </Typography>
-                                        <Typography variant="body2" color="text.secondary">
+                                        <Typography variant="span" fontSize={15} style={{ padding: '0px 80px 0px 0px'}}>
                                             {testimony.description}
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>
                                 <CardActions>
-                                    <Button size="small" color="secondary" variant="contained" onClick={()=>handleViewMore(testimony)}>
+                                    <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>
                                         Ver más
                                     </Button>
                                 </CardActions>
@@ -146,9 +157,9 @@ const Testimony = () => {
                 )}
                 {openViewTestimony && (
                     <ViewTestimony
-                    dataView={selectedTestimony}
-                    action="view"/>
-                )}                 
+                        dataView={selectedTestimony}
+                        action="view" />
+                )}
             </Grid>
         </Grid>
     )

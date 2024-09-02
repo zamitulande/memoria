@@ -215,7 +215,7 @@ const Header = () => {
 
                         {/* :::END MOVIL FIRST NAVBAR:: */}
 
-                        <Box p={13} sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
+                        <Box p={6} sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
                             <Grid container direction="column" alignItems="center" spacing={2}>
                                 <Grid item>
                                     <Typography variant='h2' color='secondary' fontWeight='bold'>Memoria Oral</Typography>
@@ -333,7 +333,7 @@ const Header = () => {
                     </Toolbar>
                 </Container>
             </AppBar>
-            {isMobile ? <Box sx={{ height: '60px' }} /> : <Box sx={{ height: '400px' }} />}
+            {isMobile ? <Box sx={{ height: '50px' }} /> : <Box sx={{ height: '325px' }} />}
         </>
     )
 }

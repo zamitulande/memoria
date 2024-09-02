@@ -40,8 +40,7 @@ const Menu = () => {
                     textTransform: 'lowercase',
                     transition: 'background-color 0.3s, color 0.3s',
                     '&:hover': {
-                        backgroundColor: '#f0f0f0',
-                        color: '#1976d2',
+                        backgroundColor: '#DDC90F',
                     }
                 }
             }}>

@@ -45,7 +45,6 @@ public class TestimonyController {
             @RequestParam String municipio,
             @RequestParam String descriptionDetail,
             @RequestParam String path,
-            @RequestParam boolean enabled,
             @RequestParam(value = "audio", required = false) MultipartFile audio,
             @RequestParam(value = "video", required = false) MultipartFile video,
             @RequestParam("image") MultipartFile image)
@@ -61,7 +60,6 @@ public class TestimonyController {
                 municipio,
                 descriptionDetail,
                 path,
-                enabled,
                 audio,
                 video,
                 image);
@@ -111,7 +109,6 @@ public class TestimonyController {
             @RequestParam String municipio,
             @RequestParam String descriptionDetail,
             @RequestParam String path,
-            @RequestParam boolean enabled,
             @RequestParam(value = "audio", required = false) MultipartFile audio,
             @RequestParam(value = "video", required = false) MultipartFile video,
             @RequestParam(value = "image", required = false) MultipartFile image)
@@ -128,7 +125,6 @@ public class TestimonyController {
                             municipio,
                             descriptionDetail,
                             path,
-                            enabled,
                             audio,
                             video,
                             image));

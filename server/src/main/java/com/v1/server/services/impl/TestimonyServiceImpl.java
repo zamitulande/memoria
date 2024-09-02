@@ -54,7 +54,6 @@ public class TestimonyServiceImpl implements TestimonyService {
             String municipio,
             String descriptionDetail,
             String path,
-            boolean enabled,
             MultipartFile audio,
             MultipartFile video,
             MultipartFile image)
@@ -89,7 +88,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .municipio(municipio)
                 .descriptionDetail(descriptionDetail)
                 .path(path)
-                .enabled(enabled)
+                .enabled(false)
                 .audioUrl(audioUrl)
                 .videoUrl(videoUrl)
                 .imageUrl(imageUrl)
@@ -231,7 +230,6 @@ public class TestimonyServiceImpl implements TestimonyService {
             String municipio,
             String descriptionDetail,
             String path,
-            boolean enabled,
             MultipartFile audio,
             MultipartFile video,
             MultipartFile image) throws IOException {
@@ -247,7 +245,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         existingTestimony.setMunicipio(municipio);
         existingTestimony.setDescriptionDetail(descriptionDetail);
         existingTestimony.setPath(path);
-        existingTestimony.setEnabled(enabled);
+        existingTestimony.setEnabled(false);
 
         if (audio != null && !audio.isEmpty()) {
             if (existingTestimony.getAudioUrl() != null) {
