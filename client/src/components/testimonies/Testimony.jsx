@@ -6,6 +6,7 @@ import axiosClient from '../../config/Axios';
 import Loading from '../../helpers/components/Loading';
 import MessageData from '../../helpers/components/MessageData';
 import Menu from '../../helpers/components/Menu';
+import { animateScroll } from 'react-scroll';
 import { setOpenViewTestimony, setTestimonies } from '../../redux/features/TestimonySlice';
 import ViewTestimony from '../../helpers/components/ViewTestimony';
 import Swal from 'sweetalert2';
@@ -48,6 +49,7 @@ const Testimony = () => {
                 setTotalPages(response.data.totalPages);
                 setTotalElements(response.data.totalElements)
                 setIsLoading(false);
+                animateScroll.scrollToTop()
             } catch (error) {
                 Swal.fire({
                     icon: "error",
@@ -117,26 +119,26 @@ const Testimony = () => {
                                          top: 0,
                                          left: 0,
                                          width: '100%',
-                                         height: '85%',
+                                         height: '100%',
                                          display: 'flex',
                                          flexDirection: 'column',  // Posiciona los elementos en columna
                                          justifyContent: 'center',  // Centra verticalmente
                                          backgroundColor: 'rgba(0, 0, 0, 0.4)',
                                          color: '#fff',
                                     }}>
-                                        <Typography gutterBottom fontSize={25} style={{ padding: '20px 80px 0px 0px' }}>
+                                        <Typography gutterBottom fontSize={25} style={{ padding: '0px 60px 0px 0px' }}>
                                             {testimony.title}
                                         </Typography>
-                                        <Typography variant="span" fontSize={15} style={{ padding: '0px 80px 0px 0px'}}>
+                                        <Typography variant="span" fontSize={15} style={{ padding: '0px 50px 0px 0px'}}>
                                             {testimony.description}
                                         </Typography>
                                     </CardContent>
-                                </CardActionArea>
-                                <CardActions>
+                                    <CardActions>
                                     <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>
                                         Ver más
                                     </Button>
                                 </CardActions>
+                                </CardActionArea>                               
                             </Card>
                         </Grid>
                     ))}

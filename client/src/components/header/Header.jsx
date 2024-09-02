@@ -107,7 +107,7 @@ const Header = () => {
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',                    
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
                 }}>
                 <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
                     <Box>{renderButtonGroup(about)}</Box>
@@ -222,7 +222,7 @@ const Header = () => {
                                 </Grid>
                                 <Grid item sx={{ width: '100%' }}>
                                     <BottomNavigation
-                                        style={{ backgroundColor: "transparent"}}
+                                        style={{ backgroundColor: "transparent" }}
                                         showLabels
                                         value={valuePage}
                                         onChange={(event, newValue) => {
@@ -258,12 +258,25 @@ const Header = () => {
 
                         <Box sx={{ display: { xs: 'flex', alignItems: 'center' } }}>
                             <Tooltip title="Abrir opciones.">
-                                <IconButton onClick={handleMenuOpen(setAnchorElUser)} sx={{ p: 0 }}>
-                                    <Button color='secondary' variant="contained" sx={{ display: { xs: 'none', md: 'flex' }}}>
+                                <div>
+                                    {/* Renderizar el botón solo en pantallas medianas y superiores */}
+                                    <Button
+                                        color='secondary'
+                                        variant="contained"
+                                        sx={{ display: { xs: 'none', md: 'flex' } }}
+                                        onClick={handleMenuOpen(setAnchorElUser)}
+                                    >
                                         {login ? 'Opciones' : 'Acceder'}
                                     </Button>
-                                    <LoginIcon sx={{ display: { xs: 'flex', md: 'none' }, color: '#fff' }} />
-                                </IconButton>
+
+                                    {/* Renderizar el ícono en pantallas pequeñas */}
+                                    <IconButton
+                                        onClick={handleMenuOpen(setAnchorElUser)}
+                                        sx={{ display: { xs: 'flex', md: 'none' }, p: 0 }}
+                                    >
+                                        <LoginIcon sx={{ color: '#fff' }} />
+                                    </IconButton>
+                                </div>
                             </Tooltip>
                             <Menu
                                 sx={{ mt: '45px' }}
