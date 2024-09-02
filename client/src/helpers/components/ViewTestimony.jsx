@@ -46,14 +46,14 @@ const ViewTestimony = ({
     let isEnabled;
 
     if(dataView){
-        isEnabled = dataView.enable
+        isEnabled = dataView.enabled
     }
     if(dataPreview){
-        isEnabled = dataPreview.enable 
+        isEnabled = dataPreview.enabled 
     }
 
     const [enable, setEnable] = useState(isEnabled)
-
+    
     const handleCloseModal = () => {
         dispatch(setOpenViewTestimony(false))
     }
@@ -69,6 +69,7 @@ const ViewTestimony = ({
             };
             const response = await axiosClient.put(`/repository/${action}/${dataView.testimonyId}`, {}, config);
             if (response && response.data) {
+                console.log(response)
                 setEnable(response.data.enabled);
                 dispatch(setTestimonyIsEnable(response.data.enabled))
             }

@@ -56,6 +56,7 @@ const ForgetPassword = ({ open, setOpen }) => {
             aria-describedby="modal-modal-description"
         >
             <Box className='modal-style'>
+            <Box padding={4}>
             <IconButton
                     aria-label="close"
                     onClick={handleCloseModal}
@@ -65,7 +66,7 @@ const ForgetPassword = ({ open, setOpen }) => {
                 >
                     <CloseIcon />
                 </IconButton>
-                <Typography sx={{ mt: 2 }}>Recuperar contraseña.</Typography>
+                <Typography >Recuperar contraseña.</Typography>
                 <Typography>ingrese su numero de identificación.</Typography>
                 <form onSubmit={handleSubmit}>
                     <TextField
@@ -97,6 +98,7 @@ const ForgetPassword = ({ open, setOpen }) => {
                     </Box>
                 )
             }
+            </Box>
             </Box>
         </Modal>
     )

@@ -9,6 +9,7 @@ import Conditions from '../../../helpers/components/Conditions';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
+import Recaptcha from '../../../helpers/components/Recaptcha';
 
 
 
@@ -43,6 +44,8 @@ const Form = ({ open,
     confirmPassword,
     setConfirmPassword,
     setFile,
+    recaptchaIsValid,
+    setRecaptchaIsValid,
     conditios,
     setConditios,
     isDisable,
@@ -355,11 +358,11 @@ const Form = ({ open,
                     <Grid >
                         <FormControlLabel
                             value="end"
-                            control={<Checkbox color='secondary' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}
+                            control={<Checkbox color='success' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}
                             labelPlacement="end"
                         />
                         <Button
-                            color='secondary'
+                            color='textField'
                             onClick={(e) => { setOpen(true) }}
                             size="small">
                             Terminos y condiciones
@@ -368,12 +371,11 @@ const Form = ({ open,
                     </Grid> : null
                 }
                 <Grid mt={2}>
-                    {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
+                    <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
                 </Grid>
                 <Grid mt={4}>
-                    <Button type="submit" color='secondary' disabled={action === 'register' ? !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
                     {action === 'update' ? <Link to="/usuarios"> <Button color='secondary'>Cancelar</Button></Link> : null}
-                    {/* <Button type="submit" color='secondary' disabled={!recaptchaIsValid || !conditios || isDisable()}>register</Button> */}
+                    <Button variant='contained' type="submit" color='success' disabled={action === 'register' ? !recaptchaIsValid || !conditios || isDisable(): null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
                 </Grid>
             </Grid>
         </form>

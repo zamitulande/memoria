@@ -10,6 +10,9 @@ export const getTheme = createTheme({
           secondary: {
             main: '#DDC90F'
           },
+          success:{
+            main: "green"
+          },
           error: {
             main: red.A400
           },

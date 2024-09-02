@@ -355,6 +355,9 @@ const FormTestimony = ({ userId, action }) => {
                             InputLabelProps={{
                                 shrink: true,
                             }}
+                            inputProps={{
+                                max: new Date().toISOString().split('T')[0], 
+                            }}
                         />
                     </FormControl>
                 </Grid>

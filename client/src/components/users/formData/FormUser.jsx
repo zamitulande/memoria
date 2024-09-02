@@ -4,8 +4,6 @@ import React, { useState } from 'react'
 import axiosClient from '../../../config/Axios'
 
 import Swal from 'sweetalert2';
-import Recaptcha from '../../../helpers/components/Recaptcha';
-
 
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from '../../../helpers/components/Loading';
