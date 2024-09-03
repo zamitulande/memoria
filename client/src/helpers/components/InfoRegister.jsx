@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Fab, Modal } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton} from '@mui/material';
 import { Link } from 'react-router-dom';
+import CloseIcon from '@mui/icons-material/Cancel';
 
 const InfoRegister = () => {
     const [open, setOpen] = useState(false);
@@ -16,7 +17,7 @@ const InfoRegister = () => {
         <>
             <Button
                 onClick={handleClick}
-                color='secondary'
+                color='success'
                 variant="contained"
                 sx={{
                     position: 'fixed',
@@ -33,6 +34,16 @@ const InfoRegister = () => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
+                <IconButton
+                        aria-label="close"
+                        onClick={handleCloseModal}
+                        sx={{
+                            marginTop: 2,
+                            marginLeft: 60
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
                 <DialogTitle id="alert-dialog-title">
                     {"¿Como puedes participar del proyecto Memoria Oral?"}
                 </DialogTitle>
@@ -44,7 +55,7 @@ const InfoRegister = () => {
                 <DialogActions>
                     <Link to='/usuarios/registrar'>
                     <Button
-                        color='secondary'
+                        color='success'
                         variant="contained"
                         onClick={handleCloseModal}
                     >Deseo registrarme

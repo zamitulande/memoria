@@ -45,15 +45,15 @@ const ViewTestimony = ({
 
     let isEnabled;
 
-    if(dataView){
+    if (dataView) {
         isEnabled = dataView.enabled
     }
-    if(dataPreview){
-        isEnabled = dataPreview.enabled 
+    if (dataPreview) {
+        isEnabled = dataPreview.enabled
     }
 
     const [enable, setEnable] = useState(isEnabled)
-    
+
     const handleCloseModal = () => {
         dispatch(setOpenViewTestimony(false))
     }
@@ -127,29 +127,36 @@ const ViewTestimony = ({
                         <Grid item xs={12} sm={12} md={12} lg={8}>
                             <Video video={dataView.videoUrl} />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <Box display="flex" alignItems="center">
+                        <Grid item xs={12} sm={6} md={4} alignItems='center'>
+                            <Box >
                                 <Typography variant="h5">{dataView.title}</Typography>
                             </Box>
-
-                            <Box display="flex" alignItems="center" mt={5}>
+                            <Box mt={5}>
                                 <Typography variant="h6">Categoria:&nbsp;</Typography>
+                            </Box>
+                            <Box>
                                 <Typography variant="body">{dataView.category}</Typography>
                             </Box>
-                            <Box display="flex" alignItems="center">
+                            <Box>
                                 <Typography variant="h6">Fecha:&nbsp;</Typography>
+                            </Box>
+                            <Box>
                                 <Typography variant="body">{dataView.evenDate}</Typography>
                             </Box>
-                            <Box display="flex" alignItems="center">
+                            <Box>
                                 <Typography variant="h6">Ubicación:&nbsp;</Typography>
+                            </Box>
+                            <Box>
                                 <Typography variant="body">{dataView.municipio}-{dataView.department}</Typography>
                             </Box>
-                            <Box display="flex" alignItems="center">
+                            <Box>
                                 <Typography variant="h6">Descripción:&nbsp;</Typography>
+                            </Box>
+                            <Box>
                                 <Typography variant="body">{dataView.description}</Typography>
                             </Box>
                             {dataView.descriptionDetail && (
-                                <Box display="flex" alignItems="center">
+                                <Box>
                                     <Typography variant="h6">Descripción Detallada:&nbsp;</Typography>
                                     <Typography variant="body">{dataView.descriptionDetail}</Typography>
                                 </Box>

@@ -144,7 +144,7 @@ const Testimony = () => {
                                         )}
                                     </CardContent>
                                     <CardActions>
-                                    <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>
+                                    <Button size="small" color="success" variant="contained" onClick={() => handleViewMore(testimony)}>
                                         Ver más
                                     </Button>
                                 </CardActions>

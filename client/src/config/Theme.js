@@ -5,23 +5,25 @@ import { red, blue, green } from "@mui/material/colors";
 export const getTheme = createTheme({
     palette:{
           primary: {
-            main: '#FFFFFF'
+            main: '#D6AA26' //amarillo
           },
           secondary: {
-            main: '#DDC90F'
+            main: '#408156' //verde menta
           },
-          success:{
-            main: "#008F39"
+          lightGreen:{
+            main: "#93A31C" //verde claro
           },
           error: {
             main: red.A400
           },
-          bottomNavigation: {
-            selected: '#FFFFFF', // Color para BottomNavigationAction seleccionado
-            unselected: '#DDC90F' // Color para BottomNavigationAction no seleccionado
+          lightWhite:{
+            main: '#FFFFC4',
           },
-          textField: {
-            main : '#757575'
+          textField:{
+            main: '#FFFFFF'
+          },
+          grayDark:{
+            main: '#30374F'
           }
     }
 })

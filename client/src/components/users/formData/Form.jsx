@@ -362,7 +362,7 @@ const Form = ({ open,
                             labelPlacement="end"
                         />
                         <Button
-                            color='textField'
+                            color='grayDark'
                             onClick={(e) => { setOpen(true) }}
                             size="small">
                             Terminos y condiciones
