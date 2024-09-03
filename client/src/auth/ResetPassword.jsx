@@ -103,7 +103,8 @@ const ResetPassword = ({ open, setOpen }) => {
                 >
                     <CloseIcon />
                 </IconButton>
-                <form onSubmit={handleSubmit}>
+              <Box padding={3}>
+              <form onSubmit={handleSubmit}>
                 <Grid item xs={4}>
                         <FormControl variant="outlined" color='textField' fullWidth required>
                             <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
@@ -155,7 +156,7 @@ const ResetPassword = ({ open, setOpen }) => {
                             />
                         </FormControl>
                     </Grid>
-                    <Grid container>
+                    <Grid container mt={2}>
                         <Grid item xs={6}>
                             <Button
                                 type="submit"
@@ -170,6 +171,7 @@ const ResetPassword = ({ open, setOpen }) => {
                         </Grid>                       
                     </Grid>
                 </form>
+              </Box>
             </Box>
         </Modal>
   )

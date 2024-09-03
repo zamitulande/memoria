@@ -108,6 +108,7 @@ const Header = () => {
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center',
                     boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+                    zIndex:1000
                 }}>
                 <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
                     <Box>{renderButtonGroup(about)}</Box>

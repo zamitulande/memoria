@@ -1,5 +1,5 @@
 import { Card, Container, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert } from '@mui/material'
-import { Link, useNavigate } from 'react-router-dom';
+import LockClockTwoToneIcon from '@mui/icons-material/LockClockTwoTone';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../config/Axios';
@@ -132,6 +132,16 @@ const Testimony = () => {
                                         <Typography variant="span" fontSize={15} style={{ padding: '0px 50px 0px 0px'}}>
                                             {testimony.description}
                                         </Typography>
+                                        {!testimony.enabled && (
+                                            <LockClockTwoToneIcon style={{
+                                                position: 'absolute',
+                                                top: 5, 
+                                                right: 40, 
+                                                backgroundColor: '#DDC90F', 
+                                                borderRadius: '30%', 
+                                                padding: '5px' 
+                                            }}/>
+                                        )}
                                     </CardContent>
                                     <CardActions>
                                     <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>

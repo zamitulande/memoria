@@ -9,7 +9,7 @@ import { setActiveAccount } from '../redux/features/userSlice';
 const ActivateAccount = () => {
 
     const dispatch = useDispatch();
-   
+
     const [open, setOpen] = useState(true);
     const [verificationCode, setVerificationCode] = useState("");
 
@@ -25,7 +25,7 @@ const ActivateAccount = () => {
                         token: verificationCode // Pasar el token como parámetro de consulta
                     }
                 });
-                if(response.status == 200){
+                if (response.status == 200) {
                     setOpen(!open)
                 }
                 dispatch(setActiveAccount(true))
@@ -56,19 +56,21 @@ const ActivateAccount = () => {
             aria-describedby="modal-modal-description"
         >
             <Box className='modal-style'>
-                <Typography sx={{mt:2}}>Activar Cuenta.</Typography>
-                <Typography>ingrese el codigo que llego a su correo.</Typography>
-                <VerificationInput
-                    length={6} // Longitud del código
-                    onChange={handleVerificationCodeChange}
-                    classNames={{
-                        container: "container",
-                        character: "character",
-                        characterInactive: "character--inactive",
-                        characterSelected: "character--selected",
-                        characterFilled: "character--filled",
-                    }} />
-                <Button type='submit' color='secondary' sx={{mt:2}} onClick={handleVerificationSubmit}>Enviar</Button> {/* Botón para enviar el código al servidor */}
+                <Box padding={3}>
+                    <Typography sx={{ mt: 2 }}>Activar Cuenta.</Typography>
+                    <Typography>ingrese el codigo que llego a su correo.</Typography>
+                    <VerificationInput
+                        length={6} // Longitud del código
+                        onChange={handleVerificationCodeChange}
+                        classNames={{
+                            container: "container",
+                            character: "character",
+                            characterInactive: "character--inactive",
+                            characterSelected: "character--selected",
+                            characterFilled: "character--filled",
+                        }} />
+                    <Button type='submit' variant='contained' color='secondary' sx={{ mt: 2 }} onClick={handleVerificationSubmit}>Enviar</Button> {/* Botón para enviar el código al servidor */}
+                </Box>
             </Box>
         </Modal>
     )

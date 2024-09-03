@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
@@ -181,7 +183,9 @@ public class TestimonyServiceImpl implements TestimonyService {
 
     @Override
     public Page<TestimonysDTO> findTestimonyByCategoryUser(String path, Pageable pageable) {
-        Page<Testimony> testimonyPage = testimonyRepository.findByPath(path, pageable);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        Page<Testimony> testimonyPage = testimonyRepository.findByPathAndEnabledOrUser(path, user, pageable);
         return testimonyPage.map(testimony -> TestimonysDTO.builder()
                 .testimonyId(testimony.getTestimonyId())
                 .category(testimony.getCategory())
@@ -286,27 +290,28 @@ public class TestimonyServiceImpl implements TestimonyService {
         }
     }
 
-
     public TestimonysDTO privateTestimony(Long testimonyId) {
-        Testimony testimony = testimonyRepository.findById(testimonyId).orElseThrow(() -> new NotFoundException("Testimonio no encontrado"));
+        Testimony testimony = testimonyRepository.findById(testimonyId)
+                .orElseThrow(() -> new NotFoundException("Testimonio no encontrado"));
         testimony.setEnabled(false);
         testimonyRepository.save(testimony);
 
         TestimonysDTO testimonysDTO = TestimonysDTO.builder()
-                    .enabled(testimony.isEnabled())
-                    .build();
+                .enabled(testimony.isEnabled())
+                .build();
         return testimonysDTO;
     }
 
     public TestimonysDTO publicTestimony(Long testimonyId) {
-        Testimony testimony= testimonyRepository.findById(testimonyId).orElseThrow(() -> new NotFoundException("Testimonio no encontrado"));
+        Testimony testimony = testimonyRepository.findById(testimonyId)
+                .orElseThrow(() -> new NotFoundException("Testimonio no encontrado"));
         testimony.setEnabled(true);
         testimonyRepository.save(testimony);
 
         TestimonysDTO testimonysDTO = TestimonysDTO.builder()
-                    .enabled(testimony.isEnabled())
-                    .build();
+                .enabled(testimony.isEnabled())
+                .build();
         return testimonysDTO;
     }
-   
+
 }

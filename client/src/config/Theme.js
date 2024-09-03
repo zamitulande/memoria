@@ -11,7 +11,7 @@ export const getTheme = createTheme({
             main: '#DDC90F'
           },
           success:{
-            main: "green"
+            main: "#008F39"
           },
           error: {
             main: red.A400
