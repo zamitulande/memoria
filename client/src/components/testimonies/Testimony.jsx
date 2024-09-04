@@ -45,6 +45,7 @@ const Testimony = () => {
                 } else {
                     response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
                 }
+                console.log(response)
                 dispatch(setTestimonies(response.data.content))
                 setTotalPages(response.data.totalPages);
                 setTotalElements(response.data.totalElements)
