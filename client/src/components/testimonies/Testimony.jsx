@@ -115,40 +115,42 @@ const Testimony = () => {
                                         alt={testimony.category}
                                     />
                                     <CardContent style={{
-                                         position: 'absolute',
-                                         top: 0,
-                                         left: 0,
-                                         width: '100%',
-                                         height: '100%',
-                                         display: 'flex',
-                                         flexDirection: 'column',  // Posiciona los elementos en columna
-                                         justifyContent: 'center',  // Centra verticalmente
-                                         backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                                         color: '#fff',
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',  // Posiciona los elementos en columna
+                                        justifyContent: 'center',  // Centra verticalmente
+                                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                                        color: '#fff',
                                     }}>
                                         <Typography gutterBottom fontSize={25} style={{ padding: '0px 60px 0px 0px' }}>
                                             {testimony.title}
                                         </Typography>
-                                        <Typography variant="span" fontSize={15} style={{ padding: '0px 50px 0px 0px'}}>
+                                        <Typography variant="span" fontSize={15} style={{ padding: '0px 50px 0px 0px' }}>
                                             {testimony.description}
                                         </Typography>
                                         {!testimony.enabled && (
                                             <LockClockTwoToneIcon style={{
                                                 position: 'absolute',
-                                                top: 5, 
-                                                right: 40, 
-                                                backgroundColor: '#DDC90F', 
-                                                borderRadius: '30%', 
-                                                padding: '5px' 
-                                            }}/>
+                                                top: 5,
+                                                right: 40,
+                                                backgroundColor: '#DDC90F',
+                                                borderRadius: '30%',
+                                                padding: '5px'
+                                            }} />
                                         )}
                                     </CardContent>
                                     <CardActions>
-                                    <Button size="small" color="success" variant="contained" onClick={() => handleViewMore(testimony)}>
-                                        Ver más
-                                    </Button>
-                                </CardActions>
-                                </CardActionArea>                               
+                                        <Box>
+                                            <Button size="small" color="success" variant="contained" onClick={() => handleViewMore(testimony)}>
+                                                Ver más
+                                            </Button>
+                                        </Box>
+                                    </CardActions>
+                                </CardActionArea>
                             </Card>
                         </Grid>
                     ))}

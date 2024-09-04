@@ -2,6 +2,7 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import AdbIcon from '@mui/icons-material/Adb';
 import LoginIcon from '@mui/icons-material/Login';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import chiva from '../../assets/header/Chiva.png'
 import {
     BottomNavigation,
@@ -106,13 +107,13 @@ const Header = () => {
                     backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3)), url(${chiva})`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center',
+                    backgroundPosition: 'right',
                     boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.9)',
                     zIndex:1000
                 }}>
                 <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
                     <Box>{renderButtonGroup(about)}</Box>
-                    {login ? <Typography sx={{ color: 'lightWhite.main', fontWeight: 'bold' }}>Bienvenido: {userName}</Typography> : null}
+                    {login ? <Typography sx={{ color: 'lightWhite.main', fontWeight: 'bold', display:'flex', justifyContent:'center' }}><AccountCircleIcon/>{userName}</Typography> : null}
                 </Toolbar>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
@@ -177,7 +178,7 @@ const Header = () => {
                                             <Button
                                                 onClick={handleMenuClose(setAnchorElNav)}
                                                 sx={{
-                                                    color: 'textField',
+                                                    color: 'grayDark.main',
                                                     backgroundColor: 'textField.main',
                                                 }}
                                             >
@@ -252,7 +253,7 @@ const Header = () => {
 
                         {/* :::START MOVIL FIRST LOGIN:: */}
 
-                        <Box sx={{ display: { xs: 'flex', alignItems: 'center' } }}>
+                        <Box>
                             <Tooltip title="Abrir opciones.">
                                 <div>
                                     {/* Renderizar el botón solo en pantallas medianas y superiores */}
@@ -270,7 +271,7 @@ const Header = () => {
                                         onClick={handleMenuOpen(setAnchorElUser)}
                                         sx={{ display: { xs: 'flex', md: 'none' }, p: 0 }}
                                     >
-                                        <LoginIcon sx={{ color: 'textField.main' }} />
+                                        <LoginIcon sx={{ color: 'lightWhite.main' }} />
                                     </IconButton>
                                 </div>
                             </Tooltip>
