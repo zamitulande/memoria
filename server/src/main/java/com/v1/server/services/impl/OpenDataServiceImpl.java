@@ -32,9 +32,9 @@ public class OpenDataServiceImpl implements OpenDataService {
                 .municipio(testimony.getMunicipio())
                 .department(testimony.getDepartment())
                 .descriptionDetail(testimony.getDescriptionDetail())
-                .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
-                .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
-                .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
+                .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
+                .imageUrl(testimony.getImageUrl() != null ? pathFile + "/image/" + testimony.getImageUrl() : null)
                 .build());
     }
     
