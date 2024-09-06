@@ -153,20 +153,30 @@ const Users = () => {
         <Table aria-label="sticky table">
           {!isMobile && (
             <TableHead >
-              <TableRow >
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Identificacion</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Nombres</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Apellidos</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Telefono</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Correo</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Acciones</TableCell>
+              <TableRow sx={{backgroundColor: 'secondary.main'}}>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Identificacion</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Nombres</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Apellidos</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Telefono</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Correo</TableCell>
+                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Acciones</TableCell>
               </TableRow>
             </TableHead>
           )}
 
           <TableBody>
             {users.map((user) => (
-              <TableRow key={user.userId} sx={{ display: isMobile ? 'block' : 'table-row', borderBottom: isMobile ? '3px solid ' : 'none' }}>
+              <TableRow key={user.userId} sx={{
+                display: isMobile ?
+                  'block' : 'table-row', borderBottom: isMobile
+                    ?
+                    '3px solid '
+                    :
+                    'none',
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',  // Cambia este color según tus necesidades
+                }
+              }}>
                 <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
                   {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Identificacion:</Box>}
                   {user.identification}
@@ -191,22 +201,22 @@ const Users = () => {
                   {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Acciones:</Box>}
                   <Tooltip title="Ver más">
                     <IconButton onClick={() => handleOpenModal(user)}>
-                      <VisibilityIcon />
+                      <VisibilityIcon color='success'/>
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Editar">
                     <IconButton onClick={() => handleUpdate(user)}>
-                      <EditIcon />
+                      <EditIcon color='grayDark'/>
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Eliminar">
                     <IconButton onClick={() => handleDelete(user)}>
-                      <DeleteIcon />
+                      <DeleteIcon color='error'/>
                     </IconButton>
                   </Tooltip>
                   <Tooltip title={user.accountLocked ? "Desbloquear" : "Bloquear"}>
                     <IconButton onClick={() => handleBlockUnblock(user)}>
-                      {user.accountLocked ? <LockIcon /> : <LockOpenIcon />}
+                      {user.accountLocked ? <LockIcon color='success' /> : <LockOpenIcon  color='success'/>}
                     </IconButton>
                   </Tooltip>
                 </TableCell>

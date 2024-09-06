@@ -55,15 +55,15 @@ const Information = () => {
                 <Table aria-label="sticky table">
                     {!isMobile && (
                         <TableHead>
-                            <TableRow>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Categoria</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Titulo</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Descripcion</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Ubicación</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Fecha</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Video</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Imagen</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase' }}>Audio</TableCell>
+                            <TableRow sx={{backgroundColor: 'secondary.main'}}>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Categoria</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Titulo</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Descripcion</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Ubicación</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Fecha</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Video</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Imagen</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Audio</TableCell>
                             </TableRow>
                         </TableHead>
                     )}
