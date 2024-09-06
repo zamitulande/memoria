@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2';
 import axiosClient from '../../config/Axios';
-import { Box, Button, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Drawer, Grid, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, useMediaQuery } from '@mui/material';
 import { useTheme } from '@emotion/react';
+import Loading from '../../helpers/components/Loading';
+import FilterOpenData from '../../helpers/components/FilterOpenData';
 
 const Information = () => {
 
@@ -16,16 +18,32 @@ const Information = () => {
     const [totalElements, setTotalElements] = useState(0);
     const [showFullText, setShowFullText] = useState(false);
 
+    // New state for filters
+    const [open, setOpen] = useState(false);
+    const [category, setCategory] = useState('');
+    const [location, setLocation] = useState('');
+    const [date, setDate] = useState('');
+    const [keyword, setKeyword] = useState('');
+
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
             try {
-                const response = await axiosClient.get(`/open-data?page=${currentPage}&size=5`)
-                setFetchData(response.data.content)
+                const response = await axiosClient.get(`/open-data`, {
+                    params: {
+                        page: currentPage,
+                        size: 5,
+                        category,
+                        location,
+                        date,
+                        keyword
+                    }
+                });
+                setFetchData(response.data.content);
                 setTotalPages(response.data.totalPages);
-                setTotalElements(response.data.totalElements)
+                setTotalElements(response.data.totalElements);
                 setIsLoading(false);
-                console.log(response.data.content)
+                console.log(response.data.content);
             } catch (error) {
                 console.log(error)
                 Swal.fire({
@@ -55,10 +73,42 @@ const Information = () => {
         setShowFullText(!showFullText);
     };
 
-    const maxLength = 20;
+    const maxLength = 30;
+
+    const handleFilterChange = () => {
+        setCurrentPage(0);
+        fetchData();
+    };
+
+    const toggleDrawer = (newOpen) => () => {
+        setOpen(newOpen);
+    };
 
     return (
         <Container maxWidth="xl">
+            <Box>
+                <Button onClick={toggleDrawer(true)}>Filtrar</Button>
+                <Drawer open={open} onClose={toggleDrawer(false)}>
+                    <FilterOpenData 
+                    toggleDrawer={toggleDrawer}
+                    category={category}
+                    setCategory={setCategory}
+                    location={location}
+                    setLocation={setLocation}
+                    date={date}
+                    setDate={setDate}
+                    handleFilterChange={handleFilterChange}
+                    />
+                </Drawer>
+            </Box>
+            <Grid item xs={12} md={3}>
+                        <TextField
+                            fullWidth
+                            label="Palabra clave"
+                            value={keyword}
+                            onChange={(e) => setKeyword(e.target.value)}
+                        />
+                    </Grid>
             <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto' }}>
                 <Table aria-label="sticky table">
                     {!isMobile && (
@@ -158,6 +208,7 @@ const Information = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <Loading isLoading={isLoading} />
             {totalElements > 6 && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                     <Button variant="contained" disabled={currentPage === 0} onClick={handlePreviousPage}>
