@@ -14,6 +14,7 @@ const Information = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
+    const [showFullText, setShowFullText] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
@@ -49,13 +50,20 @@ const Information = () => {
             setCurrentPage(prevPage => prevPage - 1);
         }
     };
+
+    const toggleText = () => {
+        setShowFullText(!showFullText);
+    };
+
+    const maxLength = 20;
+
     return (
         <Container maxWidth="xl">
             <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto' }}>
                 <Table aria-label="sticky table">
                     {!isMobile && (
                         <TableHead>
-                            <TableRow sx={{backgroundColor: 'secondary.main'}}>
+                            <TableRow sx={{ backgroundColor: 'secondary.main' }}>
                                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Categoria</TableCell>
                                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Titulo</TableCell>
                                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Descripcion</TableCell>
@@ -64,6 +72,7 @@ const Information = () => {
                                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Video</TableCell>
                                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Imagen</TableCell>
                                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Audio</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Detalles</TableCell>
                             </TableRow>
                         </TableHead>
                     )}
@@ -118,6 +127,31 @@ const Information = () => {
                                     {data.audioUrl ? (
                                         <a href={data.audioUrl} target="_blank" rel="noopener noreferrer">Escuchar Audio</a>
                                     ) : 'Audio no disponible'}
+                                </TableCell>
+                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Detalles:</Box>}
+                                    {data.descriptionDetail.length ? (
+                                        <>
+                                            {/* Mostrar texto truncado o completo basado en el estado */}
+                                            {showFullText ? (
+                                                <span>{data.descriptionDetail}</span>
+                                            ) : (
+                                                <span>
+                                                    {data.descriptionDetail.slice(0, maxLength)}
+                                                    {data.descriptionDetail.length > maxLength && '...'}
+                                                </span>
+                                            )}
+
+                                            {/* Mostrar botón de "Leer más" o "Leer menos" si el texto es largo */}
+                                            {data.descriptionDetail.length > maxLength && (
+                                                <Button onClick={toggleText} size="small" color='grayDark'>
+                                                    {showFullText ? 'Leer menos' : 'Leer más'}
+                                                </Button>
+                                            )}
+                                        </>
+                                    ) : (
+                                        'Detalle no disponible'
+                                    )}
                                 </TableCell>
                             </TableRow>
                         ))}
