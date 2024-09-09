@@ -37,7 +37,7 @@ const Information = () => {
         municipio = name;
     }
 
-    const fetchData = async () => {        
+    const fetchData = async () => {
         setIsLoading(true);
         try {
             const response = await axiosClient.get(`/open-data`, {
@@ -103,33 +103,39 @@ const Information = () => {
 
     return (
         <Container maxWidth="xl">
-            <Box>
-                <Button onClick={toggleDrawer(true)}>Filtrar</Button>
-                <Drawer open={open} onClose={toggleDrawer(false)}>
-                    <FilterOpenData 
-                    category={category}
-                    setCategory={setCategory}
-                    city={city}
-                    setCity={setCity}
-                    department={department}
-                    setDepartment={setDepartment}
-                    evenDateStart={evenDateStart}
-                    setEvenDateStart={setEvenDateStart}
-                    evenDateEnd={evenDateEnd}
-                    setEvenDateEnd={setEvenDateEnd}
-                    handleFilterChange={handleFilterChange}
-                    />
-                </Drawer>
-                <Button onClick={fetchData}>Limpiar filtro</Button>
-            </Box>
-            <Grid item xs={12} md={3}>
-                        <TextField
-                            fullWidth
-                            label="Palabra clave"
-                            value={keyword}
-                            onChange={(e) => setKeyword(e.target.value)}
+            <Grid container>
+                <Grid item xs={12} md={3}>
+                    <Button variant='contained'  onClick={toggleDrawer(true)}>Filtrar</Button>
+                    <Drawer open={open} onClose={toggleDrawer(false)}>
+                        <FilterOpenData
+                            category={category}
+                            setCategory={setCategory}
+                            city={city}
+                            setCity={setCity}
+                            department={department}
+                            setDepartment={setDepartment}
+                            evenDateStart={evenDateStart}
+                            setEvenDateStart={setEvenDateStart}
+                            evenDateEnd={evenDateEnd}
+                            setEvenDateEnd={setEvenDateEnd}
+                            handleFilterChange={handleFilterChange}
                         />
-                    </Grid>
+                    </Drawer>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <Button variant='contained' onClick={fetchData}>Limpiar filtro</Button>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <Button variant='contained' >Documentación API</Button>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                    <TextField
+                        label="Palabra clave"
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                    />
+                </Grid>
+            </Grid>
             <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto' }}>
                 <Table aria-label="sticky table">
                     {!isMobile && (

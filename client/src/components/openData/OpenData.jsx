@@ -6,7 +6,7 @@ const OpenaData = () => {
   return (
     <>
     <Container maxWidth="xl">
-      <Alert severity="info" sx={{fontSize:14, marginBottom:2}}>
+      <Alert severity="info" sx={{fontSize:16, marginBottom:2}}>
         <AlertTitle>Bienvenido al sistema de investigación</AlertTitle>
         el modulo de datos abiertos proporciona la opción de
         promover la investigación de los testimonios y la
