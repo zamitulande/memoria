@@ -11,7 +11,7 @@ const Information = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    const [fetchData, setFetchData] = useState([]);
+    const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
@@ -21,41 +21,56 @@ const Information = () => {
     // New state for filters
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState('');
-    const [location, setLocation] = useState('');
-    const [date, setDate] = useState('');
+    const [city, setCity] = useState("");
+    const [department, setDepartment] = useState("");
+    const [evenDateStart, setEvenDateStart] = useState('');
+    const [evenDateEnd, setEvenDateEnd] = useState('');
     const [keyword, setKeyword] = useState('');
 
     useEffect(() => {
-        setIsLoading(true);
-        const fetchData = async () => {
-            try {
-                const response = await axiosClient.get(`/open-data`, {
-                    params: {
-                        page: currentPage,
-                        size: 5,
-                        category,
-                        location,
-                        date,
-                        keyword
-                    }
-                });
-                setFetchData(response.data.content);
-                setTotalPages(response.data.totalPages);
-                setTotalElements(response.data.totalElements);
-                setIsLoading(false);
-                console.log(response.data.content);
-            } catch (error) {
-                console.log(error)
-                Swal.fire({
-                    icon: "error",
-                    title: error.message,
-                    text: "No hay conexión con el servidor.",
-                });
-                setIsLoading(false);
-            }
-        }
         fetchData();
-    }, [currentPage])
+    }, [currentPage, keyword]);
+
+    let municipio;
+    if (city) {
+        const { name } = city;
+        municipio = name;
+    }
+
+    const fetchData = async () => {        
+        setIsLoading(true);
+        try {
+            const response = await axiosClient.get(`/open-data`, {
+                params: {
+                    page: currentPage,
+                    size: 5,
+                    category,
+                    municipio,
+                    department,
+                    evenDateStart,
+                    evenDateEnd,
+                    keyword
+                }
+            });
+            setData(response.data.content);
+            setTotalPages(response.data.totalPages);
+            setTotalElements(response.data.totalElements);
+            setIsLoading(false);
+            setDepartment("");
+            setCity("");
+            setCategory("");
+            setEvenDateStart("");
+            setEvenDateEnd("");
+        } catch (error) {
+            console.log(error);
+            Swal.fire({
+                icon: "error",
+                title: error.message,
+                text: "No hay conexión con el servidor.",
+            });
+            setIsLoading(false);
+        }
+    };
 
     const handleNextPage = () => {
         if (currentPage < totalPages - 1) {
@@ -75,9 +90,11 @@ const Information = () => {
 
     const maxLength = 30;
 
-    const handleFilterChange = () => {
+    const handleFilterChange = (e) => {
+        e.preventDefault();
         setCurrentPage(0);
         fetchData();
+        setOpen(false)
     };
 
     const toggleDrawer = (newOpen) => () => {
@@ -90,16 +107,20 @@ const Information = () => {
                 <Button onClick={toggleDrawer(true)}>Filtrar</Button>
                 <Drawer open={open} onClose={toggleDrawer(false)}>
                     <FilterOpenData 
-                    toggleDrawer={toggleDrawer}
                     category={category}
                     setCategory={setCategory}
-                    location={location}
-                    setLocation={setLocation}
-                    date={date}
-                    setDate={setDate}
+                    city={city}
+                    setCity={setCity}
+                    department={department}
+                    setDepartment={setDepartment}
+                    evenDateStart={evenDateStart}
+                    setEvenDateStart={setEvenDateStart}
+                    evenDateEnd={evenDateEnd}
+                    setEvenDateEnd={setEvenDateEnd}
                     handleFilterChange={handleFilterChange}
                     />
                 </Drawer>
+                <Button onClick={fetchData}>Limpiar filtro</Button>
             </Box>
             <Grid item xs={12} md={3}>
                         <TextField
@@ -127,7 +148,7 @@ const Information = () => {
                         </TableHead>
                     )}
                     <TableBody>
-                        {fetchData.map((data) => (
+                        {data.map((data) => (
                             <TableRow key={data.testimonyId}
                                 sx={{
                                     display: isMobile ?

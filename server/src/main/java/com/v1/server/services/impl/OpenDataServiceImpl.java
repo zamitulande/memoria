@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.v1.server.dtos.openData.OpenDataDTO;
 import com.v1.server.entities.Testimony;
+import com.v1.server.helpers.TestimonySpecification;
 import com.v1.server.repositories.OpenDataRepository;
 import com.v1.server.services.OpenDataService;
 
@@ -21,8 +23,11 @@ public class OpenDataServiceImpl implements OpenDataService {
     private OpenDataRepository openDataRepository;
 
     @Override
-    public Page<OpenDataDTO> findOpenData(Pageable pageable) {
-         Page<Testimony> testimonyPage = openDataRepository.findByEnabledTrue(pageable);
+    public Page<OpenDataDTO> findOpenData(Pageable pageable, String category, String department, String municipio, String evenDateStart, String evenDateEnd, String keyword) {
+       Specification<Testimony> specification = TestimonySpecification.getTestimoniesWithFilters(category, department, municipio, evenDateStart, evenDateEnd, keyword);
+
+       Page<Testimony> testimonyPage = openDataRepository.findAll(specification, pageable);
+
         return testimonyPage.map(testimony -> OpenDataDTO.builder()
                 .testimonyId(testimony.getTestimonyId())
                 .category(testimony.getCategory())

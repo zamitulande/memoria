@@ -1,23 +1,30 @@
-import { Box, Button, Grid, MenuItem, Paper, Select, TextField } from '@mui/material'
+import { Alert, Box, Button, Container, Grid, MenuItem, Paper, Select, TextField } from '@mui/material'
 import React from 'react'
+import SelectDepartment from './SelectDepartment';
+import SelectCity from './SelectCity';
 
 const FilterOpenData = ({
-    toggleDrawer,
     category,
     setCategory,
-    location,
-    setLocation,
-    date,
-    setDate,
-    handleFilterChange
+    department,
+    setDepartment,
+    city,
+    setCity,
+    evenDateStart,
+    setEvenDateStart,
+    evenDateEnd,
+    setEvenDateEnd,
+    handleFilterChange,
 }) => {
     
   return (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-     <Paper sx={{ p: 2, mb: 2 }}>
-                <Grid container spacing={2}>
-                    
-                    <Grid item xs={12} md={3}>
+    <Box sx={{ width: 400 }} role="presentation">
+    {/* Filter Section */}
+    <Paper sx={{ p: 2, mb: 2 }} >
+      <form onSubmit={handleFilterChange}>
+                <Grid container >                    
+                    <Grid item xs={12} md={10} mt={10}>
+                    <Alert severity="info">Filtrar por categoria</Alert>
                         <Select
                             fullWidth
                             value={category}
@@ -25,35 +32,58 @@ const FilterOpenData = ({
                             displayEmpty
                         >
                             <MenuItem value="">Todas las categorías</MenuItem>
-                            <MenuItem value="categoria1">Categoria 1</MenuItem>
-                            <MenuItem value="categoria2">Categoria 2</MenuItem>
+                            <MenuItem value="Conflicto social">Conflicto Social</MenuItem>
+                            <MenuItem value="Pandemia">Pandemia</MenuItem>
+                            <MenuItem value="Conflicto armado">Conflicto Armado</MenuItem>
+                            <MenuItem value="Cultura">Cultura</MenuItem>
+                            <MenuItem value="Patrimonio alimentario">Patrimonio Alimentario</MenuItem>
                         </Select>
                     </Grid>
-                    <Grid item xs={12} md={3}>
-                        <TextField
-                            fullWidth
-                            label="Ubicación"
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                        />
+                    <Grid item xs={12} md={10} mt={3}>
+                    <Alert severity="info">Filtrar por ubicación</Alert>
+                    <SelectDepartment
+                        value={department}
+                        onChange={(e, item) => {
+                            setDepartment(e.target.value);
+                        }}
+                    />
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={10} mt={3}>
+                    <SelectCity
+                        value={city}
+                        setCity={setCity}
+                        department={department}
+                    />
+                    </Grid>
+                    <Grid item xs={12} md={10} mt={3}>
+                    <Alert severity="info">Filtrar por rango fecha</Alert>
                         <TextField
                             fullWidth
-                            label="Fecha"
+                            label="Fecha inicio"
                             type="date"
                             InputLabelProps={{ shrink: true }}
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
+                            value={evenDateStart}
+                            onChange={(e) => setEvenDateStart(e.target.value)}
                         />
                     </Grid>
-                    <Grid item xs={12}>
-                        <Button variant="contained" onClick={handleFilterChange}>
+                    <Grid item xs={12} md={10} mt={3}>
+                        <TextField
+                            fullWidth
+                            label="Fecha Fin"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            value={evenDateEnd}
+                            onChange={(e) => setEvenDateEnd(e.target.value)}
+                        />
+                    </Grid>
+                    <Grid item xs={12} mt={5}>
+                        <Button variant="contained" type="submit">
                             Aplicar Filtros
                         </Button>
                     </Grid>
                 </Grid>
-            </Paper>
+                </form>
+                </Paper>
   </Box>
   )
 }

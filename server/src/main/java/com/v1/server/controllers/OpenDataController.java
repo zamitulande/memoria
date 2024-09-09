@@ -23,10 +23,16 @@ public class OpenDataController {
     @GetMapping("")
     public ResponseEntity<Page<OpenDataDTO>> allOpenData(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "6") int size) {
+            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String department,
+            @RequestParam(required = false) String municipio,
+            @RequestParam(required = false) String evenDateStart,
+            @RequestParam(required = false) String evenDateEnd,
+            @RequestParam(required = false) String keyword) {
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<OpenDataDTO> testimonyPage = openDataService.findOpenData(pageable);
+        Page<OpenDataDTO> testimonyPage = openDataService.findOpenData(pageable, category, department, municipio, evenDateStart, evenDateEnd, keyword);
         return ResponseEntity.ok(testimonyPage);
     }
 }

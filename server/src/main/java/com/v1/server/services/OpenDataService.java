@@ -10,5 +10,5 @@ import com.v1.server.dtos.openData.OpenDataDTO;
 @Service
 public interface OpenDataService {
 
-    Page<OpenDataDTO> findOpenData(Pageable pageable);
+    Page<OpenDataDTO> findOpenData(Pageable pageable, String catetogory, String department, String municipio, String evenDateStart, String evenDateEnd, String keyword);
 } 
