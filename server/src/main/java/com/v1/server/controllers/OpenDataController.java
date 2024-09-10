@@ -29,10 +29,10 @@ public class OpenDataController {
             @RequestParam(required = false) String municipio,
             @RequestParam(required = false) String evenDateStart,
             @RequestParam(required = false) String evenDateEnd,
-            @RequestParam(required = false) String keyword) {
+            @RequestParam(required = false) String search) {
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<OpenDataDTO> testimonyPage = openDataService.findOpenData(pageable, category, department, municipio, evenDateStart, evenDateEnd, keyword);
+        Page<OpenDataDTO> testimonyPage = openDataService.findOpenData(pageable, category, department, municipio, evenDateStart, evenDateEnd, search);
         return ResponseEntity.ok(testimonyPage);
     }
 }

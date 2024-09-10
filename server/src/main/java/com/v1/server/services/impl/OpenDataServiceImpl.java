@@ -23,8 +23,8 @@ public class OpenDataServiceImpl implements OpenDataService {
     private OpenDataRepository openDataRepository;
 
     @Override
-    public Page<OpenDataDTO> findOpenData(Pageable pageable, String category, String department, String municipio, String evenDateStart, String evenDateEnd, String keyword) {
-       Specification<Testimony> specification = TestimonySpecification.getTestimoniesWithFilters(category, department, municipio, evenDateStart, evenDateEnd, keyword);
+    public Page<OpenDataDTO> findOpenData(Pageable pageable, String category, String department, String municipio, String evenDateStart, String evenDateEnd, String search) {
+       Specification<Testimony> specification = TestimonySpecification.getTestimoniesWithFilters(category, department, municipio, evenDateStart, evenDateEnd, search);
 
        Page<Testimony> testimonyPage = openDataRepository.findAll(specification, pageable);
 

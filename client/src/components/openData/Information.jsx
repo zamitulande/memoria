@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2';
 import axiosClient from '../../config/Axios';
-import { Box, Button, Container, Drawer, Grid, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Drawer, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, useMediaQuery } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import Loading from '../../helpers/components/Loading';
 import FilterOpenData from '../../helpers/components/FilterOpenData';
+import SearchIcon from '@mui/icons-material/Search';
+import ApiIcon from '@mui/icons-material/Api';
+import FilterAltOffTwoToneIcon from '@mui/icons-material/FilterAltOffTwoTone';
+import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
+import DocumentatioAPI from '../../helpers/components/DocumentatioAPI';
 
 const Information = () => {
 
@@ -20,16 +25,17 @@ const Information = () => {
 
     // New state for filters
     const [open, setOpen] = useState(false);
+    const [openApi, setOpenApi] = useState(false);
     const [category, setCategory] = useState('');
     const [city, setCity] = useState("");
     const [department, setDepartment] = useState("");
     const [evenDateStart, setEvenDateStart] = useState('');
     const [evenDateEnd, setEvenDateEnd] = useState('');
-    const [keyword, setKeyword] = useState('');
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         fetchData();
-    }, [currentPage, keyword]);
+    }, [currentPage, search]);
 
     let municipio;
     if (city) {
@@ -49,9 +55,10 @@ const Information = () => {
                     department,
                     evenDateStart,
                     evenDateEnd,
-                    keyword
+                    search
                 }
             });
+            console.log(response.data.content)
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setTotalElements(response.data.totalElements);
@@ -103,9 +110,13 @@ const Information = () => {
 
     return (
         <Container maxWidth="xl">
-            <Grid container>
+            <Grid container alignItems='center'>
                 <Grid item xs={12} md={3}>
-                    <Button variant='contained'  onClick={toggleDrawer(true)}>Filtrar</Button>
+                    <Button 
+                    variant='contained' 
+                    onClick={toggleDrawer(true)} 
+                    endIcon={<FilterAltTwoToneIcon/>}
+                    >Filtrar</Button>
                     <Drawer open={open} onClose={toggleDrawer(false)}>
                         <FilterOpenData
                             category={category}
@@ -123,20 +134,25 @@ const Information = () => {
                     </Drawer>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <Button variant='contained' onClick={fetchData}>Limpiar filtro</Button>
+                    <Button variant='contained' onClick={fetchData} endIcon={<FilterAltOffTwoToneIcon/>}>Limpiar filtro</Button>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <Button variant='contained' >Documentación API</Button>
+                    <Button variant='contained' onClick={(e)=>setOpenApi(true)} endIcon={<ApiIcon/>} >Documentación API</Button>
+                    <DocumentatioAPI openApi={openApi} setOpenApi={setOpenApi}/>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <TextField
-                        label="Palabra clave"
-                        value={keyword}
-                        onChange={(e) => setKeyword(e.target.value)}
-                    />
+                    <IconButton>
+                    <SearchIcon />
+                        <TextField
+                            fullWidth
+                            label="Buscar..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </IconButton>
                 </Grid>
             </Grid>
-            <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto' }}>
+            <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto', marginTop: 5 }}>
                 <Table aria-label="sticky table">
                     {!isMobile && (
                         <TableHead>
