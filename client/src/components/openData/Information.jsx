@@ -58,6 +58,12 @@ const Information = () => {
                     search
                 }
             });
+            if(response.data.content.length === 0){
+                Swal.fire({
+                    title: "No se encontraron testimonios.",
+                    timer: 1000
+                  });
+            }
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setTotalElements(response.data.totalElements);

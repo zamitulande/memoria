@@ -126,37 +126,37 @@ const ViewTestimony = ({
                         <Grid item xs={12} sm={12} md={12} lg={8}>
                             <Video video={dataView.videoUrl} />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} alignItems='center' fontSize={16}>
+                        <Grid item xs={12} sm={6} md={4} alignItems='center'>
                             <Box>
-                                <Typography variant="h5" borderBottom={1} >{dataView.title}</Typography>
+                                <Typography fontSize={40} variant="h5" borderBottom={1} >{dataView.title}</Typography>
                             </Box>
                             <Box mt={5}>
-                                <Typography variant="span" fontWeight='bold'>Categoria:&nbsp;</Typography>
+                                <Typography  fontSize={25} variant="span" fontWeight='bold'>Categoria:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.category}</Typography>
                             </Box>
-                            <Box>
-                                <Typography variant="span" fontWeight='bold'>Fecha:&nbsp;</Typography>
+                            <Box mt={2}>
+                                <Typography fontSize={25}  variant="span" fontWeight='bold'>Fecha:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.evenDate}</Typography>
                             </Box>
-                            <Box>
-                                <Typography variant="span" fontWeight='bold'>Ubicación:&nbsp;</Typography>
+                            <Box mt={2}>
+                                <Typography fontSize={25} variant="span" fontWeight='bold'>Ubicación:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.municipio}-{dataView.department}</Typography>
                             </Box>
-                            <Box>
-                                <Typography variant="span" fontWeight='bold'>Descripción:&nbsp;</Typography>
+                            <Box mt={2}>
+                                <Typography fontSize={25} variant="span" fontWeight='bold'>Descripción:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.description}</Typography>
                             </Box>
                             {dataView.descriptionDetail && (
-                                <Box>
-                                    <Typography variant="h6">Descripción Detallada:&nbsp;</Typography>
+                                <Box mt={2}>
+                                    <Typography fontSize={25} variant="span" fontWeight='bold'>Descripción Detallada:&nbsp;</Typography>
                                     <Typography variant="body">{dataView.descriptionDetail}</Typography>
                                 </Box>
                             )}

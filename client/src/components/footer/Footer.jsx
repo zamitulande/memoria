@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Sena from '../../assets/footer/sena.png'
 import Sennova from '../../assets/footer/sennova.png'
 import Documental from '../../assets/footer/gestion-documental .png'
+import logo from '../../assets/header/logo.png'
 
 
 const Footer = () => {
@@ -17,9 +18,12 @@ const Footer = () => {
         <>
             <Container sx={{ mt: 8 }}>
                 <Grid container wrap="nowrap" spacing={2} direction={isMobile ? 'column' : 'row'}>
+                    <Grid item xs={12} sm={2}>
+                        <img src={logo} alt="Logo" style={{ width: '100px', height: '150px', borderRadius: '8px' }}/>
+                    </Grid>
                     <Grid item xs={12} sm={10}>
                         <Typography>
-                            Sistema para la recuperación de la memoria oral de las víctimas del conflicto armado, Pandemia y Cultura en Colombia.
+                            Sistema para la recuperación de la memoria oral de las víctimas del conflicto armado, Pandemia, Cultura, Conflicto social y Patrimonio alimentario en Colombia.
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -42,37 +46,37 @@ const Footer = () => {
                     </Grid>
                 </Grid>
             </Container>
-            <Divider ><Typography mt={5} color='lightWhite.main'>Nuestros aliados</Typography></Divider>
-            <Grid sx={{backgroundColor:'primary.main'}} container justifyContent="center" spacing={4}>
+            <Divider ><Typography mb={5} color='secondary.main' fontSize={35}>Nuestros aliados</Typography></Divider>
+            <Grid sx={{ backgroundColor: 'primary.main' }} container justifyContent="center" spacing={4}>
                 <Grid item xs={12} sm={6} md={5} textAlign="center">
-                        <Box
-                            component="img"
-                            src={Sennova}
-                            sx={{
-                                width: '70%',
-                                marginBottom: 2,
-                            }}
-                        />
+                    <Box
+                        component="img"
+                        src={Sennova}
+                        sx={{
+                            width: '70%',
+                            marginBottom: 2,
+                        }}
+                    />
                 </Grid>
-                <Grid item xs={6} sm={3} md={2} textAlign="center">                   
-                        <Box
-                            component="img"
-                            src={Sena}
-                            sx={{
-                                width: '70%',
-                                marginBottom: 2,
-                            }}
-                        />
+                <Grid item xs={6} sm={3} md={2} textAlign="center">
+                    <Box
+                        component="img"
+                        src={Sena}
+                        sx={{
+                            width: '110%',
+                            marginBottom: 2,
+                        }}
+                    />
                 </Grid>
-                <Grid item xs={12} sm={6} md={5} textAlign="center">                   
-                        <Box
-                            component="img"
-                            src={Documental}
-                            sx={{
-                                width: '70%',
-                                marginBottom: 2,
-                            }}
-                        />
+                <Grid item xs={12} sm={6} md={5} textAlign="center">
+                    <Box
+                        component="img"
+                        src={Documental}
+                        sx={{
+                            width: '70%',
+                            marginBottom: 2,
+                        }}
+                    />
                 </Grid>
             </Grid>
             <Box
