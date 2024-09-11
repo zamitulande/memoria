@@ -58,7 +58,6 @@ const Information = () => {
                     search
                 }
             });
-            console.log(response.data.content)
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setTotalElements(response.data.totalElements);
@@ -69,7 +68,6 @@ const Information = () => {
             setEvenDateStart("");
             setEvenDateEnd("");
         } catch (error) {
-            console.log(error);
             Swal.fire({
                 icon: "error",
                 title: error.message,

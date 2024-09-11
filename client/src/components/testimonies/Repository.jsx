@@ -110,7 +110,7 @@ const Repository = () => {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="success" variant="contained" onClick={() => handleSelectCategory(image.category)}>
+                  <Button size="small" color="secondary" variant="contained" onClick={() => handleSelectCategory(image.category)}>
                     Ver más
                   </Button>
                 </CardActions>

@@ -85,8 +85,8 @@ const Form = ({ open,
                 </label>
             </Grid>
             {fileName && (
-                <Grid item sx={{backgroundColor:'GrayText', padding:2}}>
-                    <Typography variant="body2" color="primary">Cargado:_{fileName}</Typography>
+                <Grid item sx={{backgroundColor:'secondary.main', padding:2}}>
+                    <Typography  color="textField.main">Cargado:_{fileName}</Typography>
                 </Grid>
             )}
             <Grid item>
@@ -358,7 +358,7 @@ const Form = ({ open,
                     <Grid >
                         <FormControlLabel
                             value="end"
-                            control={<Checkbox color='success' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}
+                            control={<Checkbox color='secondary' checked={conditios} onChange={(e) => setConditios(e.target.checked)} />}
                             labelPlacement="end"
                         />
                         <Button
@@ -375,7 +375,7 @@ const Form = ({ open,
                 </Grid>
                 <Grid mt={4}>
                     {action === 'update' ? <Link to="/usuarios"> <Button color='secondary'>Cancelar</Button></Link> : null}
-                    <Button variant='contained' type="submit" color='success' disabled={action === 'register' ? !recaptchaIsValid || !conditios || isDisable(): null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
+                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ? !recaptchaIsValid || !conditios || isDisable(): null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
                 </Grid>
             </Grid>
         </form>

@@ -94,7 +94,7 @@ const Header = () => {
         <ButtonGroup disableElevation variant="contained" aria-label="button group">
             {items.map((item) => (
                 <Link to={item.path} target="_blank" rel="noopener noreferrer" key={item.id}>
-                    <Button size="small" color='success'>{item.item}</Button>
+                    <Button size="small" color='secondary'>{item.item}</Button>
                 </Link>
             ))}
         </ButtonGroup>

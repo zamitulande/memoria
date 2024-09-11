@@ -88,7 +88,7 @@ const ViewMore = ({ open, setOpen, user }) => {
                             ))}
                         </Grid>
                         {urlPdf && (
-                            <IconButton onClick={() => window.open(urlPdf, '_blank')}>
+                            <IconButton onClick={() => window.open(urlPdf, '_blank')} color='secondary'>
                             <PictureAsPdfIcon fontSize='large' />
                             <Typography fontSize={18}>consentimiento informado</Typography>
                           </IconButton>

@@ -181,7 +181,7 @@ const Login = ({ open, setOpen }) => {
                         </Grid>
                         <Grid item xs={6}>
                             <Button
-                                color='success'
+                                color='secondary'
                                 type="submit"
                                 fullWidth
                                 sx={{

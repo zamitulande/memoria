@@ -69,7 +69,6 @@ const ViewTestimony = ({
             };
             const response = await axiosClient.put(`/repository/${action}/${dataView.testimonyId}`, {}, config);
             if (response && response.data) {
-                console.log(response)
                 setEnable(response.data.enabled);
                 dispatch(setTestimonyIsEnable(response.data.enabled))
             }
@@ -127,30 +126,30 @@ const ViewTestimony = ({
                         <Grid item xs={12} sm={12} md={12} lg={8}>
                             <Video video={dataView.videoUrl} />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} alignItems='center'>
-                            <Box >
-                                <Typography variant="h5">{dataView.title}</Typography>
+                        <Grid item xs={12} sm={6} md={4} alignItems='center' fontSize={16}>
+                            <Box>
+                                <Typography variant="h5" borderBottom={1} >{dataView.title}</Typography>
                             </Box>
                             <Box mt={5}>
-                                <Typography variant="h6">Categoria:&nbsp;</Typography>
+                                <Typography variant="span" fontWeight='bold'>Categoria:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.category}</Typography>
                             </Box>
                             <Box>
-                                <Typography variant="h6">Fecha:&nbsp;</Typography>
+                                <Typography variant="span" fontWeight='bold'>Fecha:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.evenDate}</Typography>
                             </Box>
                             <Box>
-                                <Typography variant="h6">Ubicación:&nbsp;</Typography>
+                                <Typography variant="span" fontWeight='bold'>Ubicación:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.municipio}-{dataView.department}</Typography>
                             </Box>
                             <Box>
-                                <Typography variant="h6">Descripción:&nbsp;</Typography>
+                                <Typography variant="span" fontWeight='bold'>Descripción:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.description}</Typography>
@@ -166,14 +165,14 @@ const ViewTestimony = ({
                     {login && role === 'ADMIN' && (
                         <Grid container justifyContent="end">
                             <Grid item xs={12} sm={2}>
-                                <IconButton onClick={() => handleUpdate(dataView)}>
+                                <IconButton onClick={() => handleUpdate(dataView)} color='primary'>
                                     <EditIcon />
                                     Editar
                                 </IconButton>
                             </Grid>
                             <Grid item xs={12} sm={2}>
                                 <Tooltip title={enable ? "Hacer Privado" : "Hacer Publico "}>
-                                    <IconButton onClick={() => handleEnabled(dataView)}>
+                                    <IconButton onClick={() => handleEnabled(dataView)} color='success'>
                                         {enable ? <LockIcon /> : <LockOpenIcon />}
                                         {enable ? "Privatizar" : "Publicar"}
                                     </IconButton>
@@ -231,37 +230,39 @@ const ViewTestimony = ({
                             })}
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Categoria</Typography>
-                            <Typography variant='body'>{dataPreview.category}</Typography>
+                            <Typography variant='h6' borderBottom={1}>Categoria</Typography>
+                            <Typography variant='span'>{dataPreview.category}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Fecha</Typography>
-                            <Typography variant='body'>{dataPreview.evenDate}</Typography>
+                            <Typography variant='h6' borderBottom={1}>Fecha</Typography>
+                            <Typography variant='span'>{dataPreview.evenDate}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Lugar</Typography>
-                            <Typography variant='body'>{dataPreview.municipio}-{dataPreview.department}</Typography>
+                            <Typography variant='h6' borderBottom={1}>Lugar</Typography>
+                            <Typography variant='span'>{dataPreview.municipio}-{dataPreview.department}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Titulo</Typography>
-                            <Typography >{dataPreview.title}</Typography>
+                            <Typography variant='h6' borderBottom={1}>Titulo</Typography>
+                            <Typography variant='span'>{dataPreview.title}</Typography>
                         </Grid>
                         <Grid item xs={12} sm={6} md={2}>
-                            <Typography variant='h6'>Descripción</Typography>
-                            <Typography variant='body'>{dataPreview.description}</Typography>
+                            <Typography variant='h6' borderBottom={1}>Descripción</Typography>
+                            <Typography variant='span'>{dataPreview.description}</Typography>
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12}>
-                            <Typography variant='h6'>Descripción Detallada</Typography>
-                            <Typography variant='body'>{dataPreview.descriptionDetail}</Typography>
+                        {dataPreview.descriptionDetail && (
+                            <Grid item xs={12} sm={12} md={12}>
+                            <Typography variant='h6' borderBottom={1}>Descripción Detallada</Typography>
+                            <Typography variant='span'>{dataPreview.descriptionDetail}</Typography>
                         </Grid>
-                        <Grid item xs={12} sm={2}>
-                            <IconButton onClick={() => handleCloseModal()}>
+                        )}
+                        <Grid item xs={12} sm={4}>
+                            <IconButton onClick={() => handleCloseModal()} color='primary'>
                                 <EditIcon />
                                 Editar
                             </IconButton>
                         </Grid>
                         <Grid item xs={12} sm={2}>
-                            <IconButton onClick={(e) => submit(e)}>
+                            <IconButton onClick={(e) => submit(e)} color='secondary'>
                                 <SaveIcon />
                                 Guardar
                             </IconButton>

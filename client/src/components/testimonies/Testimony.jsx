@@ -45,7 +45,6 @@ const Testimony = () => {
                 } else {
                     response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
                 }
-                console.log(response)
                 dispatch(setTestimonies(response.data.content))
                 setTotalPages(response.data.totalPages);
                 setTotalElements(response.data.totalElements)
@@ -146,7 +145,7 @@ const Testimony = () => {
                                     </CardContent>
                                     <CardActions>
                                         <Box>
-                                            <Button size="small" color="success" variant="contained" onClick={() => handleViewMore(testimony)}>
+                                            <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>
                                                 Ver más
                                             </Button>
                                         </Box>

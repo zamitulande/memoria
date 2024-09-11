@@ -17,7 +17,7 @@ const InfoRegister = () => {
         <>
             <Button
                 onClick={handleClick}
-                color='success'
+                color='secondary'
                 variant="contained"
                 sx={{
                     position: 'fixed',
@@ -55,7 +55,7 @@ const InfoRegister = () => {
                 <DialogActions>
                     <Link to='/usuarios/registrar'>
                     <Button
-                        color='success'
+                        color='secondary'
                         variant="contained"
                         onClick={handleCloseModal}
                     >Deseo registrarme

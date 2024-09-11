@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import React, { useEffect, useState } from 'react'
 
-const LoadFiles = ({ onFilesChange, resetTrigger, videoUpdate, imageUpdate, action }) => {
+const LoadFiles = ({ onFilesChange, resetTrigger}) => {
 
   const [value, setValue] = useState(0);
   const [files, setFiles] = useState({ audio: [], video: [], image: [] });
@@ -120,7 +120,7 @@ const LoadFiles = ({ onFilesChange, resetTrigger, videoUpdate, imageUpdate, acti
   return (
     <Box mt={2}>
       <Tabs
-        sx={{ backgroundColor: 'gray' }}
+        sx={{ backgroundColor: 'textFiled.main' }}
         variant="fullWidth"
         value={value}        
         onChange={handleChange}

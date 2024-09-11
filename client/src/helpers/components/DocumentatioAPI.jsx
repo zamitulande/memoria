@@ -48,10 +48,10 @@ const DocumentatioAPI = ({ openApi, setOpenApi }) => {
                         <Typography fontWeight='bold'>¿Cómo utilizar el API?</Typography>
                         <Typography variant='spam'>A continuación, se listan y describen las caracteristicas del API de testimonios a tener en cuenta para utilizar de forma correcta.</Typography>
                         <Typography fontWeight='bold'>Url de API</Typography>
-                        <Typography variant='spam'>http://memoriaoral.com//api/v1/open-data</Typography>
+                        <Typography variant='spam'>http://memoriaoral.com/api/v1/open-data</Typography>
                         <Typography fontWeight='bold'>Tipo de petición Http</Typography>
                         <Typography variant='spam'>GET</Typography>
-                        <Typography fontWeight='bold'>Paratros en la consulta.</Typography>
+                        <Typography fontWeight='bold'>Parametros en la consulta.</Typography>
                         <ul>
                             <li>page:(INT) - requerido</li>
                             <li>size:(INT) - requerido</li>

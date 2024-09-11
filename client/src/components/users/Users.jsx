@@ -201,7 +201,7 @@ const Users = () => {
                   {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Acciones:</Box>}
                   <Tooltip title="Ver más">
                     <IconButton onClick={() => handleOpenModal(user)}>
-                      <VisibilityIcon color='success'/>
+                      <VisibilityIcon color='secondary'/>
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Editar">
@@ -216,7 +216,7 @@ const Users = () => {
                   </Tooltip>
                   <Tooltip title={user.accountLocked ? "Desbloquear" : "Bloquear"}>
                     <IconButton onClick={() => handleBlockUnblock(user)}>
-                      {user.accountLocked ? <LockIcon color='success' /> : <LockOpenIcon  color='success'/>}
+                      {user.accountLocked ? <LockIcon color='secondary' /> : <LockOpenIcon  color='secondary'/>}
                     </IconButton>
                   </Tooltip>
                 </TableCell>
