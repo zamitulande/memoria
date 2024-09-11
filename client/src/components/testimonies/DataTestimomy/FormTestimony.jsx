@@ -272,7 +272,7 @@ const FormTestimony = ({ userId, action }) => {
         <form onSubmit={determineSubmitHandler()}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} alignItems="center">
                 <Grid item xs={6}>
-                    <FormControl color='textField' fullWidth>
+                    <FormControl color='grayDark' fullWidth>
                         <InputLabel id="demo-simple-select-label">Testimonio</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -300,7 +300,7 @@ const FormTestimony = ({ userId, action }) => {
                 <Grid item xs={6}>
                     <TextField
                         label="Titulo"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="titulo"
                         type='text'
@@ -323,7 +323,7 @@ const FormTestimony = ({ userId, action }) => {
                 <Grid item xs={6}>
                     <TextField
                         label="Descripción corta"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="descripcion"
                         required
@@ -348,6 +348,7 @@ const FormTestimony = ({ userId, action }) => {
                         <TextField
                             label="Fecha"
                             type="date"
+                            color='grayDark'
                             required
                             value={action === 'register' ? evenDate : undefined}
                             defaultValue={action === 'update' ? getformEditTestimony.evenDate : undefined}

@@ -116,7 +116,7 @@ const Form = ({ open,
                 <Grid item xs={4}>
                     <TextField
                         label="Identificacion"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="identification"
                         type='number'
@@ -138,7 +138,7 @@ const Form = ({ open,
                 <Grid item xs={4}>
                     <TextField
                         label="Correo electronico"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="email"
                         type='email'
@@ -151,7 +151,7 @@ const Form = ({ open,
                 <Grid item xs={4}>
                     <TextField
                         label="Confirmar correo electronico"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="confirmEmail"
                         type='email'
@@ -164,7 +164,7 @@ const Form = ({ open,
                 <Grid item xs={4}>
                     <TextField
                         label="Primer nombre"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="firstName"
                         type='text'
@@ -187,7 +187,7 @@ const Form = ({ open,
                 <Grid item xs={4}>
                     <TextField
                         label="Segundo nombre"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="secondName"
                         type='text'
@@ -210,7 +210,7 @@ const Form = ({ open,
                 <Grid item xs={4}>
                     <TextField
                         label="Primer apellido"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="firstLastName"
                         type='text'
@@ -233,7 +233,7 @@ const Form = ({ open,
                 <Grid item xs={4}>
                     <TextField
                         label="Segundo apellido"
-                        color='textField'
+                        color='grayDark'
                         variant="outlined"
                         name="secondLastName"
                         type='text'
@@ -271,7 +271,7 @@ const Form = ({ open,
                 <Grid item xs={4}>
                     <TextField
                         label="Celular"
-                        color='textField'
+                        color='grayDark'
                         type='text'
                         variant="outlined"
                         value={action === 'register' ? contactNumber : undefined}
@@ -293,7 +293,7 @@ const Form = ({ open,
                 {action === "register" && (
                     <>
                         <Grid item xs={4}>
-                            <FormControl variant="outlined" color='textField' fullWidth required>
+                            <FormControl variant="outlined" color='grayDark' fullWidth required>
                                 <InputLabel htmlFor="outlined-adornment-password">Contraseña</InputLabel>
                                 <OutlinedInput
                                     type={showPassword ? 'text' : 'password'}
@@ -321,7 +321,7 @@ const Form = ({ open,
                             </FormControl>
                         </Grid>
                         <Grid item xs={4}>
-                            <FormControl variant="outlined" color='textField' fullWidth required>
+                            <FormControl variant="outlined" color='grayDark' fullWidth required>
                                 <InputLabel htmlFor="outlined-adornment-password">Confirmar contraseña</InputLabel>
                                 <OutlinedInput
                                     type={showPasswordConfirm ? 'text' : 'password'}

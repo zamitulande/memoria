@@ -18,7 +18,7 @@ const SelectCity = ({ value, setCity, department }) => {
     },[department])
 
     return (
-        <FormControl color='textField' fullWidth required>
+        <FormControl color='grayDark' fullWidth required>
             <Autocomplete
 
                 value={value}
@@ -55,7 +55,7 @@ const SelectCity = ({ value, setCity, department }) => {
                 renderOption={(props, option) => <li {...props}>{option.name}</li>}
                 freeSolo
                 renderInput={(params) => (
-                    <TextField {...params} label="Municipio"  variant="outlined"/>
+                    <TextField color='grayDark' {...params} label="Municipio"  variant="outlined"/>
                 )}
             />
         </FormControl>
