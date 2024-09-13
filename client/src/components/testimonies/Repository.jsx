@@ -5,7 +5,6 @@ import slider2 from '../../assets/slider/slider2.png'
 import slider3 from '../../assets/slider/slider3.png'
 import slider4 from '../../assets/slider/slider4.png'
 import slider5 from '../../assets/slider/slider5.png'
-import LoadingGif from '../../assets/loading/loading.gif'
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategories } from '../../redux/features/TestimonySlice';
@@ -27,12 +26,6 @@ const Repository = () => {
   const handleRegisterUser = () => {
     navigate('/repositorio/registrar');
   }
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(!isLoading)
-    }, 1000)
-  }, [])
 
   const images = [
     { src: slider1, title: "Conflicto armado", category: "conflicto-armado" },
@@ -119,13 +112,6 @@ const Repository = () => {
           </Grid>
         ))}
       </Grid>
-      {/* {
-                isLoading && (
-                    <Box className="loading-overlay">
-                        <img src={LoadingGif} alt="Loading..." />
-                    </Box>
-                )
-            } */}
     </Container>
 
   )

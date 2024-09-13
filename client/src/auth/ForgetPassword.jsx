@@ -3,8 +3,8 @@ import React, { useState } from 'react'
 import UseValidation from '../helpers/hooks/UseValidation';
 import axiosClient from '../config/Axios';
 import CloseIcon from '@mui/icons-material/Cancel';
-import LoadingGif from '../assets/loading/loading.gif'
 import Swal from 'sweetalert2';
+import Loading from '../helpers/components/Loading';
 
 const ForgetPassword = ({ open, setOpen }) => {
 
@@ -93,9 +93,7 @@ const ForgetPassword = ({ open, setOpen }) => {
                 </form>
                 {
                 isLoading && (
-                    <Box className="loading-overlay">
-                        <img src={LoadingGif} alt="Loading..." />
-                    </Box>
+                    <Loading isLoading={isLoading}/>
                 )
             }
             </Box>

@@ -15,6 +15,7 @@ import RegisterTestimony from "../components/testimonies/RegisterTestimony"
 import Testimony from "../components/testimonies/Testimony"
 import { useSelector } from "react-redux"
 import UpdateTestimony from "../components/testimonies/UpdateTestimony"
+import PageNotFound from "../helpers/components/PageNotFound"
 
 const AppRoutes = () => {
   const category = useSelector((state) => state.testimony.categories);
@@ -52,6 +53,7 @@ const AppRoutes = () => {
         element={<ProtectedRoutes redirectTo="/">
           <UpdateTestimony />
         </ProtectedRoutes>} />
+      <Route path="*" element={<PageNotFound/>} /> {/* Ruta para manejar 404 */}
     </Routes>
   )
 }
