@@ -1,6 +1,5 @@
 
 import MenuIcon from '@mui/icons-material/Menu';
-import AdbIcon from '@mui/icons-material/Adb';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import chiva from '../../assets/header/Chiva.png'
@@ -119,7 +118,7 @@ const Header = () => {
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                       <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1}}>
-                      <img src={logo} alt="Logo" style={{ width: '100px', height: '150px', borderRadius: '8px' }}/>
+                      <img src={logo} alt="Logo" loading="lazy" style={{ width: '100px', height: '150px', borderRadius: '8px' }}/>
                       </Box>
 
                         {/* :::START MOVIL FIRST NAVBAR:: */}
@@ -177,7 +176,7 @@ const Header = () => {
                             </Menu>
                         </Box>
                         <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1}}>
-                        <img src={logo} alt="Logo" style={{ width: '25px', height: '40px', borderRadius: '8px' }}/>
+                        <img src={logo} alt="Logo" loading="lazy" style={{ width: '25px', height: '40px', borderRadius: '8px' }}/>
                         </Box>
                         <Typography
                             variant="h6"

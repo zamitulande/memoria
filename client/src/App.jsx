@@ -6,6 +6,7 @@ import Header from "./components/header/Header"
 import Footer from "./components/footer/Footer"
 import InfoRegister from "./helpers/components/InfoRegister"
 import { useSelector } from "react-redux"
+import SplashScreen from "./helpers/components/LoadingPage"
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
   return (
     <ThemeProvider theme={getTheme}>
       <BrowserRouter>
+      <SplashScreen />
         <Header/>
         <AppRoutes />
         <Footer/>
