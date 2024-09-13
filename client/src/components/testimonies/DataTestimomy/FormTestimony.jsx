@@ -11,6 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { animateScroll } from 'react-scroll';
 import ViewTestimony from '../../../helpers/components/ViewTestimony';
 import { setOpenViewTestimony } from '../../../redux/features/TestimonySlice';
+import Loading from '../../../helpers/components/Loading';
 
 const FormTestimony = ({ userId, action }) => {
 
@@ -466,7 +467,7 @@ const FormTestimony = ({ userId, action }) => {
                         action="preview" />
                 )}
             </Grid>
-
+            <Loading isLoading={isLoading} />
         </form>
     )
 }

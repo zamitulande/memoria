@@ -49,7 +49,8 @@ public class SecurityConfig {
                 new AntPathRequestMatcher("/api/v1/repository/show/**"),
                 new AntPathRequestMatcher("/api/v1/repository/files/show/video/*"),
                 new AntPathRequestMatcher("/api/v1/repository/files/show/image/*"),
-                new AntPathRequestMatcher("/api/v1/open-data") 
+                new AntPathRequestMatcher("/api/v1/open-data"),
+                new AntPathRequestMatcher("/api/v1/colaborate")
         );
     }
 }

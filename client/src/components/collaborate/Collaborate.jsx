@@ -3,6 +3,9 @@ import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import React, { useState } from 'react'
 import UseValidation from '../../helpers/hooks/UseValidation';
 import Recaptcha from '../../helpers/components/Recaptcha';
+import axiosClient from '../../config/Axios';
+import Loading from '../../helpers/components/Loading';
+import Swal from 'sweetalert2';
 
 const Collaborate = () => {
 
@@ -14,16 +17,13 @@ const Collaborate = () => {
   const [email, setEmail] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [corporatePurpose, setCorporatePurpose] = useState('');
-  const [recaptchaIsValid, setRecaptchaIsValid] = useState(false)
+  const [recaptchaIsValid, setRecaptchaIsValid] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const isDisable = () => {
     return (
       !name ||
       !minLength(name, 10) ||
-      !siteWeb ||
-      !minLength(siteWeb, 10) ||
-      !facebook ||
-      !minLength(facebook, 10) ||
       !email ||
       !minLength(email, 10) ||
       !contactNumber ||
@@ -33,7 +33,7 @@ const Collaborate = () => {
     );
   }
 
-  const resetForm = ()=>{
+  const resetForm = () => {
     setName('');
     setSiteWeb('');
     setFacebook('');
@@ -42,9 +42,36 @@ const Collaborate = () => {
     setCorporatePurpose('');
   }
 
-  const handleSubmit = () => {
-    console.log('enviandi')
-    resetForm();
+  const handleSubmit = async (e) => {
+    setIsLoading(true);
+    const colaborate = {
+      name,
+      siteWeb,
+      facebook,
+      email,
+      contactNumber,
+      corporatePurpose
+    }
+    try {
+      const res = await axiosClient.post('/colaborate', colaborate);
+      const messageResponse = res.data.message
+      Swal.fire({
+        position: "bottom-end",
+        icon: "success",
+        title: messageResponse,
+      });
+      setIsLoading(false);
+      resetForm();
+    } catch (error) {
+      setIsLoading(false);
+      const errorMessage = error.response.data.message
+                Swal.fire({
+                    icon: "error",
+                    text: errorMessage,
+                });
+      
+    }
+    
   }
 
   return (
@@ -88,7 +115,6 @@ const Collaborate = () => {
                     variant="outlined"
                     name="siteWeb"
                     type='text'
-                    required
                     value={siteWeb}
                     onChange={(e) => setSiteWeb(e.target.value)}
                     fullWidth
@@ -110,7 +136,6 @@ const Collaborate = () => {
                     variant="outlined"
                     name="facebook"
                     type='text'
-                    required
                     value={facebook}
                     onChange={(e) => setFacebook(e.target.value)}
                     fullWidth
@@ -151,7 +176,7 @@ const Collaborate = () => {
                   <TextField
                     label="Celular"
                     color='grayDark'
-                    type='text'
+                    type='number'
                     variant="outlined"
                     value={contactNumber}
                     onChange={(e) => {
@@ -183,8 +208,8 @@ const Collaborate = () => {
                     fullWidth
                     inputProps={{ maxLength: 201 }}
                     helperText={
-                      (!minLength(corporatePurpose, 10) && corporatePurpose)
-                        ? "Este campo debe tener al menos 10 caracteres"
+                      (!minLength(corporatePurpose, 30) && corporatePurpose)
+                        ? "Este campo debe tener al menos 30 caracteres"
                         : (!maxLength(corporatePurpose, 200) && corporatePurpose)
                           ? "Este campo no puede ser mayor a 200 caracteres"
                           : ""
@@ -208,6 +233,7 @@ const Collaborate = () => {
           HOLA
         </Grid>
       </Grid>
+      <Loading isLoading={isLoading} />
     </Container>
   )
 }
