@@ -1,22 +1,23 @@
 import {createSlice} from '@reduxjs/toolkit';
-import Cookies from 'js-cookie';
 
+// Función para guardar el token en localStorage
 const guardarTokenJWT = (token) => {
-    Cookies.set('jwtToken', token, { expires: 0.125 }); //la cookie expirará en 3 horas
+    localStorage.setItem('jwtToken', token); // Guardar token en localStorage
 };
 
+// Función para obtener el token desde localStorage
 const obtenerTokenJWT = () => {
-    return Cookies.get('jwtToken');
+    return localStorage.getItem('jwtToken'); // Obtener token desde localStorage
 };
 
+// Función para eliminar el token desde localStorage
 const eliminarTokenJWT = () => {
-    Cookies.remove('jwtToken', { path: '', sameSite: 'strict' });
+    localStorage.removeItem('jwtToken'); // Eliminar token de localStorage
 };
-
 export const userSlice = createSlice({
     name: "user",
     initialState:{
-        token : obtenerTokenJWT() || "",
+        token : obtenerTokenJWT(),
         login: false,
         role: "",
         userName: "",
@@ -34,6 +35,7 @@ export const userSlice = createSlice({
             if (!action.payload) {
                 eliminarTokenJWT();
                 state.role = "";
+                state.token = "";
             }
         },
         setRole: (state, action)=>{

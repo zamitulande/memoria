@@ -1,0 +1,125 @@
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import axiosClient from '../../config/Axios';
+import { Box, Container, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SennovaLogo from '../../assets/loading/sennova-logo.png'
+
+const TableColaborates = () => {
+
+    const getToken = useSelector((state) => state.user.token)
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
+    const [colaborates, setColaborates] = useState([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const config = {
+                    headers: {
+                        'Authorization': `Bearer${getToken}`
+                    }
+                }
+                const response = await axiosClient.get(`/list-colaborate?page=${currentPage}&size=10`, config);
+                setColaborates(response.data.content);
+                setTotalPages(response.data.totalPages);
+                setTotalElements(response.data.totalElements)
+                setIsLoading(false);
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchData();
+    }, [currentPage])
+
+    const handleDelete = async (user) => {
+
+    }
+    return (
+        <Container maxWidth="xl">
+             {isLoading ? (
+                <Grid item xs={12}>
+                {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}
+                <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+                <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada"  /> 
+                <Typography variant="h4">Cargando contenido...</Typography>    
+                </Box>
+            </Grid>
+            ) : (
+            <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto' }}>
+                <Table aria-label="sticky table">
+                    {!isMobile && (
+                        <TableHead >
+                            <TableRow sx={{ backgroundColor: 'secondary.main' }}>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Organización</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Sitio web</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Facebook</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Telefono</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Correo</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Objeto social</TableCell>
+                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Acciones</TableCell>
+                            </TableRow>
+                        </TableHead>
+                    )}
+                    <TableBody>
+                        {colaborates.map((coloborate) => (
+                            <TableRow key={coloborate.coloborateId} sx={{
+                                display: isMobile ?
+                                    'block' : 'table-row', borderBottom: isMobile
+                                        ?
+                                        '3px solid '
+                                        :
+                                        'none',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.1)',  // Cambia este color según tus necesidades
+                                }
+                            }}>
+                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Organización:</Box>}
+                                    {coloborate.name}
+                                </TableCell>
+                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Sitio web:</Box>}
+                                    {coloborate.siteWeb.length ? (coloborate.siteWeb): "no disponible"}
+                                </TableCell>
+                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Facebook:</Box>}
+                                    {coloborate.facebook .length ? (coloborate.facebook): "no disponible"}
+                                </TableCell>
+                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Telefono:</Box>}
+                                    {coloborate.contactNumber}
+                                </TableCell>
+                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Correo:</Box>}
+                                    {coloborate.email}
+                                </TableCell>
+                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Objeto social:</Box>}
+                                    {coloborate.corporatePurpose}
+                                </TableCell>
+                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Acciones:</Box>}
+                                    <Tooltip title="Eliminar">
+                                        <IconButton onClick={() => handleDelete(coloborate)}>
+                                            <DeleteIcon color='error' />
+                                        </IconButton>
+                                    </Tooltip>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            )}
+        </Container>
+    )
+}
+
+export default TableColaborates

@@ -6,8 +6,13 @@ import Recaptcha from '../../helpers/components/Recaptcha';
 import axiosClient from '../../config/Axios';
 import Loading from '../../helpers/components/Loading';
 import Swal from 'sweetalert2';
+import { useSelector } from 'react-redux';
+import TableColaborates from './TableColaborates';
 
 const Collaborate = () => {
+
+  const login = useSelector((state) => state.user.login)
+  const role = useSelector((state) => state.user.role)
 
   const { capitalizeFirstLetter, maxLength, minLength, isCellPhone } = UseValidation();
 
@@ -75,8 +80,12 @@ const Collaborate = () => {
   }
 
   return (
-    <Container>
-      <Grid container spacing={2} justifyContent='space-around' mt={5}>
+    <>
+      {login && role === "ADMIN" ? (
+        <TableColaborates/>
+      ) : (
+        <Container>
+        <Grid container spacing={2} justifyContent='space-around' mt={5}>
         <Grid item xs={12} md={4}>
           <Alert sx={{ fontSize: '1.3rem' }} severity="info" icon={<VolunteerActivismIcon fontSize='large' color='secondary' />}>
             Si desea ser un aliado nuestro y apoyar de alguna forma a las víctimas del conflicto armado en Colombia, victimas por covid-19 y demas temas que se tratan en nuestra plataforma memoria oral, dejenos los datos de la organización a la cual pertenece. Pronto nos pondremos en contácto.
@@ -229,8 +238,9 @@ const Collaborate = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Loading isLoading={isLoading} />
-    </Container>
+      </Container>
+      )}
+    </>
   )
 }
 

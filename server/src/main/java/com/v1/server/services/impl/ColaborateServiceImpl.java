@@ -40,8 +40,16 @@ public class ColaborateServiceImpl  implements ColaborateService{
 
     @Override
     public Page<ColaborateDTO> findAllColaborates(Pageable pageable) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAllColaborates'");
+        Page<Colaborate> colaboratePage = colaborateRepository.findAll(pageable);
+        return colaboratePage.map(colaborate-> ColaborateDTO.builder()
+                .colaborateId(colaborate.getColaborateId())
+                .name(colaborate.getName())
+                .siteWeb(colaborate.getSiteWeb())
+                .facebook(colaborate.getFacebook())
+                .email(colaborate.getEmail())
+                .contactNumber(colaborate.getContactNumber())
+                .corporatePurpose(colaborate.getCorporatePurpose())
+                .build());
     }
 
     @Override

@@ -153,7 +153,7 @@ const Users = () => {
         <Table aria-label="sticky table">
           {!isMobile && (
             <TableHead >
-              <TableRow sx={{backgroundColor: 'secondary.main'}}>
+              <TableRow sx={{ backgroundColor: 'secondary.main' }}>
                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Identificacion</TableCell>
                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Nombres</TableCell>
                 <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Apellidos</TableCell>
@@ -201,22 +201,22 @@ const Users = () => {
                   {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Acciones:</Box>}
                   <Tooltip title="Ver más">
                     <IconButton onClick={() => handleOpenModal(user)}>
-                      <VisibilityIcon color='secondary'/>
+                      <VisibilityIcon color='secondary' />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Editar">
                     <IconButton onClick={() => handleUpdate(user)}>
-                      <EditIcon color='grayDark'/>
+                      <EditIcon color='grayDark' />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Eliminar">
                     <IconButton onClick={() => handleDelete(user)}>
-                      <DeleteIcon color='error'/>
+                      <DeleteIcon color='error' />
                     </IconButton>
                   </Tooltip>
                   <Tooltip title={user.accountLocked ? "Desbloquear" : "Bloquear"}>
                     <IconButton onClick={() => handleBlockUnblock(user)}>
-                      {user.accountLocked ? <LockIcon color='secondary' /> : <LockOpenIcon  color='secondary'/>}
+                      {user.accountLocked ? <LockIcon color='secondary' /> : <LockOpenIcon color='secondary' />}
                     </IconButton>
                   </Tooltip>
                 </TableCell>
