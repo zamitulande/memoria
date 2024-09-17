@@ -14,8 +14,6 @@ const Repository = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = useState(true);
-
   const login = useSelector((state) => state.user.login)
   const role = useSelector((state) => state.user.role)
 
@@ -80,7 +78,7 @@ const Repository = () => {
                 boxShadow: 6
               }
             }}>
-              <CardActionArea>
+              <CardActionArea component="div">
                 <CardMedia
                   component="img"
                   height="150"

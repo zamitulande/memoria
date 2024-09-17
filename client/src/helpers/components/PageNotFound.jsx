@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from '@mui/material'
+import { Alert, Container, Grid, Typography } from '@mui/material'
 import React from 'react'
 
 const PageNotFound = () => {
@@ -10,11 +10,11 @@ const PageNotFound = () => {
             </Grid>
             <Grid item md={6} >
             <Typography fontSize={60} color='primary'>Elemento no localizado</Typography>
-                <Typography variant='p'>
+                <Alert severity="warning">
                 El elemento o la página que está buscando no se ha logrado localizar, 
                 esto puede ocurrir porque nunca existió en el sistema o porque el nombre 
                 del recurso ha sido editado.
-                </Typography>
+                </Alert>
             </Grid> 
         </Grid>
    </Container>

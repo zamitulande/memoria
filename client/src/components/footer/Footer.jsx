@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Sena from '../../assets/footer/sena.png'
 import Sennova from '../../assets/footer/sennova.png'
 import Documental from '../../assets/footer/gestion-documental .png'
-import logo from '../../assets/header/logo.png'
+import logo from '../../assets/footer/logo.png'
 
 
 const Footer = () => {
@@ -18,8 +18,8 @@ const Footer = () => {
         <>
             <Container sx={{ mt: 8 }}>
                 <Grid container wrap="nowrap" spacing={2} direction={isMobile ? 'column' : 'row'}>
-                    <Grid item xs={12} sm={2}>
-                        <img src={logo} alt="Logo" style={{ width: '100px', height: '150px', borderRadius: '8px' }}/>
+                    <Grid item xs={12} sm={4}>
+                        <img src={logo} alt="Logo" style={{ height: '150px', borderRadius: '8px' }}/>
                     </Grid>
                     <Grid item xs={12} sm={10}>
                         <Typography>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2';
 import axiosClient from '../../config/Axios';
-import { Box, Button, Container, Drawer, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Drawer, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@emotion/react';
-import Loading from '../../helpers/components/Loading';
+import SennovaLogo from '../../assets/loading/sennova-logo.png'
 import FilterOpenData from '../../helpers/components/FilterOpenData';
 import SearchIcon from '@mui/icons-material/Search';
 import ApiIcon from '@mui/icons-material/Api';
@@ -49,7 +49,7 @@ const Information = () => {
             const response = await axiosClient.get(`/open-data`, {
                 params: {
                     page: currentPage,
-                    size: 5,
+                    size: 10,
                     category,
                     municipio,
                     department,
@@ -156,7 +156,16 @@ const Information = () => {
                     </IconButton>
                 </Grid>
             </Grid>
-            <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto', marginTop: 5 }}>
+            {isLoading ? (
+                <Grid item xs={12}>
+                {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}
+                <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+                <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada"  /> 
+                <Typography variant="h4">Cargando contenido...</Typography>    
+                </Box>
+            </Grid>
+            ) : (
+                <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto', marginTop: 5 }}>
                 <Table aria-label="sticky table">
                     {!isMobile && (
                         <TableHead>
@@ -255,7 +264,7 @@ const Information = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <Loading isLoading={isLoading} />
+            )}
             {totalElements > 6 && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                     <Button variant="contained" disabled={currentPage === 0} onClick={handlePreviousPage}>

@@ -10,6 +10,7 @@ import { animateScroll } from 'react-scroll';
 import { setOpenViewTestimony, setTestimonies } from '../../redux/features/TestimonySlice';
 import ViewTestimony from '../../helpers/components/ViewTestimony';
 import Swal from 'sweetalert2';
+import SennovaLogo from '../../assets/loading/sennova-logo.png'
 
 const Testimony = () => {
 
@@ -97,65 +98,82 @@ const Testimony = () => {
             </Grid>
             <Grid item xs={12} sm={8}>
                 <Grid container spacing={2}>
-                    {dataTestimonies.map((testimony, index) => (
-                        <Grid item key={index} xs={12} sm={8} md={6} lg={4}>
-                            <Card sx={{
-                                boxShadow: 8,
-                                transition: 'transform 0.3s, box-shadow 0.3s',
-                                '&:hover': {
-                                    transform: 'scale(1.05)',
-                                    boxShadow: 6
-                                }
-                            }}>
-                                <CardActionArea>
-                                    <CardMedia
-                                        component="img"
-                                        height="200"
-                                        image={testimony.imageUrl}
-                                        alt={testimony.category}
-                                    />
-                                    <CardContent style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: '100%',
-                                        display: 'flex',
-                                        flexDirection: 'column',  // Posiciona los elementos en columna
-                                        justifyContent: 'center',  // Centra verticalmente
-                                        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                                        color: '#fff',
-                                    }}>
-                                        <Typography gutterBottom fontSize={25} style={{ padding: '0px 60px 0px 0px' }}>
-                                            {testimony.title}
-                                        </Typography>
-                                        <Typography variant="span" fontSize={15} style={{ padding: '0px 50px 0px 0px' }}>
-                                            {testimony.description}
-                                        </Typography>
-                                        {!testimony.enabled && (
-                                            <LockClockTwoToneIcon style={{
-                                                position: 'absolute',
-                                                top: 5,
-                                                right: 40,
-                                                backgroundColor: '#DDC90F',
-                                                borderRadius: '30%',
-                                                padding: '5px'
-                                            }} />
-                                        )}
-                                    </CardContent>
-                                    <CardActions>
-                                        <Box>
-                                            <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>
-                                                Ver más
-                                            </Button>
-                                        </Box>
-                                    </CardActions>
-                                </CardActionArea>
-                            </Card>
+                    {isLoading ? (
+                        <Grid item xs={12}>
+                            {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}
+                            <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+                            <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada"  /> 
+                            <Typography variant="h4">Cargando contenido...</Typography>    
+                            </Box>
                         </Grid>
-                    ))}
+                    ) : (dataTestimonies.length > 0 ? (
+                        dataTestimonies.map((testimony, index) => (
+                            <Grid item key={index} xs={12} sm={8} md={6} lg={4}>
+                                <Card sx={{
+                                    boxShadow: 8,
+                                    transition: 'transform 0.3s, box-shadow 0.3s',
+                                    '&:hover': {
+                                        transform: 'scale(1.05)',
+                                        boxShadow: 6
+                                    }
+                                }}>
+                                    <CardActionArea component="div">
+                                        <CardMedia
+                                            component="img"
+                                            height="200"
+                                            image={testimony.imageUrl}
+                                            alt={testimony.category}
+                                        />
+                                        <CardContent style={{
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            width: '100%',
+                                            height: '100%',
+                                            display: 'flex',
+                                            flexDirection: 'column',  // Posiciona los elementos en columna
+                                            justifyContent: 'center',  // Centra verticalmente
+                                            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                                            color: '#fff',
+                                        }}>
+                                            <Typography gutterBottom fontSize={25} style={{ padding: '0px 60px 0px 0px' }}>
+                                                {testimony.title}
+                                            </Typography>
+                                            <Typography variant="span" fontSize={15} style={{ padding: '0px 50px 0px 0px' }}>
+                                                {testimony.description}
+                                            </Typography>
+                                            {!testimony.enabled && (
+                                                <LockClockTwoToneIcon style={{
+                                                    position: 'absolute',
+                                                    top: 5,
+                                                    right: 40,
+                                                    backgroundColor: '#DDC90F',
+                                                    borderRadius: '30%',
+                                                    padding: '5px'
+                                                }} />
+                                            )}
+                                        </CardContent>
+                                        <CardActions>
+                                            <Box>
+                                                <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>
+                                                    Ver más
+                                                </Button>
+                                            </Box>
+                                        </CardActions>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                        ))
+                    ) : (
+                        <Grid item xs={12}>
+                            <MessageData action="testimony" />
+                        </Grid>
+                    )
+                    )}
                 </Grid>
-                {totalElements > 6 && (
+
+                {/* Navegación de páginas */}
+                {totalElements > 6 && !isLoading && (
                     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                         <Button variant="contained" disabled={currentPage === 0} onClick={handlePreviousPage}>
                             Anterior
@@ -165,11 +183,7 @@ const Testimony = () => {
                         </Button>
                     </Box>
                 )}
-                <Loading isLoading={isLoading} />
-                {totalElements < 1 && (
-                    <MessageData action="testimony" />
-                )}
-                {openViewTestimony && (
+                 {openViewTestimony && (
                     <ViewTestimony
                         dataView={selectedTestimony}
                         action="view" />
