@@ -10,7 +10,7 @@ const DocumentatioAPI = ({ openApi, setOpenApi }) => {
         left: '50%',
         transform: 'translate(-50%, -50%)',
         width: '80%',
-        maxWidth: 1300,
+        maxWidth: 1000,
         maxHeight: '90vh',
         bgcolor: 'background.paper',
         border: '2px solid #000',
@@ -40,7 +40,7 @@ const DocumentatioAPI = ({ openApi, setOpenApi }) => {
                     <CloseIcon />
                 </IconButton>
                 <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-                    <Typography variant='h6' fontWeight='bold'>Documentación API</Typography>
+                    <Typography variant='h6' fontWeight='bold' borderBottom={4}>Documentación API</Typography>
                 </Box>
                 <Typography>El api de testimonios le permitirá acceder, desde otros sistemas, a los testimonios almacenado en la plataforma Memoria Oral.</Typography>
                 <Grid container  justifyContent='space-around' mt={2}>
@@ -64,7 +64,7 @@ const DocumentatioAPI = ({ openApi, setOpenApi }) => {
                         </ul>
                         <Typography fontWeight='bold'>Ejemplo de petición Http</Typography>
                         <Typography component="div" variant="span">
-                            <pre>
+                            <pre style={{color:'blue'}}>
                                 {`
 const fetchData = async () => {
   try {
@@ -90,7 +90,7 @@ const fetchData = async () => {
                         </Typography>
                         <Typography fontWeight='bold'>Ejemplo de respuesta Http</Typography>
                         <Typography component="div" variant="span">
-                            <pre>{`
+                            <pre style={{color:'blue'}}>{`
  [
     {
         "testimonyId": 3,
@@ -102,8 +102,8 @@ const fetchData = async () => {
         "department": "Guainía",
         "descriptionDetail": "",
         "audioUrl": null,
-        "videoUrl": "http://localhost:6868/api/v1/repository/files/show/video/EDITADO TODO CON PESO_CAMINA POR FE l SARA MORENO. Y GUISELLA DUARTE l BETHEL PRODUCCIONES.mp4",
-        "imageUrl": "http://localhost:6868/api/v1/repository/files/show/image/EDITADO TODO_Captura desde 2024-07-03 13-37-19.png"
+        "videoUrl": "http://memoriaoral.com/api/v1/repository/files/show/video/videoclip.mp4",
+        "imageUrl": "http://memoriaoral.com/api/v1/repository/files/show/image/imagen.png"
     },
 ]
     `}

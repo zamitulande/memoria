@@ -58,21 +58,23 @@ const Information = () => {
                     search
                 }
             });
-            if(response.data.content.length === 0){
+            if (response.data.content.length === 0) {
                 Swal.fire({
                     title: "No se encontraron testimonios.",
                     timer: 1000
-                  });
+                });
             }
-            setData(response.data.content);
-            setTotalPages(response.data.totalPages);
-            setTotalElements(response.data.totalElements);
-            setIsLoading(false);
-            setDepartment("");
-            setCity("");
-            setCategory("");
-            setEvenDateStart("");
-            setEvenDateEnd("");
+            setTimeout(() => {
+                setData(response.data.content);
+                setTotalPages(response.data.totalPages);
+                setTotalElements(response.data.totalElements);
+                setIsLoading(false);
+                setDepartment("");
+                setCity("");
+                setCategory("");
+                setEvenDateStart("");
+                setEvenDateEnd("");
+            }, 700)
         } catch (error) {
             Swal.fire({
                 icon: "error",
@@ -116,10 +118,10 @@ const Information = () => {
         <Container maxWidth="xl">
             <Grid container alignItems='center'>
                 <Grid item xs={12} md={3}>
-                    <Button 
-                    variant='contained' 
-                    onClick={toggleDrawer(true)} 
-                    endIcon={<FilterAltTwoToneIcon/>}
+                    <Button
+                        variant='contained'
+                        onClick={toggleDrawer(true)}
+                        endIcon={<FilterAltTwoToneIcon />}
                     >Filtrar</Button>
                     <Drawer open={open} onClose={toggleDrawer(false)}>
                         <FilterOpenData
@@ -138,15 +140,15 @@ const Information = () => {
                     </Drawer>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <Button variant='contained' onClick={fetchData} endIcon={<FilterAltOffTwoToneIcon/>}>Limpiar filtro</Button>
+                    <Button variant='contained' onClick={fetchData} endIcon={<FilterAltOffTwoToneIcon />}>Limpiar filtro</Button>
                 </Grid>
                 <Grid item xs={12} md={3}>
-                    <Button variant='contained' onClick={(e)=>setOpenApi(true)} endIcon={<ApiIcon/>} >Documentación API</Button>
-                    <DocumentatioAPI openApi={openApi} setOpenApi={setOpenApi}/>
+                    <Button variant='contained' onClick={(e) => setOpenApi(true)} endIcon={<ApiIcon />} >Documentación API</Button>
+                    <DocumentatioAPI openApi={openApi} setOpenApi={setOpenApi} />
                 </Grid>
                 <Grid item xs={12} md={3}>
                     <IconButton>
-                    <SearchIcon />
+                        <SearchIcon />
                         <TextField
                             fullWidth
                             label="Buscar..."
@@ -158,112 +160,112 @@ const Information = () => {
             </Grid>
             {isLoading ? (
                 <Grid item xs={12}>
-                {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}
-                <Box display="flex" justifyContent="center" alignItems="center" height="300px">
-                <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada"  /> 
-                <Typography variant="h4">Cargando contenido...</Typography>    
-                </Box>
-            </Grid>
+                    {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}
+                    <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+                        <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada" />
+                        <Typography variant="h4">Cargando contenido...</Typography>
+                    </Box>
+                </Grid>
             ) : (
                 <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto', marginTop: 5 }}>
-                <Table aria-label="sticky table">
-                    {!isMobile && (
-                        <TableHead>
-                            <TableRow sx={{ backgroundColor: 'secondary.main' }}>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Categoria</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Titulo</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Descripcion</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Ubicación</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Fecha</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Video</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Imagen</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Audio</TableCell>
-                                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Detalles</TableCell>
-                            </TableRow>
-                        </TableHead>
-                    )}
-                    <TableBody>
-                        {data.map((data) => (
-                            <TableRow key={data.testimonyId}
-                                sx={{
-                                    display: isMobile ?
-                                        'block' : 'table-row', borderBottom: isMobile
-                                            ?
-                                            '3px solid '
-                                            :
-                                            'none',
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(0, 0, 0, 0.1)',  // Cambia este color según tus necesidades
-                                    }
-                                }}>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Categoria:</Box>}
-                                    {data.category}
-                                </TableCell>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Titulo:</Box>}
-                                    {data.title}
-                                </TableCell>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Descripcion:</Box>}
-                                    {data.description}
-                                </TableCell>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Ubicación:</Box>}
-                                    {data.department}-{data.municipio}
-                                </TableCell>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Fecha:</Box>}
-                                    {data.evenDate}
-                                </TableCell>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Video:</Box>}
-                                    {data.videoUrl ? (
-                                        <a href={data.videoUrl} target="_blank" rel="noopener noreferrer">Ver Video</a>
-                                    ) : 'Video no disponible'}
-                                </TableCell>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Imagen:</Box>}
-                                    {data.imageUrl ? (
-                                        <a href={data.imageUrl} target="_blank" rel="noopener noreferrer">Ver Imagen</a>
-                                    ) : 'Imagen no disponible'}
-                                </TableCell>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Audio:</Box>}
-                                    {data.audioUrl ? (
-                                        <a href={data.audioUrl} target="_blank" rel="noopener noreferrer">Escuchar Audio</a>
-                                    ) : 'Audio no disponible'}
-                                </TableCell>
-                                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Detalles:</Box>}
-                                    {data.descriptionDetail.length ? (
-                                        <>
-                                            {/* Mostrar texto truncado o completo basado en el estado */}
-                                            {showFullText ? (
-                                                <span>{data.descriptionDetail}</span>
-                                            ) : (
-                                                <span>
-                                                    {data.descriptionDetail.slice(0, maxLength)}
-                                                    {data.descriptionDetail.length > maxLength && '...'}
-                                                </span>
-                                            )}
+                    <Table aria-label="sticky table">
+                        {!isMobile && (
+                            <TableHead>
+                                <TableRow sx={{ backgroundColor: 'secondary.main' }}>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Categoria</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Titulo</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Descripcion</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Ubicación</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Fecha</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Video</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Imagen</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Audio</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Detalles</TableCell>
+                                </TableRow>
+                            </TableHead>
+                        )}
+                        <TableBody>
+                            {data.map((data) => (
+                                <TableRow key={data.testimonyId}
+                                    sx={{
+                                        display: isMobile ?
+                                            'block' : 'table-row', borderBottom: isMobile
+                                                ?
+                                                '3px solid '
+                                                :
+                                                'none',
+                                        '&:hover': {
+                                            backgroundColor: 'rgba(0, 0, 0, 0.1)',  // Cambia este color según tus necesidades
+                                        }
+                                    }}>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Categoria:</Box>}
+                                        {data.category}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Titulo:</Box>}
+                                        {data.title}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Descripcion:</Box>}
+                                        {data.description}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Ubicación:</Box>}
+                                        {data.department}-{data.municipio}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Fecha:</Box>}
+                                        {data.evenDate}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Video:</Box>}
+                                        {data.videoUrl ? (
+                                            <a href={data.videoUrl} target="_blank" rel="noopener noreferrer">Ver Video</a>
+                                        ) : 'Video no disponible'}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Imagen:</Box>}
+                                        {data.imageUrl ? (
+                                            <a href={data.imageUrl} target="_blank" rel="noopener noreferrer">Ver Imagen</a>
+                                        ) : 'Imagen no disponible'}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Audio:</Box>}
+                                        {data.audioUrl ? (
+                                            <a href={data.audioUrl} target="_blank" rel="noopener noreferrer">Escuchar Audio</a>
+                                        ) : 'Audio no disponible'}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Detalles:</Box>}
+                                        {data.descriptionDetail.length ? (
+                                            <>
+                                                {/* Mostrar texto truncado o completo basado en el estado */}
+                                                {showFullText ? (
+                                                    <span>{data.descriptionDetail}</span>
+                                                ) : (
+                                                    <span>
+                                                        {data.descriptionDetail.slice(0, maxLength)}
+                                                        {data.descriptionDetail.length > maxLength && '...'}
+                                                    </span>
+                                                )}
 
-                                            {/* Mostrar botón de "Leer más" o "Leer menos" si el texto es largo */}
-                                            {data.descriptionDetail.length > maxLength && (
-                                                <Button onClick={toggleText} size="small" color='grayDark'>
-                                                    {showFullText ? 'Leer menos' : 'Leer más'}
-                                                </Button>
-                                            )}
-                                        </>
-                                    ) : (
-                                        'Detalle no disponible'
-                                    )}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                                                {/* Mostrar botón de "Leer más" o "Leer menos" si el texto es largo */}
+                                                {data.descriptionDetail.length > maxLength && (
+                                                    <Button onClick={toggleText} size="small" color='grayDark'>
+                                                        {showFullText ? 'Leer menos' : 'Leer más'}
+                                                    </Button>
+                                                )}
+                                            </>
+                                        ) : (
+                                            'Detalle no disponible'
+                                        )}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             )}
             {totalElements > 6 && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>

@@ -46,11 +46,13 @@ const Testimony = () => {
                 } else {
                     response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
                 }
-                dispatch(setTestimonies(response.data.content))
-                setTotalPages(response.data.totalPages);
-                setTotalElements(response.data.totalElements)
-                setIsLoading(false);
-                animateScroll.scrollToTop()
+                setTimeout(() => {
+                    dispatch(setTestimonies(response.data.content))
+                    setTotalPages(response.data.totalPages);
+                    setTotalElements(response.data.totalElements)
+                    setIsLoading(false);
+                    animateScroll.scrollToTop()
+                }, 700)
             } catch (error) {
                 Swal.fire({
                     icon: "error",
@@ -102,8 +104,8 @@ const Testimony = () => {
                         <Grid item xs={12}>
                             {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}
                             <Box display="flex" justifyContent="center" alignItems="center" height="300px">
-                            <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada"  /> 
-                            <Typography variant="h4">Cargando contenido...</Typography>    
+                                <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada" />
+                                <Typography variant="h4">Cargando contenido...</Typography>
                             </Box>
                         </Grid>
                     ) : (dataTestimonies.length > 0 ? (
@@ -183,7 +185,7 @@ const Testimony = () => {
                         </Button>
                     </Box>
                 )}
-                 {openViewTestimony && (
+                {openViewTestimony && (
                     <ViewTestimony
                         dataView={selectedTestimony}
                         action="view" />

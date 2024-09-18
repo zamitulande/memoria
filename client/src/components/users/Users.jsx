@@ -10,10 +10,11 @@ import axiosClient from '../../config/Axios'
 import ViewMore from './ViewMore';
 import { useNavigate } from 'react-router-dom';
 import { setFormEdit, setUserId } from '../../redux/features/userSlice';
-import Loading from '../../helpers/components/Loading';
+import { animateScroll } from 'react-scroll';
 import Swal from 'sweetalert2';
 import { useTheme } from '@mui/material/styles';
 import MessageData from '../../helpers/components/MessageData';
+import SennovaLogo from '../../assets/loading/sennova-logo.png'
 
 
 const Users = () => {
@@ -45,10 +46,13 @@ const Users = () => {
           }
         }
         const response = await axiosClient.get(`/users?page=${currentPage}&size=10`, config);
-        setUsers(response.data.content);
-        setTotalPages(response.data.totalPages);
-        setTotalElements(response.data.totalElements)
-        setIsLoading(false);
+        animateScroll.scrollToTop();
+        setTimeout(() => {
+          setUsers(response.data.content);
+          setTotalPages(response.data.totalPages);
+          setTotalElements(response.data.totalElements);
+          setIsLoading(false);
+        }, 700);
 
       } catch (error) {
         Swal.fire({
@@ -149,82 +153,92 @@ const Users = () => {
 
   return (
     <Container>
-      <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto' }}>
-        <Table aria-label="sticky table">
-          {!isMobile && (
-            <TableHead >
-              <TableRow sx={{ backgroundColor: 'secondary.main' }}>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Identificacion</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Nombres</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Apellidos</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Telefono</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Correo</TableCell>
-                <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-          )}
+      {isLoading ? (
+        <Grid item xs={12}>
+          {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}
+          <Box display="flex" justifyContent="center" alignItems="center" height="300px">
+            <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada" />
+            <Typography variant="h4">Cargando contenido...</Typography>
+          </Box>
+        </Grid>
+      ) : (
+        <TableContainer component={Paper} sx={{ width: '100%', overflow: 'auto' }}>
+          <Table aria-label="sticky table">
+            {!isMobile && (
+              <TableHead >
+                <TableRow sx={{ backgroundColor: 'secondary.main' }}>
+                  <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Identificacion</TableCell>
+                  <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Nombres</TableCell>
+                  <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Apellidos</TableCell>
+                  <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Telefono</TableCell>
+                  <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Correo</TableCell>
+                  <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Acciones</TableCell>
+                </TableRow>
+              </TableHead>
+            )}
 
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.userId} sx={{
-                display: isMobile ?
-                  'block' : 'table-row', borderBottom: isMobile
-                    ?
-                    '3px solid '
-                    :
-                    'none',
-                '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.1)',  // Cambia este color según tus necesidades
-                }
-              }}>
-                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Identificacion:</Box>}
-                  {user.identification}
-                </TableCell>
-                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Nombres:</Box>}
-                  {user.firstName}
-                </TableCell>
-                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Apellidos:</Box>}
-                  {user.firstLastName}
-                </TableCell>
-                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Telefono:</Box>}
-                  {user.contactNumber}
-                </TableCell>
-                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Correo:</Box>}
-                  {user.email}
-                </TableCell>
-                <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                  {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Acciones:</Box>}
-                  <Tooltip title="Ver más">
-                    <IconButton onClick={() => handleOpenModal(user)}>
-                      <VisibilityIcon color='secondary' />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Editar">
-                    <IconButton onClick={() => handleUpdate(user)}>
-                      <EditIcon color='grayDark' />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Eliminar">
-                    <IconButton onClick={() => handleDelete(user)}>
-                      <DeleteIcon color='error' />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={user.accountLocked ? "Desbloquear" : "Bloquear"}>
-                    <IconButton onClick={() => handleBlockUnblock(user)}>
-                      {user.accountLocked ? <LockIcon color='secondary' /> : <LockOpenIcon color='secondary' />}
-                    </IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow key={user.userId} sx={{
+                  display: isMobile ?
+                    'block' : 'table-row', borderBottom: isMobile
+                      ?
+                      '3px solid '
+                      :
+                      'none',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)',  // Cambia este color según tus necesidades
+                  }
+                }}>
+                  <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Identificacion:</Box>}
+                    {user.identification}
+                  </TableCell>
+                  <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Nombres:</Box>}
+                    {user.firstName}
+                  </TableCell>
+                  <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Apellidos:</Box>}
+                    {user.firstLastName}
+                  </TableCell>
+                  <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Telefono:</Box>}
+                    {user.contactNumber}
+                  </TableCell>
+                  <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Correo:</Box>}
+                    {user.email}
+                  </TableCell>
+                  <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                    {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Acciones:</Box>}
+                    <Tooltip title="Ver más">
+                      <IconButton onClick={() => handleOpenModal(user)}>
+                        <VisibilityIcon color='secondary' />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Editar">
+                      <IconButton onClick={() => handleUpdate(user)}>
+                        <EditIcon color='grayDark' />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Eliminar">
+                      <IconButton onClick={() => handleDelete(user)}>
+                        <DeleteIcon color='error' />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={user.accountLocked ? "Desbloquear" : "Bloquear"}>
+                      <IconButton onClick={() => handleBlockUnblock(user)}>
+                        {user.accountLocked ? <LockIcon color='secondary' /> : <LockOpenIcon color='secondary' />}
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
       {totalElements > 10 && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
           <Button variant="contained" disabled={currentPage === 0} onClick={handlePreviousPage}>
@@ -236,7 +250,6 @@ const Users = () => {
         </Box>
       )}
       <ViewMore open={open} setOpen={setOpen} user={selectedUser} />
-      <Loading isLoading={isLoading} />
       {totalElements < 1 && (
         <MessageData action="user" />
       )}
