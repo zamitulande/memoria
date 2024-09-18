@@ -4,6 +4,8 @@ import axiosClient from '../../config/Axios';
 import { Box, Container, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SennovaLogo from '../../assets/loading/sennova-logo.png'
+import Swal from 'sweetalert2';
+import MessageData from '../../helpers/components/MessageData';
 
 const TableColaborates = () => {
 
@@ -41,8 +43,40 @@ const TableColaborates = () => {
         fetchData();
     }, [currentPage])
 
-    const handleDelete = async (user) => {
-
+    const handleDelete = async (coloborate) => {
+        const {colaborateId} = coloborate;
+        Swal.fire({
+            title: "Estas seguro?",
+            text: "Esta accion elimina el colaborador, no se puede revertir!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, Eliminar",
+            cancelButtonText: "Cancelar"
+          }).then(async (result) => {
+            try {
+              if (result.isConfirmed) {
+                const config = {
+                  headers: {
+                    'Authorization': `Bearer${getToken}`
+                  }
+                }
+                const response = await axiosClient.delete(`colaborate/delete/${colaborateId}`, config);
+                if (response.status === 200) {
+                  const colaborateFilter = colaborates.filter(colaborate => colaborate.colaborateId !== colaborateId);
+                  Swal.fire({
+                    title: "Borrado!",
+                    text: "El colaborador ha sido borrado",
+                    icon: "success"
+                  });
+                  setColaborates(colaborateFilter);
+                }
+              }
+            } catch (error) {
+              console.log(error)
+            }
+          })
     }
     return (
         <Container maxWidth="xl">
@@ -121,6 +155,9 @@ const TableColaborates = () => {
                     </Table>
                 </TableContainer>
             )}
+            {totalElements < 1 && (
+                <MessageData action="colaborate" />
+      )}
         </Container>
     )
 }

@@ -13,11 +13,16 @@ const MessageData = ({action}) => {
         setOpen(false);
     };
     let message;
-    
-    if(action === "testimony"){
-        message = "testimonios"
-    }else{
-        message = "usuarios"
+    switch(action){
+        case "testimony":
+            message = "testimonios"
+        break;
+        case "user":
+            message = "usuarios"
+        break;
+        case "colaborate":
+            message = "colaboradores"
+        break;
     } 
 
     return (

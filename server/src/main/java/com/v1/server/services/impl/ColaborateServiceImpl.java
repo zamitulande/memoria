@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.v1.server.dtos.colaborate.ColaborateDTO;
 import com.v1.server.entities.Colaborate;
 import com.v1.server.exceptions.ApiResponse;
+import com.v1.server.exceptions.customExceptions.NotFoundException;
 import com.v1.server.repositories.ColaborateRepository;
 import com.v1.server.services.ColaborateService;
 
@@ -54,8 +55,9 @@ public class ColaborateServiceImpl  implements ColaborateService{
 
     @Override
     public void deleteById(Long colaborateId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
+        Colaborate colaborate = colaborateRepository.findById(colaborateId)
+                                 .orElseThrow(() -> new NotFoundException("Colaborador no encontrado."));
+        colaborateRepository.delete(colaborate);     
     }
     
 }
