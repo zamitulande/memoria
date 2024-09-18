@@ -24,7 +24,8 @@
     "react-router-dom": "^6.22.3",
     "react-scroll": "^1.9.0",
     "react-verification-input": "^4.1.2",
-    "sweetalert2": "^11.10.8"
+    "sweetalert2": "^11.10.8",
+    "swiper": "^11.1.14"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
