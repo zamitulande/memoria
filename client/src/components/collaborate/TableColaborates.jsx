@@ -94,7 +94,7 @@ const TableColaborates = () => {
                         {!isMobile && (
                             <TableHead >
                                 <TableRow sx={{ backgroundColor: 'secondary.main' }}>
-                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Organización</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Organización o persona natural</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Sitio web</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Facebook</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Telefono</TableCell>
@@ -118,7 +118,7 @@ const TableColaborates = () => {
                                     }
                                 }}>
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Organización:</Box>}
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Organización o persona natural:</Box>}
                                         {coloborate.name}
                                     </TableCell>
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
