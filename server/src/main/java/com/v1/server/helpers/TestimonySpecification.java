@@ -10,10 +10,14 @@ import com.v1.server.entities.Testimony;
 import jakarta.persistence.criteria.Predicate;
 
 public class TestimonySpecification {
-    
-     public static Specification<Testimony> getTestimoniesWithFilters(String category, String department, String municipio, String evenDateStart, String evenDateEnd, String search) {
+
+    public static Specification<Testimony> getTestimoniesWithFilters(String category, String department,
+            String municipio, String evenDateStart, String evenDateEnd, String search) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
+
+            // Filtrar solo los testimonios que están habilitados
+            predicates.add(criteriaBuilder.isTrue(root.get("enabled")));
 
             // Filtro por categoría
             if (category != null && !category.isEmpty()) {

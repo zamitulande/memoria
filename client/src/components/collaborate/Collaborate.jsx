@@ -209,7 +209,7 @@ const Collaborate = () => {
                     </Grid>
                     <Grid item xs={12} mt={3}>
                       <TextField
-                        label="Objeto social"
+                        label="Objeto social (ej. cual es el motivo de su solicitud.)"
                         color='grayDark'
                         variant="outlined"
                         multiline

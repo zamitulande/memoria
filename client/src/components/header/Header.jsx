@@ -44,9 +44,9 @@ const Header = () => {
         { item: 'Usuarios', id: 6, path: 'usuarios' },
     ];
     const about = [
-        { item: 'Sena', id: 1, path: 'https://www.sena.edu.co/es-co/Paginas/default.aspx' },
+        { item: 'Sena cauca - comercio y servicios', id: 1, path: 'https://www.sena.edu.co/es-co/Paginas/default.aspx' },
         { item: 'Sennova', id: 2, path: 'https://www.sena.edu.co/es-co/formacion/paginas/tecnologia-innovacion.aspx' },
-        { item: 'Tecnoparque', id: 3, path: 'https://sena.edu.co/es-co/formacion/Paginas/tecnoparques.aspx' },
+        { item: 'Tecnoparque nodo Cauca', id: 3, path: 'https://sena.edu.co/es-co/formacion/Paginas/tecnoparques.aspx' },
     ]
 
     const buttonsAuth = [

@@ -42,7 +42,7 @@ const DocumentatioAPI = ({ openApi, setOpenApi }) => {
                 <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
                     <Typography variant='h6' fontWeight='bold' borderBottom={4}>Documentación API</Typography>
                 </Box>
-                <Typography>El api de testimonios le permitirá acceder, desde otros sistemas, a los testimonios almacenado en la plataforma Memoria Oral.</Typography>
+                <Typography>El api de testimonios le permitirá acceder, desde otros sistemas, a los testimonios almacenados en la plataforma Memoria Oral.</Typography>
                 <Grid container  justifyContent='space-around' mt={2}>
                     <Grid item>
                         <Typography fontWeight='bold'>¿Cómo utilizar el API?</Typography>
