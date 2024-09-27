@@ -34,6 +34,8 @@ public interface UserService {
 
     Page<UsersDTO> findAllUsers(Pageable pageable);
 
+    Page<UsersDTO> findUsersByIdentification(String search, Pageable pageable);
+
     UsersDTO updateUser(Long userId, UsersDTO userUpdateDTO);
 
     void deleteById(Long userId);

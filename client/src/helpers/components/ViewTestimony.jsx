@@ -2,7 +2,7 @@ import { Alert, Box, Grid, IconButton, Modal, Skeleton, Stack, Tooltip, Typograp
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Cancel';
-import FaceRetouchingOffIcon from '@mui/icons-material/FaceRetouchingOff';
+import logo from '../../assets/header/logo.png'
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import DoneIcon from '@mui/icons-material/Done';
@@ -126,18 +126,42 @@ const ViewTestimony = ({
                         <Grid item xs={12} sm={12} md={12} lg={8}>
                             <Video video={dataView.videoUrl} />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} alignItems='center'>
+                        <Grid item
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            alignItems='center'
+                            sx={{
+                                position: 'relative',  // Para que el pseudo-elemento se posicione correctamente
+                                overflow: 'hidden',  // Para evitar que el pseudo-elemento se salga del Grid
+                                '&::before': {
+                                    content: '""',  // Necesario para que el pseudo-elemento aparezca
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    backgroundImage: `url(${logo})`,  // Ruta a tu imagen
+                                    backgroundSize: 'cover',  // Ajusta la imagen para cubrir todo el fondo
+                                    backgroundPosition: 'center',  // Centra la imagen
+                                    backgroundRepeat: 'no-repeat',  // Evita que la imagen se repita
+                                    opacity: 1,  // Aplica la opacidad solo a la imagen
+                                    filter: 'blur(22px)',  // Aplica el desenfoque solo a la imagen
+                                    zIndex: -1,  // Asegura que esté detrás del contenido
+                                }
+                            }}
+                            >
                             <Box>
                                 <Typography fontSize={40} variant="h5" borderBottom={1} >{dataView.title}</Typography>
                             </Box>
                             <Box mt={5}>
-                                <Typography  fontSize={25} variant="span" fontWeight='bold'>Categoria:&nbsp;</Typography>
+                                <Typography fontSize={25} variant="span" fontWeight='bold'>Categoria:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.category}</Typography>
                             </Box>
                             <Box mt={2}>
-                                <Typography fontSize={25}  variant="span" fontWeight='bold'>Fecha:&nbsp;</Typography>
+                                <Typography fontSize={25} variant="span" fontWeight='bold'>Fecha:&nbsp;</Typography>
                             </Box>
                             <Box>
                                 <Typography variant="body">{dataView.evenDate}</Typography>
@@ -160,10 +184,16 @@ const ViewTestimony = ({
                                     <Typography variant="body">{dataView.descriptionDetail}</Typography>
                                 </Box>
                             )}
+                            {login && role === 'ADMIN' && (
+                                <Box mt={2}>
+                                    <Typography fontSize={25} variant="span" fontWeight='bold'>Usuario asociado:&nbsp;</Typography>
+                                    <Typography variant="body">{dataView.identification}</Typography>
+                                </Box>
+                            )}
                         </Grid>
                     </Grid>
                     {login && role === 'ADMIN' && (
-                        <Grid container justifyContent="end">
+                        <Grid container justifyContent="end" mt={3}>
                             <Grid item xs={12} sm={2}>
                                 <IconButton onClick={() => handleUpdate(dataView)} color='primary'>
                                     <EditIcon />
@@ -251,9 +281,9 @@ const ViewTestimony = ({
                         </Grid>
                         {dataPreview.descriptionDetail && (
                             <Grid item xs={12} sm={12} md={12}>
-                            <Typography variant='h6' borderBottom={1}>Descripción Detallada</Typography>
-                            <Typography variant='span'>{dataPreview.descriptionDetail}</Typography>
-                        </Grid>
+                                <Typography variant='h6' borderBottom={1}>Descripción Detallada</Typography>
+                                <Typography variant='span'>{dataPreview.descriptionDetail}</Typography>
+                            </Grid>
                         )}
                         <Grid item xs={12} sm={4}>
                             <IconButton onClick={() => handleCloseModal()} color='primary'>

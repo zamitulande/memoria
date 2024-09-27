@@ -37,4 +37,7 @@ public class TestimonysDTO {
 
     private String imageUrl;
 
+    // Información del usuario relacionado
+    private Long userId;
+    private String identification;
 }

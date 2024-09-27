@@ -172,6 +172,7 @@ const FormTestimony = ({ userId, action }) => {
                         container: 'my-swal'
                     }
                 });
+                setIsLoading(false);
             }
         }
         postTestimony();

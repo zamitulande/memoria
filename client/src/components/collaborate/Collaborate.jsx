@@ -92,7 +92,7 @@ const Collaborate = () => {
           <Grid container spacing={2} justifyContent='space-around' mt={5}>
             <Grid item xs={12} md={4}>
               <Alert sx={{ fontSize: '1.3rem' }} severity="info" icon={<VolunteerActivismIcon fontSize='large' color='secondary' />}>
-                Si desea ser un aliado nuestro y apoyar de alguna forma a las víctimas del conflicto armado en Colombia, victimas por covid-19 y demas temas que se tratan en nuestra plataforma memoria oral, dejenos los datos de la organización a la cual pertenece. Pronto nos pondremos en contácto.
+                Si desea ser un aliado nuestro y apoyar de alguna forma a las víctimas del conflicto armado en Colombia, victimas por covid-19 y demas temas que se tratan en nuestra plataforma memoria oral, dejenos los datos de la organización a la cual pertenece o si es persona natural. Pronto nos pondremos en contácto.
               </Alert>
             </Grid>
             <Grid item xs={12} md={8} >

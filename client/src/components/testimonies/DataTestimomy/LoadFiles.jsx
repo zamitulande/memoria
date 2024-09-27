@@ -70,7 +70,7 @@ const LoadFiles = ({ onFilesChange, resetTrigger}) => {
               {fileType} del testimonio
             </AlertTitle>
             A continuación, seleccione el archivo de {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} que contiene el relato del testimonio.
-            El tamaño máximo permitido para {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} es de {value === 0 ? '10' : value === 1 ? '512' : '8'} Megabytes,
+            El tamaño máximo permitido para {value === 0 ? 'Audio' : value === 1 ? 'Video' : 'Imagen'} es de {value === 0 ? '10' : value === 1 ? '512' : '1'} Megabytes,
             los formatos permitidos son: {value === 0 ? 'WAV, MP3, WMA, ACC.' : value === 1 ? 'MP4, AVI, WMV, WEBM. ' : 'PNG, JPG, JPEG.'}
           </Alert>
         </Grid>

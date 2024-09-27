@@ -63,7 +63,7 @@ const Footer = () => {
                         component="img"
                         src={Sena}
                         sx={{
-                            width: '110%',
+                            width: '80%',
                             marginBottom: 2,
                         }}
                     />
@@ -85,7 +85,7 @@ const Footer = () => {
                     color: '#757575',
                 }}
             >
-                &copy; Copyright {year}, Sena
+                &copy; Copyright {year}, Sena - Cauca - Centro de Comercio y servicios.
             </Box>
         </>
     )

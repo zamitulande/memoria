@@ -15,13 +15,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.v1.server.dtos.testimony.TestimonysDTO;
 import com.v1.server.entities.Testimony;
 import com.v1.server.entities.User;
 import com.v1.server.exceptions.ApiResponse;
+import com.v1.server.exceptions.customExceptions.MaxUploadSizeFileException;
 import com.v1.server.exceptions.customExceptions.NotFoundException;
 import com.v1.server.repositories.TestimonyRepository;
 import com.v1.server.repositories.UserRepository;
@@ -109,7 +109,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         String[] allowedTypes = { "audio/wav", "audio/mpeg", "audio/x-ms-wma", "audio/acc" };
         long maxFileSize = 3 * 1024 * 1024; // 20 MB en bytes
         String uploadDir = AUDIO_DIRECTORY;
-        return saveUploadedFile(audio, title, allowedTypes, maxFileSize, uploadDir);
+        return saveUploadedFile(audio, title, allowedTypes, maxFileSize, uploadDir, "audio");
     }
 
     private String saveUploadedFileVideo(MultipartFile video, String title) throws IOException {
@@ -119,7 +119,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
         long maxFileSize = 500 * 1024 * 1024; // 50 MB en bytes
         String uploadDir = VIDEO_DIRECTORY;
-        return saveUploadedFile(video, title, allowedTypes, maxFileSize, uploadDir);
+        return saveUploadedFile(video, title, allowedTypes, maxFileSize, uploadDir, "video");
     }
 
     private String saveUploadedFileImage(MultipartFile image, String title) throws IOException {
@@ -127,13 +127,13 @@ public class TestimonyServiceImpl implements TestimonyService {
             return null;
         }
         String[] allowedTypes = { "image/png", "image/jpeg", "image/jpg" };
-        long maxFileSize = 10 * 1024 * 1024; // 10 MB en bytes
+        long maxFileSize = 1 * 1024 * 1024; // 1 MB en bytes
         String uploadDir = IMAGE_DIRECTORY;
-        return saveUploadedFile(image, title, allowedTypes, maxFileSize, uploadDir);
+        return saveUploadedFile(image, title, allowedTypes, maxFileSize, uploadDir, "imagen");
     }
 
     private String saveUploadedFile(MultipartFile file, String title, String[] allowedTypes, long maxFileSize,
-            String uploadDir) throws IOException {
+            String uploadDir, String fileType) throws IOException {
 
         if (file == null || file.isEmpty()) {
             return null;
@@ -146,7 +146,7 @@ public class TestimonyServiceImpl implements TestimonyService {
 
         // Validar tamaño del archivo
         if (file.getSize() > maxFileSize) {
-            throw new MaxUploadSizeExceededException(maxFileSize / (1024 * 1024));
+            throw new MaxUploadSizeFileException(fileType, maxFileSize / (1024 * 1024));
         }
         String fileName = title + "_" + file.getOriginalFilename();
 
@@ -178,6 +178,9 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
                 .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
+                // Mapeando la información del usuario
+                .userId(testimony.getUser().getUserId())
+                .identification(testimony.getUser().getIdentification())
                 .build());
     }
 

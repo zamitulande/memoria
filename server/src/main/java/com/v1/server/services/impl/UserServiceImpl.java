@@ -171,6 +171,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Page<UsersDTO> findUsersByIdentification(String search, Pageable pageable) {
+        Page<User> userPage = userRepository.findByRoleAndIdentificationContaining(Role.USER, search, pageable);
+        return userPage.map(user -> UsersDTO.builder()
+                .userId(user.getUserId())
+                .identification(user.getIdentification())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .secondName(user.getSecondName())
+                .firstLastName(user.getFirstLastName())
+                .secondLastName(user.getSecondLastName())
+                .contactNumber(user.getContactNumber())
+                .accountLocked(user.isAccountLocked())
+                .municipio(user.getMunicipio())
+                .department(user.getDepartment())
+                .documentUrl(user.getDocumentUrl())
+                .email(user.getEmail())
+                .build());
+    }
+
+    @Override
     public UsersDTO updateUser(Long userId, UsersDTO userUpdateDTO) {
 
         if (!userUpdateDTO.getEmail().equals(userUpdateDTO.getConfirmEmail())) {

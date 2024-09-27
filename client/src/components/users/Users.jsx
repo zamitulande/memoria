@@ -1,9 +1,10 @@
-import { Box, Button, Container, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery } from '@mui/material'
+import { Alert, Box, Button, Container, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import SearchIcon from '@mui/icons-material/Search';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import axiosClient from '../../config/Axios'
@@ -34,6 +35,7 @@ const Users = () => {
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [stateUser, setStateUser] = useState(false);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -45,7 +47,10 @@ const Users = () => {
             'Authorization': `Bearer${getToken}`
           }
         }
-        const response = await axiosClient.get(`/users?page=${currentPage}&size=10`, config);
+        // Agregar el parámetro de búsqueda si hay un valor en `search`
+      const query = search ? `/users?page=${currentPage}&size=10&search=${search}` : `/users?page=${currentPage}&size=10`;
+        
+      const response = await axiosClient.get(query, config);
         animateScroll.scrollToTop();
         setTimeout(() => {
           setUsers(response.data.content);
@@ -64,7 +69,7 @@ const Users = () => {
       }
     }
     fetchData();
-  }, [currentPage])
+  }, [currentPage, search])
 
   const handleBlockUnblock = async (user) => {
     setStateUser(true)
@@ -153,6 +158,25 @@ const Users = () => {
 
   return (
     <Container>
+      <Grid container alignItems='center' justifyContent='space-between' >
+        <Grid item xs={12} md={4}>
+          <Alert severity="info">Listado de usuarios registrados</Alert>
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <IconButton>
+            <SearchIcon />
+            <TextField
+              color='grayDark'
+              type='text'
+              variant="outlined"
+              fullWidth
+              label="Buscar por identificación"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </IconButton>
+        </Grid>
+      </Grid>
       {isLoading ? (
         <Grid item xs={12}>
           {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}

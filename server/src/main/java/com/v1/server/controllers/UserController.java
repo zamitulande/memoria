@@ -42,7 +42,7 @@ public class UserController {
 
     private static final String CONSENTIMIENTO_DIRECTORY = "./storage/user/consentimiento-informado/";
 
-    //registra admin
+    // registra admin
     @PostMapping(path = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse register(
             @RequestParam String firstName,
@@ -75,10 +75,18 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<Page<UsersDTO>> findAllUsers(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<UsersDTO>> findAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String search) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<UsersDTO> userPage = userService.findAllUsers(pageable);
+        Page<UsersDTO> userPage;
+        // Verificar si el parámetro de búsqueda está presente
+        if (search != null && !search.isEmpty()) {
+            userPage = userService.findUsersByIdentification(search, pageable);
+        } else {
+            userPage = userService.findAllUsers(pageable);
+        }
         return ResponseEntity.ok(userPage);
     }
 
@@ -108,25 +116,25 @@ public class UserController {
     }
 
     @GetMapping("/consentimiento/{consentimientoName}")
-    public ResponseEntity<Resource> getConsentimiento(@PathVariable String consentimientoName) throws IOException{
-        
-        try {
-        Path pdfPath = Paths.get(CONSENTIMIENTO_DIRECTORY+consentimientoName);
-        System.out.println(pdfPath);
-        Resource resource = new UrlResource(pdfPath.toUri());
+    public ResponseEntity<Resource> getConsentimiento(@PathVariable String consentimientoName) throws IOException {
 
-        if (resource.exists() && resource.isReadable()) {
-            MediaType contenType = determineContentType(consentimientoName);
-            return ResponseEntity.ok()
+        try {
+            Path pdfPath = Paths.get(CONSENTIMIENTO_DIRECTORY + consentimientoName);
+            System.out.println(pdfPath);
+            Resource resource = new UrlResource(pdfPath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                MediaType contenType = determineContentType(consentimientoName);
+                return ResponseEntity.ok()
                         .contentType(contenType)
                         .body(resource);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-       } catch (MalformedURLException e) {
-        e.printStackTrace();
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-       }
     }
 
     private MediaType determineContentType(String consentimientoName) {
