@@ -150,6 +150,9 @@ const Information = () => {
                     <IconButton>
                         <SearchIcon />
                         <TextField
+                            color='grayDark'
+                            type='text'
+                            variant="outlined"
                             fullWidth
                             label="Buscar..."
                             value={search}

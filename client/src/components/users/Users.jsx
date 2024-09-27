@@ -54,11 +54,10 @@ const Users = () => {
         animateScroll.scrollToTop();
         setTimeout(() => {
           setUsers(response.data.content);
-          setTotalPages(response.data.totalPages);
-          setTotalElements(response.data.totalElements);
+          setTotalPages(response.data.totalPages);          
           setIsLoading(false);
         }, 700);
-
+        setTotalElements(response.data.totalElements);
       } catch (error) {
         Swal.fire({
           icon: "error",

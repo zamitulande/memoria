@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import Snackbar from '@mui/material/Snackbar';
-import { Alert, Box } from '@mui/material';
+import { Alert, Box, Slide  } from '@mui/material';
+
+const SlideTransition = (props) => {
+    return <Slide {...props} direction="left" />;
+};
 
 const MessageData = ({action}) => {
 
@@ -32,6 +36,7 @@ const MessageData = ({action}) => {
                 autoHideDuration={5000}
                 onClose={handleClose}
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                TransitionComponent={SlideTransition}
             >
                 <Alert
                     onClose={handleClose}

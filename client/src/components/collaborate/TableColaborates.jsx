@@ -32,10 +32,10 @@ const TableColaborates = () => {
                 const response = await axiosClient.get(`/list-colaborate?page=${currentPage}&size=10`, config);
                 setTimeout(() => {
                     setColaborates(response.data.content);
-                    setTotalPages(response.data.totalPages);
-                    setTotalElements(response.data.totalElements)
+                    setTotalPages(response.data.totalPages);                    
                     setIsLoading(false);
                 }, 700)
+                setTotalElements(response.data.totalElements)
             } catch (error) {
                 console.log(error)
             }
