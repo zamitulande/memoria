@@ -45,6 +45,15 @@ public class User implements UserDetails{
 
     @NotBlank
     private String firstLastName;
+
+    @NotBlank
+    private String gender;
+
+    @NotBlank
+    private String poblacion;
+
+    @NotBlank
+    private String disability;
    
     private String secondLastName;
 

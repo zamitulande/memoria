@@ -23,6 +23,12 @@ public class RegisterRequestDTO {
    
     private String secondLastName;
 
+    private String gender;
+
+    private String poblacion;
+
+    private String disability;
+
     private String identification;
     
     private String contactNumber;

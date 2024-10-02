@@ -33,6 +33,9 @@ const FormUser = ({ action, role }) => {
     const [secondName, setSecondName] = useState("")
     const [firstLastName, setFirstLastName] = useState("")
     const [secondLastName, setSecondLastName] = useState("")
+    const [gender, setGender] = useState("");
+    const [poblacion, setPoblacion] = useState("");
+    const [disability, setDisability] = useState("");
     const [department, setDepartment] = useState("");
     const [contactNumber, setContactNumber] = useState("");
     const [city, setCity] = useState("");
@@ -62,6 +65,9 @@ const FormUser = ({ action, role }) => {
         setSecondName("")
         setFirstLastName("")
         setSecondLastName("")
+        setGender("")
+        setPoblacion("")
+        setDisability("")
         setPassword("")
         setConfirmPassword("")
         setConditios(false)
@@ -110,6 +116,9 @@ const FormUser = ({ action, role }) => {
             secondName,
             firstLastName,
             secondLastName,
+            gender,
+            poblacion,
+            disability,
             contactNumber,
             department,
             municipio,
@@ -149,6 +158,9 @@ const FormUser = ({ action, role }) => {
             formData.append('secondName', secondName)
             formData.append('firstLastName', firstLastName)
             formData.append('secondLastName', secondLastName)
+            formData.append('gender', gender)
+            formData.append('poblacion', poblacion)
+            formData.append('disability', disability)
             formData.append('contactNumber', contactNumber)
             formData.append('department', department)
             formData.append('municipio', municipio)
@@ -196,6 +208,9 @@ const FormUser = ({ action, role }) => {
         updateUser.secondName = secondName || getFormEditar.secondName;
         updateUser.firstLastName = firstLastName || getFormEditar.firstLastName;
         updateUser.secondLastName = secondLastName || getFormEditar.secondLastName;
+        updateUser.gender = gender || getFormEditar.gender;
+        updateUser.disability = disability || getFormEditar.disability;
+        updateUser.poblacion = poblacion || getFormEditar.poblacion;
         updateUser.contactNumber = contactNumber || getFormEditar.contactNumber;
         updateUser.department = department || getFormEditar.department;
         updateUser.municipio = municipio || getFormEditar.municipio;
@@ -250,6 +265,12 @@ const FormUser = ({ action, role }) => {
                 setFirstLastName={setFirstLastName}
                 secondLastName={secondLastName}
                 setSecondLastName={setSecondLastName}
+                gender={gender}
+                setGender={setGender}
+                poblacion={poblacion}
+                setPoblacion={setPoblacion}
+                disability={disability}
+                setDisability={setDisability}
                 department={department}
                 setDepartment={setDepartment}
                 contactNumber={contactNumber}

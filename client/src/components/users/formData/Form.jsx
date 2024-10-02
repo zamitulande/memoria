@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material'
+import { Button, Checkbox, FormControl, FormControlLabel, FormHelperText, Grid, IconButton, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import SelectDepartment from '../../../helpers/components/SelectDepartment';
@@ -33,6 +33,12 @@ const Form = ({ open,
     setFirstLastName,
     secondLastName,
     setSecondLastName,
+    gender,
+    setGender,
+    poblacion,
+    setPoblacion,
+    disability, 
+    setDisability,
     department,
     setDepartment,
     contactNumber,
@@ -62,38 +68,66 @@ const Form = ({ open,
 }) => {
 
     const login = useSelector((state) => state.user.login)
-    const { isCellPhone, passwordValid, capitalizeFirstLetter } = UseValidation(); 
+    const { isCellPhone, passwordValid, capitalizeFirstLetter } = UseValidation();
 
     let imagen = "";
 
+    const genders = [
+        'Masculino',
+        'Femenino',
+        'Otro'
+    ];
+
+    const poblaciones = [
+        'Campesino',
+        'Indigena',
+        'Raizal del archipielago',
+        'Afrocolombiano-Afrodescendiente',
+        'Gitano (ROM)',
+        'Palenquero de San Basilio',
+        'Ninguno'
+    ];
+
+    const disabilities =[
+        'Fisica',
+        'Auditiva',
+        'Visual',
+        'Sordo-ceguera',
+        'Intelectual',
+        'Psicosicial',
+        'Multiple',
+        'Otra',
+        'Ninguna'
+    ]
+
     if (login) {
         if (action === 'register' && role === 'ADMIN') {
-            imagen =  <Grid container direction="column" alignItems="center">
-            <Grid item>
-                <input
-                    accept="application/pdf"
-                    id="icon-button-file"
-                    onChange={(e) => {setFile(e.target.files), setFileName(e.target.files[0].name); }}
-                    type="file"
-                    style={{ display: 'none' }}
-                    required
-                />
-                <label htmlFor="icon-button-file">
-                    <IconButton component="span">
-                        <CloudUploadIcon fontSize='large' />
-                    </IconButton>
-                </label>
-            </Grid>
-            {fileName && (
-                <Grid item sx={{backgroundColor:'secondary.main', padding:2}}>
-                    <Typography  color="textField.main">Cargado:_{fileName}</Typography>
+            imagen = <Grid container direction="column" alignItems="center">
+                <Grid item>
+                    <input
+                        accept="application/pdf"
+                        id="icon-button-file"
+                        onChange={(e) => { setFile(e.target.files), setFileName(e.target.files[0].name); }}
+                        type="file"
+                        style={{ display: 'none' }}
+                        required
+                    />
+                    <label htmlFor="icon-button-file">
+                        <IconButton component="span">
+                            <CloudUploadIcon fontSize='large' />
+                        </IconButton>
+                    </label>
                 </Grid>
-            )}
-            <Grid item>
-                <Typography variant="body1">Consentimiento informado</Typography>
+                {fileName && (
+                    <Grid item sx={{ backgroundColor: 'secondary.main', padding: 2 }}>
+                        <Typography color="textField.main">Cargado:_{fileName}</Typography>
+                    </Grid>
+                )}
+                <Grid item>
+                    <Typography variant="body1">Consentimiento informado</Typography>
+                </Grid>
+
             </Grid>
-           
-        </Grid>
 
         }
     }
@@ -254,6 +288,84 @@ const Form = ({ open,
 
                 </Grid>
                 <Grid item xs={4}>
+                <FormControl color='grayDark' fullWidth>
+                        <InputLabel id="demo-simple-select-label">Genero</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Genero"
+                            value={
+                                action === 'register'
+                                    ? gender
+                                    : action === 'update'
+                                        ? gender || getformEditTestimony.gender // Si hay un cambio, toma gender; si no, toma el valor original.
+                                        : ''
+                            }
+                            onChange={(e) => {
+                                setGender(e.target.value);
+                            }}
+                        >
+                            {genders.map((genderItem, index) => (
+                                <MenuItem key={index} value={genderItem}>
+                                    {genderItem}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                <FormControl color='grayDark' fullWidth>
+                        <InputLabel id="demo-simple-select-label">Población</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Población"
+                            value={
+                                action === 'register'
+                                    ? poblacion
+                                    : action === 'update'
+                                        ? poblacion || getformEditTestimony.poblacion // Si hay un cambio, toma gender; si no, toma el valor original.
+                                        : ''
+                            }
+                            onChange={(e) => {
+                                setPoblacion(e.target.value);
+                            }}
+                        >
+                            {poblaciones.map((poblacionItem, index) => (
+                                <MenuItem key={index} value={poblacionItem}>
+                                    {poblacionItem}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                <FormControl color='grayDark' fullWidth>
+                        <InputLabel id="demo-simple-select-label">Discapacidad</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Discapacidad"
+                            value={
+                                disability === 'register'
+                                    ? disability
+                                    : action === 'update'
+                                        ? disability || getformEditTestimony.disability // Si hay un cambio, toma gender; si no, toma el valor original.
+                                        : ''
+                            }
+                            onChange={(e) => {
+                                setDisability(e.target.value);
+                            }}
+                        >
+                            {disabilities.map((disabilityItem, index) => (
+                                <MenuItem key={index} value={disabilityItem}>
+                                    {disabilityItem}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={4}>
                     <SelectDepartment
                         value={action === 'register' ? department : getFormEditar.department}
                         onChange={(e, item) => {
@@ -375,7 +487,7 @@ const Form = ({ open,
                 </Grid>
                 <Grid mt={4}>
                     {action === 'update' ? <Link to="/usuarios"> <Button color='secondary'>Cancelar</Button></Link> : null}
-                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ? !recaptchaIsValid || !conditios || isDisable(): null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
+                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ? !recaptchaIsValid || !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
                 </Grid>
             </Grid>
         </form>

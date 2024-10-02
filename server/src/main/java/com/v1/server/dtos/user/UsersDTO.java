@@ -20,6 +20,12 @@ public class UsersDTO {
     private String firstLastName;
    
     private String secondLastName;
+
+    private String gender;
+
+    private String poblacion;
+
+    private String disability;
     
     private String contactNumber;
 

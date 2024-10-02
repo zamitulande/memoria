@@ -56,6 +56,9 @@ public class UserServiceImpl implements UserService {
             String secondName,
             String firstLastName,
             String secondLastName,
+            String gender,
+            String poblacion,
+            String disability,
             String contactNumber,
             String department,
             String municipio,
@@ -81,6 +84,9 @@ public class UserServiceImpl implements UserService {
                 .secondName(secondName)
                 .firstLastName(firstLastName)
                 .secondLastName(secondLastName)
+                .gender(gender)
+                .poblacion(poblacion)
+                .disability(disability)
                 .identification(identification)
                 .contactNumber(contactNumber)
                 .department(department)
@@ -161,6 +167,9 @@ public class UserServiceImpl implements UserService {
                 .secondName(user.getSecondName())
                 .firstLastName(user.getFirstLastName())
                 .secondLastName(user.getSecondLastName())
+                .gender(user.getGender())
+                .poblacion(user.getPoblacion())
+                .disability(user.getDisability())
                 .contactNumber(user.getContactNumber())
                 .accountLocked(user.isAccountLocked())
                 .municipio(user.getMunicipio())
@@ -181,6 +190,9 @@ public class UserServiceImpl implements UserService {
                 .secondName(user.getSecondName())
                 .firstLastName(user.getFirstLastName())
                 .secondLastName(user.getSecondLastName())
+                .gender(user.getGender())
+                .poblacion(user.getPoblacion())
+                .disability(user.getDisability())
                 .contactNumber(user.getContactNumber())
                 .accountLocked(user.isAccountLocked())
                 .municipio(user.getMunicipio())
@@ -203,6 +215,9 @@ public class UserServiceImpl implements UserService {
             user.setSecondName(userUpdateDTO.getSecondName());
             user.setFirstLastName(userUpdateDTO.getFirstLastName());
             user.setSecondLastName(userUpdateDTO.getSecondLastName());
+            user.setGender(userUpdateDTO.getGender());
+            user.setPoblacion(userUpdateDTO.getPoblacion());
+            user.setDisability(userUpdateDTO.getDisability());
             user.setContactNumber(userUpdateDTO.getContactNumber());
             user.setDepartment(userUpdateDTO.getDepartment());
             user.setMunicipio(userUpdateDTO.getMunicipio());
@@ -215,6 +230,9 @@ public class UserServiceImpl implements UserService {
                     .secondName(user.getSecondName())
                     .firstLastName(user.getFirstLastName())
                     .secondLastName(user.getSecondLastName())
+                    .gender(user.getGender())
+                    .poblacion(user.getPoblacion())
+                    .disability(user.getDisability())
                     .contactNumber(user.getContactNumber())
                     .department(user.getDepartment())
                     .municipio(user.getMunicipio())
