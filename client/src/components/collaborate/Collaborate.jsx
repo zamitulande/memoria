@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import UseValidation from '../../helpers/hooks/UseValidation';
 import Recaptcha from '../../helpers/components/Recaptcha';
 import axiosClient from '../../config/Axios';
-import Loading from '../../helpers/components/Loading';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
 import TableColaborates from './TableColaborates';

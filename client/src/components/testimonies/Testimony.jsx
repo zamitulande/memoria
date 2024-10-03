@@ -3,7 +3,6 @@ import LockClockTwoToneIcon from '@mui/icons-material/LockClockTwoTone';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../config/Axios';
-import Loading from '../../helpers/components/Loading';
 import MessageData from '../../helpers/components/MessageData';
 import Menu from '../../helpers/components/Menu';
 import { animateScroll } from 'react-scroll';
