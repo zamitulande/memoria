@@ -104,6 +104,7 @@ const ViewTestimony = ({
     }
 
     if (dataView) {
+        console.log(dataView)
         return (
             <Modal
                 open={openViewTestimony}
@@ -123,9 +124,21 @@ const ViewTestimony = ({
                         <CloseIcon />
                     </IconButton>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12} md={12} lg={8}>
-                            <Video video={dataView.videoUrl} />
-                        </Grid>
+                        {dataView.videoUrl ? (
+                            <Grid item xs={12} sm={12} md={12} lg={8}>
+                                <Video video={dataView.videoUrl} />
+                            </Grid>
+                        ) : null}
+                        {dataView.audioUrl ? (
+                            <Grid item xs={12} sm={12} md={12} lg={8}>
+                                <Box  sx={{ mt: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>                                   
+                                        <audio controls controlsList="nodownload" style={{ width: '100%', maxWidth: '500px' }}>
+                                            <source src={dataView.audioUrl} type="audio/mp3" />
+                                            Your browser does not support the audio tag.
+                                        </audio>                                   
+                                </Box>
+                            </Grid>
+                        ) : null}
                         <Grid item
                             xs={12}
                             sm={6}
@@ -150,7 +163,7 @@ const ViewTestimony = ({
                                     zIndex: -1,  // Asegura que esté detrás del contenido
                                 }
                             }}
-                            >
+                        >
                             <Box>
                                 <Typography fontSize={40} variant="h5" borderBottom={1} >{dataView.title}</Typography>
                             </Box>
@@ -230,22 +243,42 @@ const ViewTestimony = ({
                                 Esta es una previsualización del testimonio que se guardará, valide que la información sea correcta.
                             </Alert>
                         </Grid>
-                        <Grid item xs={12} sm={6}>
-                            {video.map((file, index) => {
-                                const fileType = getFileType(file);
-                                const fileUrl = URL.createObjectURL(file);
-                                return (
-                                    <Box key={index} sx={{ mb: 2 }}>
-                                        {fileType === 'video' && (
-                                            <video width="100%" controls>
-                                                <source src={fileUrl} type="video/mp4" />
-                                                Your browser does not support the video tag.
-                                            </video>
-                                        )}
-                                    </Box>
-                                )
-                            })}
-                        </Grid>
+                        {video.length > 0 ? (
+                            <Grid item xs={12} sm={6}>
+                                {video.map((file, index) => {
+                                    const fileType = getFileType(file);
+                                    const fileUrl = URL.createObjectURL(file);
+                                    return (
+                                        <Box key={index} sx={{ mb: 2 }}>
+                                            {fileType === 'video' && (
+                                                <video width="100%" controls>
+                                                    <source src={fileUrl} type="video/mp4" />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            )}
+                                        </Box>
+                                    )
+                                })}
+                            </Grid>
+                        ) : null}
+                        {audio.length > 0 ? (
+                            <Grid item xs={12} sm={6}>
+                                {audio.map((file, index) => {
+                                    const fileType = getFileType(file);
+                                    const fileUrl = URL.createObjectURL(file);
+                                    return (
+                                        <Box key={index} sx={{ mt: 20, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            {fileType === 'audio' && (
+                                                <audio controls style={{ width: '100%', maxWidth: '500px' }}>
+                                                    <source src={fileUrl} type="audio/mp3" />
+                                                    Your browser does not support the audio tag.
+                                                </audio>
+                                            )}
+                                        </Box>
+                                    )
+                                })}
+                            </Grid>
+                        ) : null}
                         <Grid item xs={12} sm={6}>
                             {image.map((file, index) => {
                                 const fileType = getFileType(file);
@@ -253,7 +286,7 @@ const ViewTestimony = ({
                                 return (
                                     <Box key={index} sx={{ mb: 2 }}>
                                         {fileType === 'image' && (
-                                            <img src={fileUrl} style={{ maxWidth: '100%', height: 'auto' }} />
+                                            <img src={fileUrl} style={{ maxWidth: '80%', height: 'auto' }} />
                                         )}
                                     </Box>
                                 )

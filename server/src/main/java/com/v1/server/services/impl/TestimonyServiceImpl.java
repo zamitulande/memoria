@@ -106,8 +106,8 @@ public class TestimonyServiceImpl implements TestimonyService {
         if (audio == null || audio.isEmpty()) {
             return null;
         }
-        String[] allowedTypes = { "audio/wav", "audio/mpeg", "audio/x-ms-wma", "audio/acc" };
-        long maxFileSize = 3 * 1024 * 1024; // 20 MB en bytes
+        String[] allowedTypes = { "audio/wav", "audio/mpeg", "audio/x-ms-wma", "audio/acc, audio/mp3" };
+        long maxFileSize = 10 * 1024 * 1024; // 20 MB en bytes
         String uploadDir = AUDIO_DIRECTORY;
         return saveUploadedFile(audio, title, allowedTypes, maxFileSize, uploadDir, "audio");
     }
@@ -175,8 +175,9 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .descriptionDetail(testimony.getDescriptionDetail())
                 .path(testimony.getPath())
                 .enabled(testimony.isEnabled())
-                .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
-                .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
+               // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir la URL
+               .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)              
+               .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 // Mapeando la información del usuario
                 .userId(testimony.getUser().getUserId())
@@ -200,9 +201,10 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .descriptionDetail(testimony.getDescriptionDetail())
                 .path(testimony.getPath())
                 .enabled(testimony.isEnabled())
-                .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
-                .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
+                // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir la URL
+                .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)              
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)               
                 .build());
     }
 
@@ -220,8 +222,9 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .descriptionDetail(testimony.getDescriptionDetail())
                 .path(testimony.getPath())
                 .enabled(testimony.isEnabled())
-                .audioUrl(pathFile + "/audio/" + testimony.getAudioUrl())
-                .videoUrl(pathFile + "/video/" + testimony.getVideoUrl())
+                // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir la URL
+                .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)              
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 .build());
     }

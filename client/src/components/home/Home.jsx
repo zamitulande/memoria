@@ -8,7 +8,7 @@ import image4 from "../../assets/cards/4.jpeg";
 import image3 from "../../assets/cards/3.jpeg";
 import image5 from "../../assets/cards/5.jpeg";
 import image6 from "../../assets/cards/6.jpeg";
-import slider1 from "../../assets/home/slider1.png"
+import slider6 from "../../assets/home/slider6.gif"
 import mapa from "../../assets/home/mapa-cauca.png"
 import { Link } from "react-router-dom";
 
@@ -43,7 +43,7 @@ const Home = () => {
         <SwiperSlide><img src={image5} width="100%" alt="Imagen 5" /></SwiperSlide>
         <SwiperSlide><img src={image6} width="100%" alt="Imagen 6" /></SwiperSlide>
       </Swiper>
-      <Box sx={{ position: 'relative', overflow: 'hidden' }}>
+      <Box mt={5} sx={{ position: 'relative', overflow: 'hidden' }}>
         <Box
           sx={{
             position: 'absolute',
@@ -76,8 +76,8 @@ const Home = () => {
               </Link>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={12} md={6} textAlign="center">
-            <img src={slider1} width="60%" />
+          <Grid item xs={12} sm={12} md={6} justifyContent="center">
+            <img src={slider6} width="100%" />
           </Grid>
         </Grid>
         <Box
