@@ -14,8 +14,6 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - app-network
-    profiles:
-      - dev
 
 #server Service
   server:    
@@ -33,9 +31,6 @@ services:
       - server-cache:/root/.m2
     networks:
       - app-network
-    profiles:
-      - dev
-      - prod
 
 #phpMyAdmin Service
   phpmyadmin:
@@ -48,8 +43,6 @@ services:
         PMA_PORT: 3306
       networks:
         - app-network
-      profiles:
-        - dev
 
 volumes:
   client-cache:

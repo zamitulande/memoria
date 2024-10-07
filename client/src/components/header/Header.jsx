@@ -117,7 +117,7 @@ const Header = () => {
                 </Toolbar>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                      <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 1}}>
+                      <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 4}}>
                       <img src={logo} alt="Logo" loading="lazy" style={{ width: '100px', height: '150px', borderRadius: '8px' }}/>
                       </Box>
 
