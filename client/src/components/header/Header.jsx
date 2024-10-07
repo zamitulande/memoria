@@ -113,7 +113,7 @@ const Header = () => {
                 }}>
                 <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
                     <Box>{renderButtonGroup(about)}</Box>
-                    {login ? <Typography sx={{ color: 'lightWhite.main', fontWeight: 'bold', display:'flex', justifyContent:'center' }}><AccountCircleIcon/>{userName}</Typography> : null}
+                    {login ? <Typography sx={{ color: 'lightWhite.main', fontWeight: 'bold', display:'flex', justifyContent:'center', backgroundColor:'rgba(0, 0, 0, 0.7)', padding:1 }}><AccountCircleIcon/>{userName}</Typography> : null}
                 </Toolbar>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>

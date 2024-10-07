@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 const Home = () => {
 
   return (
-    <Container maxWidth="xl">
+    <Container>
       <Swiper
         slidesPerView={3}
         spaceBetween={30}
@@ -64,9 +64,9 @@ const Home = () => {
             <Typography component="p">
               En Colombia tenemos una memoria enriquecedora y más en el departamento del Cauca,
               la plataforma tecnológica Memoria Oral, busca la recuperación y preservación
-              de la memoria sobre...
+              de la memoria sobre... {" "}
               <Typography fontWeight="bold" component="span">
-                Conflicto armado, Covid 19, Cultura, Patrimonio alimentario, Conflicto social.
+                Conflicto armado, Covid 19, Cultura, Patrimonio alimentario, Conflicto social.{" "}
               </Typography>
               En nuestro repositorio encontrara los módulos con cada una de las temáticas y testimonios que dan vida a la memoria.
             </Typography>

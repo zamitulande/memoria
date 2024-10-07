@@ -36,19 +36,6 @@ services:
     profiles:
       - dev
       - prod
-  
-  #client Service
-  client:
-    build: ./client
-    env_file: 
-      - ./client/.env
-    ports:
-      - "3001:3000"
-    volumes:
-      - ./client:/app
-      - client-cache:/root/.cache/vite
-    profiles:
-      - prod
 
 #phpMyAdmin Service
   phpmyadmin:

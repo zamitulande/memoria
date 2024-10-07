@@ -132,8 +132,8 @@ const Testimony = () => {
                                             width: '100%',
                                             height: '100%',
                                             display: 'flex',
-                                            flexDirection: 'column',  // Posiciona los elementos en columna
-                                            justifyContent: 'center',  // Centra verticalmente
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',  
                                             backgroundColor: 'rgba(0, 0, 0, 0.4)',
                                             color: '#fff',
                                         }}>
