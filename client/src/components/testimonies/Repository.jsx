@@ -26,7 +26,7 @@ const Repository = () => {
     navigate('/repositorio/registrar');
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     animateScroll.scrollToTop();
   }, [])
 
@@ -35,7 +35,7 @@ const Repository = () => {
     { src: slider2, title: "Pandemia", category: "pandemia" },
     { src: slider3, title: "Conflicto social", category: "conflicto-social" },
     { src: slider4, title: "Cultura", category: "cultura" },
-    { src: slider5, title: "Gastronomia", category: "patrimonio-alimentario" }
+    { src: slider5, title: "Patrimonio alimentario", category: "patrimonio-alimentario" }
   ];
 
   let message = "";
@@ -71,59 +71,85 @@ const Repository = () => {
 
   return (
     <>
-    {/* Barra que ocupa todo el ancho */}
-    <Box
+      {/* Barra que ocupa todo el ancho */}
+      <Box
         sx={{
-          position: 'absolute', // Se posiciona en relación al contenedor padre (el <Box> o <Container> más cercano con position: relative)
-          top: '50%', // Centrada verticalmente
+          position: 'absolute', 
+          top: '50%', 
           left: -10,
-          width: '140vw', // Cubre todo el ancho de la pantalla
+          width: '140vw', 
           height: '400px',
           backgroundColor: 'primary.main',
-          transform: 'translateY(-10%) rotate(25deg)', // Se centra correctamente y rota
-          zIndex: 0 // Detrás del contenido
+          transform: 'translateY(-10%) rotate(25deg)', 
+          zIndex: 0 
         }}
       />
-    <Container sx={{ position: 'relative', zIndex: 1 }}>
-      {message}
-      <Grid container spacing={1} mb={6}>
-        {images.map((image, index) => (
-          <Grid item key={index} xs={12} sm={6} md={4} lg={2.4}>
-            <Card
-              sx={{
-                boxShadow: 8,
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                  boxShadow: 6
-                }
-              }}
-            >
-              <CardActionArea component="div">
-                <CardMedia
-                  component="img"
-                  height="550"
-                  image={image.src}
+      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
+        {message}
+        <Grid container spacing={0.5} mb={6}>
+          {images.map((image, index) => (
+            <Grid item key={index} xs={12} sm={6} md={4} lg={2.4}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  position: 'relative',  
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                  transition: 'transform 0.4s ease, box-shadow 0.4s ease, border 0.4s ease',
+                  border: '2px solid transparent',
+                  borderRadius: '12px',
+                  overflow: 'hidden',  
+                  '&:hover': {
+                    transform: 'scale(1.07)',
+                    boxShadow: '0px 10px 24px rgba(0, 0, 0, 0.15)',
+                    border: '2px solid #1976d2',
+                    '& .imageTitle': {  
+                      opacity: 1,
+                      transform: 'translateY(0)', 
+                    }
+                  }
+                }}
+
+                onClick={() => handleSelectCategory(image.category)}
+              >
+                <img
+                  src={image.src}
                   alt={image.title}
+                  style={{
+                    height: 395,
+                    width: '100%',
+                    objectFit: 'contain'
+                  }}
                 />
-                <CardActions>
-                  <Button
-                    fullWidth
-                    size="small"
-                    color="secondary"
-                    variant="contained"
-                    onClick={() => handleSelectCategory(image.category)}
-                  >
-                    {image.title}
-                  </Button>
-                </CardActions>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
-  </>
+                <Typography
+                  variant="h6"
+                  component="p"
+                  className="imageTitle"  
+                  sx={{
+                    position: 'absolute',
+                    bottom: 0,  
+                    left: 0,
+                    right: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',  
+                    color: '#fff',
+                    textAlign: 'center',
+                    padding: '10px',
+                    opacity: 0,  
+                    transition: 'opacity 0.3s ease, transform 0.3s ease', 
+                    transform: 'translateY(100%)',  
+                  }}
+                >
+                  {image.title}
+                </Typography>
+
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </>
   )
 }
 
