@@ -16,7 +16,7 @@ import { useEffect } from "react";
 const Home = () => {
 
   useEffect(()=>{
-    fetch(`http://memoriaoral.com:6868/api/v1/repository/show/pandemia?page=0&size=6`, {
+    fetch(`https://memoriaoral.com:6868/api/v1/repository/show/pandemia?page=0&size=6`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
