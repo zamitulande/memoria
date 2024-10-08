@@ -347,7 +347,7 @@ const Form = ({ open,
                             id="demo-simple-select"
                             label="Discapacidad"
                             value={
-                                disability === 'register'
+                                action === 'register'
                                     ? disability
                                     : action === 'update'
                                         ? disability || getformEditTestimony.disability // Si hay un cambio, toma gender; si no, toma el valor original.
