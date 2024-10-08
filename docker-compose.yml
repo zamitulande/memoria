@@ -1,17 +1,13 @@
+
 version: "3.3"
 
 services:
-  # Servicio MySQL
+#mysql Service
   mysqldb:
     image: mysql:8.0.1
     container_name: oral_db
     restart: unless-stopped
     env_file: ./server/.env
-    environment:
-      MYSQL_ROOT_PASSWORD: YWopV5jX 
-      MYSQL_DATABASE: oral_db   
-      MYSQL_USER: memoria   
-      MYSQL_PASSWORD: YWopV5jX 
     ports:
       - "3307:3306"
     volumes:
@@ -19,14 +15,14 @@ services:
     networks:
       - app-network
 
-  # Servicio Spring Boot
-  server:
+#server Service
+  server:    
     build:
       context: ./server
       dockerfile: Dockerfile
     container_name: oral_server
     restart: on-failure
-    env_file:
+    env_file: 
       - ./server/.env
     ports:
       - "6868:8080"
@@ -36,19 +32,17 @@ services:
     networks:
       - app-network
 
-  # Servicio phpMyAdmin
+#phpMyAdmin Service
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadminOral
-    ports:
-      - "8082:80"
-    environment:
-      PMA_HOST: mysqldb
-      PMA_PORT: 3306 
-      PMA_USER: memoria 
-      PMA_PASSWORD: YWopV5jX 
-    networks:
-      - app-network
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadminOral
+      ports:
+        - "8082:80"
+      environment:
+        PMA_HOST: mysqldb
+        PMA_PORT: 3306
+      networks:
+        - app-network
 
 volumes:
   client-cache:
