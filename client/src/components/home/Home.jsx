@@ -11,8 +11,32 @@ import image6 from "../../assets/cards/6.jpeg";
 import slider6 from "../../assets/home/slider6.gif"
 import mapa from "../../assets/home/mapa-cauca.png"
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const Home = () => {
+
+  useEffect(()=>{
+    fetch(`http://memoriaoral.com:6868/api/v1/repository/show/pandemia?page=0&size=6`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(response => {
+      console.log('Respuesta completa:', response);
+      if (!response.ok) {
+        console.error('Error en la respuesta:', response.statusText);
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Datos recibidos:', data);
+    })
+    .catch(error => {
+      console.error('Error en la solicitud:', error);
+    });
+  },[])
 
   return (
     <Container>
