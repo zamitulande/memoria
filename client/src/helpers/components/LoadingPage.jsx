@@ -44,8 +44,8 @@ const SplashScreen = () => {
             <Image
               src={SennovaLogoPng}
               webp={SennovaLogoWebp}
-              width="100%"
-            />       
+              className='imagen-animada'
+            />      
             <Typography variant="h6" mt={2}>
                 Cargando, por favor espera...
             </Typography>
@@ -58,5 +58,4 @@ const SplashScreen = () => {
         </Box>
     );
 };
-
 export default SplashScreen;

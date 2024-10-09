@@ -3,7 +3,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import chivaWebp from '../../assets/header/Chiva.webp';
-import chivaPng from '../../assets/header/Chiva.png';
 import logoWebp from '../../assets/header/logo.webp';
 import logoPng from '../../assets/header/logo.png';
 import {
