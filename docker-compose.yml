@@ -8,6 +8,9 @@ services:
     container_name: oral_db
     restart: unless-stopped
     env_file: ./server/.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} 
+      MYSQL_DATABASE: ${MYSQLDB_DATABASE} 
     ports:
       - "3307:3306"
     volumes:
