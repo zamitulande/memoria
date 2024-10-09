@@ -48,7 +48,7 @@ services:
         PMA_PORT: 3306
         PMA_USER: ${MYSQLDB_USER}        # Usuario definido en el archivo .env
         PMA_PASSWORD: ${MYSQLDB_PASSWORD} # Password definido en el archivo .env
-        networks:
+      networks:
         - app-network
 
 volumes:
