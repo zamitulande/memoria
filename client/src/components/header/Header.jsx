@@ -104,7 +104,7 @@ const Header = () => {
         <>
             <AppBar position="fixed" color='lightWhite'
                 style={{
-                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3)), url(${chiva})`,
+                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url(${chiva})`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'right',
@@ -112,7 +112,7 @@ const Header = () => {
                     zIndex:1000
                 }}>
                 <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
-                    <Box>{renderButtonGroup(about)}</Box>
+                    {/* <Box>{renderButtonGroup(about)}</Box> */}
                     {login ? <Typography sx={{ color: 'lightWhite.main', fontWeight: 'bold', display:'flex', justifyContent:'center', backgroundColor:'rgba(0, 0, 0, 0.7)', padding:1 }}><AccountCircleIcon/>{userName}</Typography> : null}
                 </Toolbar>
                 <Container maxWidth="xl">
