@@ -2,8 +2,10 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import chiva from '../../assets/header/Chiva.png'
-import logo from '../../assets/header/logo.png'
+import chivaWebp from '../../assets/header/Chiva.webp';
+import chivaPng from '../../assets/header/Chiva.png';
+import logoWebp from '../../assets/header/logo.webp';
+import logoPng from '../../assets/header/logo.png';
 import {
     BottomNavigation,
     BottomNavigationAction,
@@ -20,14 +22,15 @@ import {
     useMediaQuery,
     Grid,
 } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { Fragment, lazy, Suspense, useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Link } from 'react-router-dom';
-import Login from '../../auth/Login';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogin } from '../../redux/features/userSlice';
-import ResetPassword from '../../auth/ResetPassword';
 import { clearTestimonies } from '../../redux/features/TestimonySlice';
+
+const Login = lazy(() => import('../../auth/Login'));
+const ResetPassword = lazy(() => import('../../auth/ResetPassword'));
 
 const Header = () => {
 
@@ -43,11 +46,6 @@ const Header = () => {
         { item: 'Datos Abiertos', id: 5, path: 'datos-abiertos' },
         { item: 'Usuarios', id: 6, path: 'usuarios' },
     ];
-    const about = [
-        { item: 'Sena cauca - comercio y servicios', id: 1, path: 'http://centrodecomercioyservicioscauca.blogspot.com/' },
-        { item: 'Sennova', id: 2, path: 'https://www.sena.edu.co/es-co/formacion/paginas/tecnologia-innovacion.aspx' },
-        { item: 'Tecnoparque nodo Cauca', id: 3, path: 'https://sena.edu.co/es-co/formacion/Paginas/tecnoparques.aspx' },
-    ]
 
     const buttonsAuth = [
         { item: 'Ingresar', id: 1 },
@@ -90,36 +88,29 @@ const Header = () => {
         ? buttonsAuth.filter(button => button.id === 3 || button.id === 4)
         : buttonsAuth.filter(button => button.id === 1 || button.id === 2);
 
-    const renderButtonGroup = (items) => (
-        <ButtonGroup disableElevation variant="contained" aria-label="button group">
-            {items.map((item) => (
-                <Link to={item.path} target="_blank" rel="noopener noreferrer" key={item.id}>
-                    <Button size="small" color='secondary'>{item.item}</Button>
-                </Link>
-            ))}
-        </ButtonGroup>
-    );
-
     return (
         <>
             <AppBar position="fixed" color='lightWhite'
                 style={{
-                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url(${chiva})`,
+                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url(${chivaWebp})`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'right',
                     boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.9)',
-                    zIndex:1000
+                    zIndex: 1000
                 }}>
                 <Toolbar sx={{ justifyContent: 'space-around', display: { xs: 'none', md: 'flex' } }}>
-                    {/* <Box>{renderButtonGroup(about)}</Box> */}
-                    {login ? <Typography sx={{ color: 'lightWhite.main', fontWeight: 'bold', display:'flex', justifyContent:'center', backgroundColor:'rgba(0, 0, 0, 0.7)', padding:1 }}><AccountCircleIcon/>{userName}</Typography> : null}
+                    {login ? <Typography sx={{ color: 'lightWhite.main', fontWeight: 'bold', display: 'flex', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: 1 }}><AccountCircleIcon />{userName}</Typography> : null}
                 </Toolbar>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                      <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 4}}>
-                      <img src={logo} alt="Logo" loading="lazy" style={{ width: '100px', height: '150px', borderRadius: '8px' }}/>
-                      </Box>
+                        <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 4 }}>
+                            <picture>
+                                <source srcSet={logoWebp} type="image/webp" />
+                                <source srcSet={logoPng} type="image/png" />
+                                <img src={logoPng} alt="Logo" loading="lazy" style={{ width: '100px', height: '150px', borderRadius: '8px' }} />
+                            </picture>
+                        </Box>
 
                         {/* :::START MOVIL FIRST NAVBAR:: */}
 
@@ -175,8 +166,12 @@ const Header = () => {
                                 </ButtonGroup>
                             </Menu>
                         </Box>
-                        <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1}}>
-                        <img src={logo} alt="Logo" loading="lazy" style={{ width: '25px', height: '40px', borderRadius: '8px' }}/>
+                        <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
+                            <picture>
+                                <source srcSet={logoWebp} type="image/webp" />
+                                <source srcSet={logoPng} type="image/png" />
+                                <img src={logoPng} alt="Logo" loading="lazy" style={{ width: '25px', height: '40px', borderRadius: '8px' }} />
+                            </picture>
                         </Box>
                         <Typography
                             variant="h6"
@@ -290,11 +285,14 @@ const Header = () => {
                                                             handleMenuClose(setAnchorElUser)();
                                                         }}
                                                         size="small"
-                                                        sx={{backgroundColor: 'textField.main', '&:hover': { backgroundColor: '#f1f1f1' } }}
+                                                        sx={{ backgroundColor: 'textField.main', '&:hover': { backgroundColor: '#f1f1f1' } }}
                                                     >
                                                         {button.item}
                                                     </Button>
-                                                    <Login open={open} setOpen={setOpen} />
+                                                    <Suspense fallback={<div>Cargando...</div>}>
+                                                        <Login open={open} setOpen={setOpen} />
+                                                    </Suspense>
+
                                                 </>
                                             ) : button.path ? (
                                                 <Link to={button.path}>
@@ -319,7 +317,9 @@ const Header = () => {
                                                     >
                                                         {button.item}
                                                     </Button>
-                                                    <ResetPassword open={openResetPassword} setOpen={setOpenResetPassword} />
+                                                    <Suspense fallback={<div>Cargando...</div>}>
+                                                        <ResetPassword open={openResetPassword} setOpen={setOpenResetPassword} />
+                                                    </Suspense>
                                                 </>
                                             )}
                                         </Fragment>

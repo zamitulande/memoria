@@ -80,7 +80,7 @@ const FormUser = ({ action, role }) => {
     const isDisable = () => {
         const commonConditions = () => (
             !identification ||
-            !minLength(identification, 8) ||
+            !minLength(identification, 7) ||
             !firstName ||
             !minLength(firstName, 3) ||
             !firstLastName ||

@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.v1.server.dtos.user.UsersDTO;
@@ -22,6 +21,7 @@ import com.v1.server.entities.User;
 import com.v1.server.enumerate.EmailTemplateName;
 import com.v1.server.enumerate.Role;
 import com.v1.server.exceptions.ApiResponse;
+import com.v1.server.exceptions.customExceptions.MaxUploadSizeFileException;
 import com.v1.server.exceptions.customExceptions.NotFoundException;
 import com.v1.server.repositories.UserRepository;
 import com.v1.server.services.EmailService;
@@ -119,10 +119,10 @@ public class UserServiceImpl implements UserService {
         throw new IllegalArgumentException("El archivo debe ser de tipo PDF.");
     }
 
-    // Validar tamaño del archivo (máximo 2 MB)
-    long maxFileSize = 2 * 1024 * 1024; // 2 MB en bytes
+    // Validar tamaño del archivo (máximo 3 MB)
+    long maxFileSize = 3 * 1024 * 1024; // 3 MB en bytes
     if (file.getSize() > maxFileSize) {
-        throw new MaxUploadSizeExceededException(2);
+        throw new MaxUploadSizeFileException("pdf", maxFileSize / (1024 * 1024));
     }
         String fileName = identification+"_"+file.getOriginalFilename();
 

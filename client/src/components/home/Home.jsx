@@ -3,15 +3,21 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
-import image1 from "../../assets/cards/1.jpeg";
-import image4 from "../../assets/cards/4.jpeg";
-import image3 from "../../assets/cards/3.jpeg";
-import image5 from "../../assets/cards/5.jpeg";
-import image6 from "../../assets/cards/6.jpeg";
-import slider6 from "../../assets/home/slider6.gif"
-import mapa from "../../assets/home/mapa-cauca.png"
+import image1Jpeg from "../../assets/cards/1.jpeg";
+import image4Jpeg from "../../assets/cards/4.jpeg";
+import image3Jpeg from "../../assets/cards/3.jpeg";
+import image5Jpeg from "../../assets/cards/5.jpeg";
+import image6Jpeg from "../../assets/cards/6.jpeg";
+import image1Webp from "../../assets/cards/1.webp";
+import image4Webp from "../../assets/cards/4.webp";
+import image3Webp from "../../assets/cards/3.webp";
+import image5Webp from "../../assets/cards/5.webp";
+import image6Webp from "../../assets/cards/6.webp";
+import slider6Gif from "../../assets/home/slider6.gif"
+import mapaPng from "../../assets/home/mapa-cauca.png"
+import slider6Webp from "../../assets/home/slider6.webp"
+import mapaWebp from "../../assets/home/mapa-cauca.webp"
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
 
 const Home = () => {
 
@@ -38,11 +44,17 @@ const Home = () => {
         }}
         className="mySwiper"
       >
-        <SwiperSlide><img src={image1} width="100%" alt="Imagen 1" /></SwiperSlide>
-        <SwiperSlide><img src={image4} width="100%" alt="Imagen 4" /></SwiperSlide>
-        <SwiperSlide><img src={image3} width="100%" alt="Imagen 3" /></SwiperSlide>
-        <SwiperSlide><img src={image5} width="100%" alt="Imagen 5" /></SwiperSlide>
-        <SwiperSlide><img src={image6} width="100%" alt="Imagen 6" /></SwiperSlide>
+        <SwiperSlide>
+          <picture>
+            <source srcSet={image1Webp} type="image/webp" />
+            <source srcSet={image1Jpeg} type="image/jpeg" />
+            <img src={image1Jpeg} width="100%" alt="Imagen 1" loading="lazy" />
+          </picture>
+        </SwiperSlide>
+        <SwiperSlide><img src={image4Jpeg} width="100%" alt="Imagen 4" /></SwiperSlide>
+        <SwiperSlide><img src={image3Jpeg} width="100%" alt="Imagen 3" /></SwiperSlide>
+        <SwiperSlide><img src={image5Jpeg} width="100%" alt="Imagen 5" /></SwiperSlide>
+        <SwiperSlide><img src={image6Jpeg} width="100%" alt="Imagen 6" /></SwiperSlide>
       </Swiper>
       <Box mt={5} sx={{ position: 'relative', overflow: 'hidden' }}>
         <Box
@@ -78,7 +90,7 @@ const Home = () => {
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={6} justifyContent="center">
-            <img src={slider6} width="100%" />
+            <img src={slider6Gif} width="100%" />
           </Grid>
         </Grid>
         <Box
@@ -95,7 +107,7 @@ const Home = () => {
         />
         <Grid mt={5} container alignItems="center" spacing={2} sx={{ position: 'relative', zIndex: 1 }}>
           <Grid item xs={12} sm={12} md={6} textAlign="center">
-            <img src={mapa} width="60%" />
+            <img src={mapaPng} width="60%" />
           </Grid>
           <Grid item xs={12} sm={12} md={6} justifyContent="center">
             <Typography fontWeight="bold" fontSize={30} borderColor="primary" borderBottom={2}>

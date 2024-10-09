@@ -127,7 +127,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             return null;
         }
         String[] allowedTypes = { "image/png", "image/jpeg", "image/jpg" };
-        long maxFileSize = 1 * 1024 * 1024; // 1 MB en bytes
+        long maxFileSize = 2 * 1024 * 1024; // 2 MB en bytes
         String uploadDir = IMAGE_DIRECTORY;
         return saveUploadedFile(image, title, allowedTypes, maxFileSize, uploadDir, "imagen");
     }

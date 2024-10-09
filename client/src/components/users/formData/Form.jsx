@@ -162,8 +162,8 @@ const Form = ({ open,
                         }}
                         fullWidth
                         helperText={
-                            (!minLength(identification, 8) && identification)
-                                ? "Este campo debe tener al menos 8 caracteres"
+                            (!minLength(identification, 7) && identification)
+                                ? "Este campo debe tener al menos 7 caracteres"
                                 : ""
                         }
                         FormHelperTextProps={{ sx: { color: "error.main" } }}
