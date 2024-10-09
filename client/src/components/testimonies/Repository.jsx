@@ -71,19 +71,6 @@ const Repository = () => {
 
   return (
     <>
-      {/* Barra que ocupa todo el ancho */}
-      <Box
-        sx={{
-          position: 'absolute', 
-          top: '50%', 
-          left: -10,
-          width: '140vw', 
-          height: '400px',
-          backgroundColor: 'primary.main',
-          transform: 'translateY(-10%) rotate(25deg)', 
-          zIndex: 0 
-        }}
-      />
       <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
         {message}
         <Grid container spacing={0.5} mb={6}>
@@ -92,7 +79,7 @@ const Repository = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  position: 'relative',  
+                  position: 'relative',
                   flexDirection: 'column',
                   alignItems: 'center',
                   cursor: 'pointer',
@@ -100,14 +87,14 @@ const Repository = () => {
                   transition: 'transform 0.4s ease, box-shadow 0.4s ease, border 0.4s ease',
                   border: '2px solid transparent',
                   borderRadius: '12px',
-                  overflow: 'hidden',  
+                  overflow: 'hidden',
                   '&:hover': {
                     transform: 'scale(1.07)',
                     boxShadow: '0px 10px 24px rgba(0, 0, 0, 0.15)',
                     border: '2px solid #1976d2',
-                    '& .imageTitle': {  
+                    '& .imageTitle': {
                       opacity: 1,
-                      transform: 'translateY(0)', 
+                      transform: 'translateY(0)',
                     }
                   }
                 }}
@@ -126,19 +113,19 @@ const Repository = () => {
                 <Typography
                   variant="h6"
                   component="p"
-                  className="imageTitle"  
+                  className="imageTitle"
                   sx={{
                     position: 'absolute',
-                    bottom: 0,  
+                    bottom: 0,
                     left: 0,
                     right: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',  
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
                     color: '#fff',
                     textAlign: 'center',
                     padding: '10px',
-                    opacity: 0,  
-                    transition: 'opacity 0.3s ease, transform 0.3s ease', 
-                    transform: 'translateY(100%)',  
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease, transform 0.3s ease',
+                    transform: 'translateY(100%)',
                   }}
                 >
                   {image.title}
