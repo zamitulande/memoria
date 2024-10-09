@@ -3,11 +3,16 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneAndroidIcon from '@mui/icons-material/PhoneAndroid';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import React from 'react'
+import Image from 'react-image-webp';
 import { Link } from 'react-router-dom';
-import Sena from '../../assets/footer/sena.png'
-import Sennova from '../../assets/footer/sennova.png'
-import Documental from '../../assets/footer/gestion-documental .png'
-import logo from '../../assets/footer/logo.png'
+import SenaPng from '../../assets/footer/sena.png'
+import SennovaPng from '../../assets/footer/sennova.png'
+import DocumentalPng from '../../assets/footer/gestion-documental .png'
+import logoPng from '../../assets/footer/logo.png'
+import SenaWebp from '../../assets/footer/sena.webp'
+import SennovaWebp from '../../assets/footer/sennova.webp'
+import DocumentalWebp from '../../assets/footer/gestion-documental .webp'
+import logoWebp from '../../assets/footer/logo.webp'
 
 
 const Footer = () => {
@@ -19,7 +24,11 @@ const Footer = () => {
             <Container sx={{ mt: 8 }}>
                 <Grid container wrap="nowrap" spacing={2} direction={isMobile ? 'column' : 'row'}>
                     <Grid item xs={12} sm={4}>
-                        <img src={logo} alt="Logo" style={{ height: '150px', borderRadius: '8px' }}/>
+                        <Image
+                            src={logoPng}
+                            webp={logoWebp}
+                            height="150px"
+                        />
                     </Grid>
                     <Grid item xs={12} sm={10}>
                         <Typography>
@@ -49,33 +58,24 @@ const Footer = () => {
             <Divider ><Typography mb={5} color='secondary.main' fontSize={35}>Nuestros aliados</Typography></Divider>
             <Grid sx={{ backgroundColor: 'primary.main' }} container justifyContent="center" spacing={4}>
                 <Grid item xs={12} sm={6} md={5} textAlign="center">
-                    <Box
-                        component="img"
-                        src={Sennova}
-                        sx={{
-                            width: '70%',
-                            marginBottom: 2,
-                        }}
+                    <Image
+                        src={SennovaPng}
+                        webp={SennovaWebp}
+                        width='70%'
                     />
                 </Grid>
                 <Grid item xs={6} sm={3} md={2} textAlign="center">
-                    <Box
-                        component="img"
-                        src={Sena}
-                        sx={{
-                            width: '80%',
-                            marginBottom: 2,
-                        }}
+                    <Image
+                        src={SenaPng}
+                        webp={SenaWebp}
+                        width='80%'
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={5} textAlign="center">
-                    <Box
-                        component="img"
-                        src={Documental}
-                        sx={{
-                            width: '70%',
-                            marginBottom: 2,
-                        }}
+                    <Image
+                        src={DocumentalPng}
+                        webp={DocumentalWebp}
+                        width='80%'
                     />
                 </Grid>
             </Grid>

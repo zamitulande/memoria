@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { CircularProgress, Box, Typography } from '@mui/material';
-import SennovaLogo from '../../assets/loading/sennova-logo.png'
+import { Box, Typography } from '@mui/material';
+import SennovaLogoPng from '../../assets/loading/sennova-logo.png'
+import SennovaLogoWebp from '../../assets/loading/sennova-logo.webp'
+import Image from 'react-image-webp';
 
 const SplashScreen = () => {
     const [loading, setLoading] = useState(true);
@@ -39,7 +41,11 @@ const SplashScreen = () => {
                 flexDirection: 'column',
             }}
         >
-         <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada"  />        
+            <Image
+              src={SennovaLogoPng}
+              webp={SennovaLogoWebp}
+              width="100%"
+            />       
             <Typography variant="h6" mt={2}>
                 Cargando, por favor espera...
             </Typography>

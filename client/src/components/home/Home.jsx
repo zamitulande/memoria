@@ -1,5 +1,6 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import Image from 'react-image-webp';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Pagination } from 'swiper/modules';
@@ -45,16 +46,35 @@ const Home = () => {
         className="mySwiper"
       >
         <SwiperSlide>
-          <picture>
-            <source srcSet={image1Webp} type="image/webp" />
-            <source srcSet={image1Jpeg} type="image/jpeg" />
-            <img src={image1Jpeg} width="100%" alt="Imagen 1" loading="lazy" />
-          </picture>
+          <Image
+            src={image1Jpeg}
+            webp={image1Webp}
+          />
         </SwiperSlide>
-        <SwiperSlide><img src={image4Jpeg} width="100%" alt="Imagen 4" /></SwiperSlide>
-        <SwiperSlide><img src={image3Jpeg} width="100%" alt="Imagen 3" /></SwiperSlide>
-        <SwiperSlide><img src={image5Jpeg} width="100%" alt="Imagen 5" /></SwiperSlide>
-        <SwiperSlide><img src={image6Jpeg} width="100%" alt="Imagen 6" /></SwiperSlide>
+        <SwiperSlide>
+          <Image
+            src={image4Jpeg}
+            webp={image4Webp}
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Image
+            src={image3Jpeg}
+            webp={image3Webp}
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Image
+            src={image5Jpeg}
+            webp={image5Webp}
+          />
+        </SwiperSlide>
+        <SwiperSlide>
+          <Image
+            src={image6Jpeg}
+            webp={image6Webp}
+          />
+        </SwiperSlide>
       </Swiper>
       <Box mt={5} sx={{ position: 'relative', overflow: 'hidden' }}>
         <Box
@@ -90,7 +110,11 @@ const Home = () => {
             </Box>
           </Grid>
           <Grid item xs={12} sm={12} md={6} justifyContent="center">
-            <img src={slider6Gif} width="100%" />
+            <Image
+              src={slider6Gif}
+              webp={slider6Webp}
+              width="100%"
+            />
           </Grid>
         </Grid>
         <Box
@@ -107,7 +131,11 @@ const Home = () => {
         />
         <Grid mt={5} container alignItems="center" spacing={2} sx={{ position: 'relative', zIndex: 1 }}>
           <Grid item xs={12} sm={12} md={6} textAlign="center">
-            <img src={mapaPng} width="60%" />
+            <Image
+              src={mapaPng}
+              webp={mapaWebp}
+              width="100%"
+            />
           </Grid>
           <Grid item xs={12} sm={12} md={6} justifyContent="center">
             <Typography fontWeight="bold" fontSize={30} borderColor="primary" borderBottom={2}>

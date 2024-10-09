@@ -28,6 +28,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogin } from '../../redux/features/userSlice';
 import { clearTestimonies } from '../../redux/features/TestimonySlice';
+import Image from 'react-image-webp';
 
 const Login = lazy(() => import('../../auth/Login'));
 const ResetPassword = lazy(() => import('../../auth/ResetPassword'));
@@ -105,11 +106,11 @@ const Header = () => {
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 4 }}>
-                            <picture>
-                                <source srcSet={logoWebp} type="image/webp" />
-                                <source srcSet={logoPng} type="image/png" />
-                                <img src={logoPng} alt="Logo" loading="lazy" style={{ width: '100px', height: '150px', borderRadius: '8px' }} />
-                            </picture>
+                            <Image
+                                src={logoPng}
+                                webp={logoWebp}
+                                width="100px"
+                            />
                         </Box>
 
                         {/* :::START MOVIL FIRST NAVBAR:: */}
@@ -167,11 +168,11 @@ const Header = () => {
                             </Menu>
                         </Box>
                         <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
-                            <picture>
-                                <source srcSet={logoWebp} type="image/webp" />
-                                <source srcSet={logoPng} type="image/png" />
-                                <img src={logoPng} alt="Logo" loading="lazy" style={{ width: '25px', height: '40px', borderRadius: '8px' }} />
-                            </picture>
+                            <Image
+                                src={logoPng}
+                                webp={logoWebp}
+                                width="25px"
+                            />
                         </Box>
                         <Typography
                             variant="h6"
