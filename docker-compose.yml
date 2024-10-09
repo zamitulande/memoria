@@ -8,11 +8,6 @@ services:
     container_name: oral_db
     restart: unless-stopped
     env_file: ./server/.env
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Password del usuario root
-      MYSQL_DATABASE: ${MYSQLDB_DATABASE}         # Base de datos por defecto
-      MYSQL_USER: ${MYSQLDB_USER}                 # Usuario no root que será creado
-      MYSQL_PASSWORD: ${MYSQLDB_PASSWORD}         # Password del nuevo usuario
     ports:
       - "3307:3306"
     volumes:
@@ -46,8 +41,6 @@ services:
       environment:
         PMA_HOST: mysqldb
         PMA_PORT: 3306
-        PMA_USER: ${MYSQLDB_USER}        # Usuario definido en el archivo .env
-        PMA_PASSWORD: ${MYSQLDB_PASSWORD} # Password definido en el archivo .env
       networks:
         - app-network
 
