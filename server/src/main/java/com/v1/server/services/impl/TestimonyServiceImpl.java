@@ -59,7 +59,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             MultipartFile audio,
             MultipartFile video,
             MultipartFile image)
-            throws MessagingException, IOException {
+            throws MessagingException, IOException, InterruptedException {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
@@ -102,14 +102,42 @@ public class TestimonyServiceImpl implements TestimonyService {
 
     }
 
-    private String saveUploadedFileAudio(MultipartFile audio, String title) throws IOException {
+    private String saveUploadedFileAudio(MultipartFile audio, String title) throws IOException, InterruptedException {
         if (audio == null || audio.isEmpty()) {
             return null;
         }
         String[] allowedTypes = { "audio/wav", "audio/mpeg", "audio/x-ms-wma", "audio/acc, audio/mp3" };
-        long maxFileSize = 10 * 1024 * 1024; // 20 MB en bytes
+        long maxFileSize = 20 * 1024 * 1024; // 20 MB en bytes
         String uploadDir = AUDIO_DIRECTORY;
-        return saveUploadedFile(audio, title, allowedTypes, maxFileSize, uploadDir, "audio");
+
+        String originalFileName = saveUploadedFile(audio, title, allowedTypes, maxFileSize, uploadDir, "audio");
+
+        Path originalFilePath = Paths.get(uploadDir, originalFileName);
+
+        String improvedFileName = title + audio.getOriginalFilename();
+        Path improvedFilePath = Paths.get(uploadDir, improvedFileName);
+
+        ProcessBuilder pb = new ProcessBuilder(
+                "ffmpeg",
+                "-i", originalFilePath.toString(),
+                "-b:a", "128k", 
+                "-y", 
+                improvedFilePath.toString());
+
+        pb.redirectErrorStream(true);
+        try {
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("Error al procesar el archivo con FFmpeg. Código de salida: " + exitCode);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); 
+            throw new IOException("Proceso interrumpido", e);
+        }
+        Files.deleteIfExists(originalFilePath);
+
+        return improvedFileName;
     }
 
     private String saveUploadedFileVideo(MultipartFile video, String title) throws IOException {
@@ -127,9 +155,45 @@ public class TestimonyServiceImpl implements TestimonyService {
             return null;
         }
         String[] allowedTypes = { "image/png", "image/jpeg", "image/jpg" };
-        long maxFileSize = 2 * 1024 * 1024; // 2 MB en bytes
+        long maxFileSize = 3 * 1024 * 1024; // 2 MB en bytes
         String uploadDir = IMAGE_DIRECTORY;
-        return saveUploadedFile(image, title, allowedTypes, maxFileSize, uploadDir, "imagen");
+
+        // Primero, validamos el archivo y lo guardamos en su formato original
+        String originalFileName = saveUploadedFile(image, title, allowedTypes, maxFileSize, uploadDir, "imagen");
+
+        // Ruta del archivo original
+        Path originalFilePath = Paths.get(uploadDir, originalFileName);
+
+        // Generar el nombre del archivo convertido y comprimido
+        String webpFileName = title + image.getOriginalFilename().replaceFirst("[.][^.]+$", "")
+                + ".webp";
+        Path webpFilePath = Paths.get(uploadDir, webpFileName);
+
+        ProcessBuilder pb = new ProcessBuilder(
+            "ffmpeg",
+            "-i", originalFilePath.toString(),  
+            "-vf", "scale=800:-1",              
+            "-compression_level", "6",          
+            "-qscale", "50",                   
+            "-preset", "picture",               
+            "-y",                               
+            webpFilePath.toString()            
+    );
+
+        pb.redirectErrorStream(true);
+        try {
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                throw new IOException("Error al procesar la imagen con FFmpeg. Código de salida: " + exitCode);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("Proceso interrumpido", e);
+        }
+        Files.deleteIfExists(originalFilePath);
+
+        return webpFileName;
     }
 
     private String saveUploadedFile(MultipartFile file, String title, String[] allowedTypes, long maxFileSize,
@@ -175,9 +239,10 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .descriptionDetail(testimony.getDescriptionDetail())
                 .path(testimony.getPath())
                 .enabled(testimony.isEnabled())
-               // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir la URL
-               .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)              
-               .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
+                // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
+                // la URL
+                .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 // Mapeando la información del usuario
                 .userId(testimony.getUser().getUserId())
@@ -202,9 +267,10 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .path(testimony.getPath())
                 .enabled(testimony.isEnabled())
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
-                // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir la URL
-                .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)              
-                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)               
+                // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
+                // la URL
+                .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
                 .build());
     }
 
@@ -222,8 +288,9 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .descriptionDetail(testimony.getDescriptionDetail())
                 .path(testimony.getPath())
                 .enabled(testimony.isEnabled())
-                // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir la URL
-                .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)              
+                // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
+                // la URL
+                .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
                 .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 .build());
@@ -242,7 +309,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             String path,
             MultipartFile audio,
             MultipartFile video,
-            MultipartFile image) throws IOException {
+            MultipartFile image) throws IOException, InterruptedException {
 
         Testimony existingTestimony = testimonyRepository.findById(testimonyId)
                 .orElseThrow(() -> new NotFoundException("Testimonio no encontrado"));

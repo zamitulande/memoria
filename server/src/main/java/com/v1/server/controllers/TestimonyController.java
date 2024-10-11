@@ -48,7 +48,7 @@ public class TestimonyController {
             @RequestParam(value = "audio", required = false) MultipartFile audio,
             @RequestParam(value = "video", required = false) MultipartFile video,
             @RequestParam("image") MultipartFile image)
-            throws MessagingException, IOException {
+            throws MessagingException, IOException, InterruptedException {
 
         return testimonyService.register(
                 userId,
@@ -112,7 +112,7 @@ public class TestimonyController {
             @RequestParam(value = "audio", required = false) MultipartFile audio,
             @RequestParam(value = "video", required = false) MultipartFile video,
             @RequestParam(value = "image", required = false) MultipartFile image)
-            throws MessagingException, IOException {
+            throws MessagingException, IOException, InterruptedException {
         try {
             return ResponseEntity.ok(
                     testimonyService.updateTestimony(

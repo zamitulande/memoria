@@ -28,7 +28,7 @@ public interface TestimonyService {
                         MultipartFile audio,
                         MultipartFile video,
                         MultipartFile image)
-                        throws MessagingException, IOException;
+                        throws MessagingException, IOException, InterruptedException;
 
         Page<TestimonysDTO> findTestimonyByCategoryAdmin(String path, Pageable pageable);
 
@@ -49,7 +49,7 @@ public interface TestimonyService {
                         MultipartFile audio,
                         MultipartFile video,
                         MultipartFile image)
-                        throws MessagingException, IOException;
+                        throws MessagingException, IOException, InterruptedException;
 
         TestimonysDTO privateTestimony(Long testimonyId);
 

@@ -1,6 +1,9 @@
 # Usa una imagen base de OpenJDK para ejecutar la aplicación
 FROM openjdk:17-jdk-slim
 
+# Instala FFmpeg
+RUN apt-get update && apt-get install -y ffmpeg
+
 # Establece el directorio de trabajo
 WORKDIR /app
 
