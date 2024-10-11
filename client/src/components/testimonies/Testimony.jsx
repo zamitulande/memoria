@@ -1,4 +1,4 @@
-import { Card, Container, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert } from '@mui/material'
+import { Card, Container, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert, Skeleton } from '@mui/material'
 import LockClockTwoToneIcon from '@mui/icons-material/LockClockTwoTone';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -99,15 +99,7 @@ const Testimony = () => {
             </Grid>
             <Grid item xs={12} sm={8}>
                 <Grid container spacing={2}>
-                    {isLoading ? (
-                        <Grid item xs={12}>
-                            {/* Mostrar el Loading solo en la sección donde irían las tarjetas */}
-                            <Box display="flex" justifyContent="center" alignItems="center" height="300px">
-                                <img src={SennovaLogo} alt="Imagen de carga" className="imagen-animada" />
-                                <Typography variant="h4">Cargando contenido...</Typography>
-                            </Box>
-                        </Grid>
-                    ) : (dataTestimonies.length > 0 ? (
+                    {dataTestimonies.length > 0 ? (
                         dataTestimonies.map((testimony, index) => (
                             <Grid item key={index} xs={12} sm={8} md={6} lg={4}>
                                 <Card sx={{
@@ -119,12 +111,17 @@ const Testimony = () => {
                                     }
                                 }}>
                                     <CardActionArea component="div">
-                                        <CardMedia
-                                            component="img"
-                                            height="200"
-                                            image={testimony.imageUrl}
-                                            alt={testimony.category}
-                                        />
+                                        {isLoading ? (
+                                            <Skeleton animation="wave" variant="rectangular" width={400} height={200} />
+                                        ) : (
+                                            <CardMedia
+                                                component="img"
+                                                height="200"
+                                                image={testimony.imageUrl}
+                                                alt={testimony.category}
+                                                loading="lazy"
+                                            />
+                                        )}
                                         <CardContent style={{
                                             position: 'absolute',
                                             top: 0,
@@ -133,8 +130,8 @@ const Testimony = () => {
                                             height: '100%',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            justifyContent: 'center',  
-                                            backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                                            justifyContent: 'center',
+                                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
                                             color: '#fff',
                                         }}>
                                             <Typography gutterBottom fontSize={25} style={{ padding: '0px 60px 0px 0px' }}>
@@ -169,7 +166,7 @@ const Testimony = () => {
                         <Grid item xs={12}>
                             <MessageData action="testimony" />
                         </Grid>
-                    )
+                    
                     )}
                 </Grid>
 

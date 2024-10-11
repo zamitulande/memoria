@@ -31,6 +31,7 @@ const Video = ({video}) => {
                 controlsList="nodownload"
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
+                onError={() => alert('No se pudo cargar el video')}
             >
                 <source src={video} type="video/mp4" />
                 Tu navegador no soporta la etiqueta de video.

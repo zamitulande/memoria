@@ -7,11 +7,11 @@ import Image from 'react-image-webp';
 import { Link } from 'react-router-dom';
 import SenaPng from '../../assets/footer/sena.png'
 import SennovaPng from '../../assets/footer/sennova.png'
-import DocumentalPng from '../../assets/footer/gestion-documental .png'
+import DocumentalPng from '../../assets/footer/gestion-documental.png'
 import logoPng from '../../assets/footer/logo.png'
 import SenaWebp from '../../assets/footer/sena.webp'
 import SennovaWebp from '../../assets/footer/sennova.webp'
-import DocumentalWebp from '../../assets/footer/gestion-documental .webp'
+import DocumentalWebp from '../../assets/footer/gestion-documental.webp'
 import logoWebp from '../../assets/footer/logo.webp'
 
 
