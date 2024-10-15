@@ -1,12 +1,15 @@
 package com.v1.server.services.impl;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,8 +124,8 @@ public class TestimonyServiceImpl implements TestimonyService {
         ProcessBuilder pb = new ProcessBuilder(
                 "ffmpeg",
                 "-i", originalFilePath.toString(),
-                "-b:a", "128k", 
-                "-y", 
+                "-b:a", "128k",
+                "-y",
                 improvedFilePath.toString());
 
         pb.redirectErrorStream(true);
@@ -133,7 +136,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 throw new IOException("Error al procesar el archivo con FFmpeg. Código de salida: " + exitCode);
             }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt(); 
+            Thread.currentThread().interrupt();
             throw new IOException("Proceso interrumpido", e);
         }
         Files.deleteIfExists(originalFilePath);
@@ -141,14 +144,60 @@ public class TestimonyServiceImpl implements TestimonyService {
         return improvedFileName;
     }
 
-    private String saveUploadedFileVideo(MultipartFile video, String title) throws IOException {
+    private String saveUploadedFileVideo(MultipartFile video, String title) throws IOException, InterruptedException {
         if (video == null || video.isEmpty()) {
             return null;
         }
-        String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
-        long maxFileSize = 500 * 1024 * 1024; // 50 MB en bytes
-        String uploadDir = VIDEO_DIRECTORY;
-        return saveUploadedFile(video, title, allowedTypes, maxFileSize, uploadDir, "video");
+
+        String videoFileName = title + "_" + video.getOriginalFilename();
+        Path uploadPath = Paths.get(VIDEO_DIRECTORY);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // Guardar el archivo original en el servidor
+        Path filePath = uploadPath.resolve(videoFileName);
+        Files.copy(video.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        // Archivo de salida para el video comprimido
+        String compressedVideoFileName = "compressed_" + videoFileName;
+        Path compressedFilePath = uploadPath.resolve(compressedVideoFileName);
+
+        // Comando FFmpeg para reducir tamaño del video (cambiar resolución y bitrate)
+        String[] ffmpegCommand = {
+                "ffmpeg",
+                "-i", filePath.toString(), // Input file (el archivo subido)
+                "-vcodec", "libx264", // Codec de video (libx264 es eficiente)
+                "-crf", "28", // Control Rate Factor (28 es buena calidad, pero con alta compresión)
+                "-preset", "fast", // Preset de compresión rápido (puedes usar "slow" para más compresión)
+                "-vf", "scale=1280:-1", // Cambiar resolución (ajusta a 1280px de ancho, preservando relación de
+                                        // aspecto)
+                "-acodec", "aac", // Codec de audio (AAC es estándar y eficiente)
+                "-b:a", "128k", // Bitrate de audio (128 kbps para buena calidad de audio)
+                compressedFilePath.toString() // Output file (archivo comprimido)
+        };
+
+        // Ejecutar el comando FFmpeg
+        ProcessBuilder processBuilder = new ProcessBuilder(ffmpegCommand);
+        processBuilder.redirectErrorStream(true); // Combina stdout y stderr
+        Process process = processBuilder.start();
+
+        // Leer la salida del proceso (si hay errores o mensajes de FFmpeg)
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line); // Puedes agregar un logger aquí
+        }
+
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new RuntimeException("Error al comprimir el video. Código de salida: " + exitCode);
+        }
+
+        // Retorna el nombre del archivo comprimido (puedes guardarlo en la base de
+        // datos)
+        return compressedVideoFileName;
+
     }
 
     private String saveUploadedFileImage(MultipartFile image, String title) throws IOException {
@@ -171,15 +220,14 @@ public class TestimonyServiceImpl implements TestimonyService {
         Path webpFilePath = Paths.get(uploadDir, webpFileName);
 
         ProcessBuilder pb = new ProcessBuilder(
-            "ffmpeg",
-            "-i", originalFilePath.toString(),  
-            "-vf", "scale=800:-1",              
-            "-compression_level", "6",          
-            "-qscale", "50",                   
-            "-preset", "picture",               
-            "-y",                               
-            webpFilePath.toString()            
-    );
+                "ffmpeg",
+                "-i", originalFilePath.toString(),
+                "-vf", "scale=800:-1",
+                "-compression_level", "6",
+                "-qscale", "50",
+                "-preset", "picture",
+                "-y",
+                webpFilePath.toString());
 
         pb.redirectErrorStream(true);
         try {
@@ -220,7 +268,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             Files.createDirectories(uploadPath);
         }
         Path filePath = uploadPath.resolve(fileName);
-        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filePath.toFile()),  32 * 1024)) {
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filePath.toFile()), 8192)) {
             os.write(file.getBytes());
         }
         return fileName;
