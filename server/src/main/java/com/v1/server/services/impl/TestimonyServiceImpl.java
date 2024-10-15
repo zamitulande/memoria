@@ -1,5 +1,6 @@
 package com.v1.server.services.impl;
 
+import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -219,7 +220,7 @@ public class TestimonyServiceImpl implements TestimonyService {
             Files.createDirectories(uploadPath);
         }
         Path filePath = uploadPath.resolve(fileName);
-        try (OutputStream os = new FileOutputStream(filePath.toFile())) {
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(filePath.toFile()),  32 * 1024)) {
             os.write(file.getBytes());
         }
         return fileName;

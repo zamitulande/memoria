@@ -102,18 +102,18 @@ const Testimony = () => {
                     {dataTestimonies.length > 0 ? (
                         dataTestimonies.map((testimony, index) => (
                             <Grid item key={index} xs={12} sm={8} md={6} lg={4}>
-                                <Card sx={{
-                                    boxShadow: 8,
-                                    transition: 'transform 0.3s, box-shadow 0.3s',
-                                    '&:hover': {
-                                        transform: 'scale(1.05)',
-                                        boxShadow: 6
-                                    }
-                                }}>
-                                    <CardActionArea component="div">
-                                        {isLoading ? (
-                                            <Skeleton animation="wave" variant="rectangular" width={400} height={200} />
-                                        ) : (
+                                {isLoading ? (
+                                    <Skeleton animation="wave" variant="rectangular" width={400} height={200} />
+                                ) : (
+                                    <Card sx={{
+                                        boxShadow: 8,
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        '&:hover': {
+                                            transform: 'scale(1.05)',
+                                            boxShadow: 6
+                                        }
+                                    }}>
+                                        <CardActionArea component="div">
                                             <CardMedia
                                                 component="img"
                                                 height="200"
@@ -121,52 +121,53 @@ const Testimony = () => {
                                                 alt={testimony.category}
                                                 loading="lazy"
                                             />
-                                        )}
-                                        <CardContent style={{
-                                            position: 'absolute',
-                                            top: 0,
-                                            left: 0,
-                                            width: '100%',
-                                            height: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'center',
-                                            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                            color: '#fff',
-                                        }}>
-                                            <Typography gutterBottom fontSize={25} style={{ padding: '0px 60px 0px 0px' }}>
-                                                {testimony.title}
-                                            </Typography>
-                                            <Typography variant="span" fontSize={15} style={{ padding: '0px 50px 0px 0px' }}>
-                                                {testimony.description}
-                                            </Typography>
-                                            {!testimony.enabled && (
-                                                <LockClockTwoToneIcon style={{
-                                                    position: 'absolute',
-                                                    top: 5,
-                                                    right: 40,
-                                                    backgroundColor: '#DDC90F',
-                                                    borderRadius: '30%',
-                                                    padding: '5px'
-                                                }} />
-                                            )}
-                                        </CardContent>
-                                        <CardActions>
-                                            <Box>
-                                                <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>
-                                                    Ver más
-                                                </Button>
-                                            </Box>
-                                        </CardActions>
-                                    </CardActionArea>
-                                </Card>
+                                            <CardContent style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'center',
+                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                color: '#fff',
+                                            }}>
+                                                <Typography gutterBottom fontSize={25} style={{ padding: '0px 60px 0px 0px' }}>
+                                                    {testimony.title}
+                                                </Typography>
+                                                <Typography variant="span" fontSize={15} style={{ padding: '0px 50px 0px 0px' }}>
+                                                    {testimony.description}
+                                                </Typography>
+                                                {!testimony.enabled && (
+                                                    <LockClockTwoToneIcon style={{
+                                                        position: 'absolute',
+                                                        top: 5,
+                                                        right: 40,
+                                                        backgroundColor: '#DDC90F',
+                                                        borderRadius: '30%',
+                                                        padding: '5px'
+                                                    }} />
+                                                )}
+                                            </CardContent>
+                                            <CardActions>
+                                                <Box>
+                                                    <Button size="small" color="secondary" variant="contained" onClick={() => handleViewMore(testimony)}>
+                                                        Ver más
+                                                    </Button>
+                                                </Box>
+                                            </CardActions>
+                                        </CardActionArea>
+                                    </Card>
+                                )}
+
                             </Grid>
                         ))
                     ) : (
                         <Grid item xs={12}>
                             <MessageData action="testimony" />
                         </Grid>
-                    
+
                     )}
                 </Grid>
 
