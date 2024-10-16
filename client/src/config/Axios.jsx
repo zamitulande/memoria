@@ -4,7 +4,7 @@ const  api = import.meta.env.VITE_API;
 
 
 const axiosClient = axios.create({
-  baseURL: `http://${api}/api/v1`,
+  baseURL: `https://${api}/api/v1`,
   headers: {
     "Content-type": "application/json"
   }
