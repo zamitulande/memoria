@@ -75,13 +75,15 @@ const Users = () => {
     const { userId, accountLocked } = user;
     const action = accountLocked ? 'unblock' : 'block';
     const actionText = accountLocked ? 'desbloque' : 'bloque';
+    console.log(userId)
     try {
       const config = {
         headers: {
           'Authorization': `Bearer ${getToken}`
         }
       };
-      const response = await axiosClient.put(`/users/${action}/${user.userId}`, {}, config);
+      const response = await axiosClient.put(`/users/${action}/${userId}`, {}, config);
+     
       if (response.status === 200) {
         const updatedUsers = users.map((u) =>
           u.userId === userId ? { ...u, accountLocked: !accountLocked } : u
@@ -92,6 +94,7 @@ const Users = () => {
         Swal.fire('Error', `No se pudo ${actionText}ar el usuario`, 'error');
       }
     } catch (error) {
+      console.log(error)
       Swal.fire('Error', `${error.response.data.message}, no se pudo ${actionText}ar el usuario`, 'error');
     }
   };

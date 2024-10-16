@@ -148,56 +148,54 @@ public class TestimonyServiceImpl implements TestimonyService {
         if (video == null || video.isEmpty()) {
             return null;
         }
-
-        String videoFileName = title + "_" + video.getOriginalFilename();
+    
+        // Nombre del archivo WebM que se va a guardar
+        String webMFileName = title + ".webm";
         Path uploadPath = Paths.get(VIDEO_DIRECTORY);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-
-        // Guardar el archivo original en el servidor
-        Path filePath = uploadPath.resolve(videoFileName);
-        Files.copy(video.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-        // Archivo de salida para el video comprimido
-        String compressedVideoFileName = "compressed_" + videoFileName;
-        Path compressedFilePath = uploadPath.resolve(compressedVideoFileName);
-
-        // Comando FFmpeg para reducir tamaño del video (cambiar resolución y bitrate)
+        
+        // Ruta del archivo WebM de salida
+        Path webMFilePath = uploadPath.resolve(webMFileName);
+    
+        // Comando FFmpeg para convertir directamente a WebM sin guardar el archivo original
         String[] ffmpegCommand = {
-                "ffmpeg",
-                "-i", filePath.toString(), // Input file (el archivo subido)
-                "-vcodec", "libx264", // Codec de video (libx264 es eficiente)
-                "-crf", "28", // Control Rate Factor (28 es buena calidad, pero con alta compresión)
-                "-preset", "fast", // Preset de compresión rápido (puedes usar "slow" para más compresión)
-                "-vf", "scale=1280:-1", // Cambiar resolución (ajusta a 1280px de ancho, preservando relación de
-                                        // aspecto)
-                "-acodec", "aac", // Codec de audio (AAC es estándar y eficiente)
-                "-b:a", "128k", // Bitrate de audio (128 kbps para buena calidad de audio)
-                compressedFilePath.toString() // Output file (archivo comprimido)
+            "ffmpeg",
+            "-i", "-",                           // Input desde stdin (no necesitamos el archivo MP4 en disco)
+            "-c:v", "libvpx",                    // Codec de video VP8 para WebM
+            "-b:v", "500k",                      // Bitrate de video reducido a 500 kbps
+            "-crf", "32",                        // Mayor compresión con calidad moderada
+            "-vf", "scale=854:480",              // Resolución ajustada a 480p
+            "-c:a", "libvorbis",                 // Codec de audio Vorbis para WebM
+            "-b:a", "96k",                       // Bitrate de audio a 96 kbps
+            webMFilePath.toString()              // Archivo de salida WebM
         };
-
-        // Ejecutar el comando FFmpeg
+    
+        // Ejecutar el comando FFmpeg y leer desde la entrada del archivo MultipartFile
         ProcessBuilder processBuilder = new ProcessBuilder(ffmpegCommand);
-        processBuilder.redirectErrorStream(true); // Combina stdout y stderr
+        processBuilder.redirectErrorStream(true);
         Process process = processBuilder.start();
-
-        // Leer la salida del proceso (si hay errores o mensajes de FFmpeg)
+    
+        // Enviar los bytes del archivo subido directamente a FFmpeg a través de su stdin
+        try (OutputStream processStdin = process.getOutputStream()) {
+            processStdin.write(video.getBytes());
+        }
+    
+        // Leer la salida del proceso para capturar los mensajes de FFmpeg
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         while ((line = reader.readLine()) != null) {
-            System.out.println(line); // Puedes agregar un logger aquí
+            System.out.println(line); // Puedes usar un logger en lugar de System.out.println
         }
-
+    
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            throw new RuntimeException("Error al comprimir el video. Código de salida: " + exitCode);
+            throw new RuntimeException("Error al convertir el video a WebM. Código de salida: " + exitCode);
         }
-
-        // Retorna el nombre del archivo comprimido (puedes guardarlo en la base de
-        // datos)
-        return compressedVideoFileName;
-
+    
+        // Retorna el nombre del archivo WebM guardado
+        return webMFileName;
     }
 
     private String saveUploadedFileImage(MultipartFile image, String title) throws IOException {

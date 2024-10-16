@@ -298,7 +298,7 @@ const Form = ({ open,
                                 action === 'register'
                                     ? gender
                                     : action === 'update'
-                                        ? gender || getformEditTestimony.gender // Si hay un cambio, toma gender; si no, toma el valor original.
+                                        ? gender || getFormEditar.gender // Si hay un cambio, toma gender; si no, toma el valor original.
                                         : ''
                             }
                             onChange={(e) => {
@@ -324,7 +324,7 @@ const Form = ({ open,
                                 action === 'register'
                                     ? poblacion
                                     : action === 'update'
-                                        ? poblacion || getformEditTestimony.poblacion // Si hay un cambio, toma gender; si no, toma el valor original.
+                                        ? poblacion || getFormEditar.poblacion // Si hay un cambio, toma gender; si no, toma el valor original.
                                         : ''
                             }
                             onChange={(e) => {
@@ -350,7 +350,7 @@ const Form = ({ open,
                                 action === 'register'
                                     ? disability
                                     : action === 'update'
-                                        ? disability || getformEditTestimony.disability // Si hay un cambio, toma gender; si no, toma el valor original.
+                                        ? disability || getFormEditar.disability // Si hay un cambio, toma gender; si no, toma el valor original.
                                         : ''
                             }
                             onChange={(e) => {
