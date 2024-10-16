@@ -29,6 +29,10 @@ public class RegisterRequestDTO {
 
     private String disability;
 
+    private String dateBirth;
+
+    private String typeId;
+
     private String identification;
     
     private String contactNumber;

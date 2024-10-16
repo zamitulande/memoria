@@ -26,6 +26,7 @@ const FormUser = ({ action, role }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
+    const [typeId, setTypeId] = useState("")
     const [identification, setIdentification] = useState("")
     const [email, setEmail] = useState("")
     const [confirmEmail, setConfirmEmail] = useState("")
@@ -33,6 +34,7 @@ const FormUser = ({ action, role }) => {
     const [secondName, setSecondName] = useState("")
     const [firstLastName, setFirstLastName] = useState("")
     const [secondLastName, setSecondLastName] = useState("")
+    const [dateBirth, setDateBirth] = useState("")
     const [gender, setGender] = useState("");
     const [poblacion, setPoblacion] = useState("");
     const [disability, setDisability] = useState("");
@@ -58,6 +60,7 @@ const FormUser = ({ action, role }) => {
     const { maxLength, minLength } = UseValidation();
 
     const resetForm = () => {
+        setTypeId("")
         setIdentification("")
         setEmail("")
         setConfirmEmail("")
@@ -65,6 +68,7 @@ const FormUser = ({ action, role }) => {
         setSecondName("")
         setFirstLastName("")
         setSecondLastName("")
+        setDateBirth("")
         setGender("")
         setPoblacion("")
         setDisability("")
@@ -109,6 +113,7 @@ const FormUser = ({ action, role }) => {
         e.preventDefault();
         setIsLoading(true);
         const userData = {
+            typeId,
             identification,
             email,
             confirmEmail,
@@ -116,6 +121,7 @@ const FormUser = ({ action, role }) => {
             secondName,
             firstLastName,
             secondLastName,
+            dateBirth,
             gender,
             poblacion,
             disability,
@@ -137,6 +143,7 @@ const FormUser = ({ action, role }) => {
                 });
             })
             .catch((error) => {
+                console.log(error)
                 setIsLoading(false);
                 const errorMessage = error.response.data.message
                 Swal.fire({
@@ -151,6 +158,7 @@ const FormUser = ({ action, role }) => {
         setIsLoading(true);
         const postUser = async () => {
             const formData = new FormData();
+            formData.append('typeId', typeId)
             formData.append('identification', identification)
             formData.append('email', email)
             formData.append('confirmEmail', confirmEmail)
@@ -158,6 +166,7 @@ const FormUser = ({ action, role }) => {
             formData.append('secondName', secondName)
             formData.append('firstLastName', firstLastName)
             formData.append('secondLastName', secondLastName)
+            formData.append('dateBirth', dateBirth)
             formData.append('gender', gender)
             formData.append('poblacion', poblacion)
             formData.append('disability', disability)
@@ -201,6 +210,7 @@ const FormUser = ({ action, role }) => {
     const handleSubmitUpdate = async (e) => {
         e.preventDefault();
         const updateUser = { ...user }
+        updateUser.typeId = typeId || getFormEditar.typeId;
         updateUser.identification = identification || getFormEditar.identification;
         updateUser.email = email || getFormEditar.email;
         updateUser.confirmEmail = confirmEmail || getFormEditar.confirmEmail;
@@ -208,6 +218,7 @@ const FormUser = ({ action, role }) => {
         updateUser.secondName = secondName || getFormEditar.secondName;
         updateUser.firstLastName = firstLastName || getFormEditar.firstLastName;
         updateUser.secondLastName = secondLastName || getFormEditar.secondLastName;
+        updateUser.dateBirth = dateBirth || getFormEditar.dateBirth;
         updateUser.gender = gender || getFormEditar.gender;
         updateUser.disability = disability || getFormEditar.disability;
         updateUser.poblacion = poblacion || getFormEditar.poblacion;
@@ -251,6 +262,8 @@ const FormUser = ({ action, role }) => {
                 setShowPassword={setShowPassword}
                 showPasswordConfirm={showPasswordConfirm}
                 setShowPasswordConfirm={setShowPasswordConfirm}
+                typeId={typeId}
+                setTypeId={setTypeId}
                 identification={identification}
                 setIdentification={setIdentification}
                 email={email}
@@ -265,6 +278,8 @@ const FormUser = ({ action, role }) => {
                 setFirstLastName={setFirstLastName}
                 secondLastName={secondLastName}
                 setSecondLastName={setSecondLastName}
+                dateBirth={dateBirth}
+                setDateBirth={setDateBirth}
                 gender={gender}
                 setGender={setGender}
                 poblacion={poblacion}

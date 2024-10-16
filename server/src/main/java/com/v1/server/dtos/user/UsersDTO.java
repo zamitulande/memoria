@@ -32,8 +32,12 @@ public class UsersDTO {
     private String department;
 
     private String municipio;
+
+    private String dateBirth;
    
     private String identification;
+
+    private String typeId;
 
     private String email;
 

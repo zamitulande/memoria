@@ -49,6 +49,8 @@ public class UserController {
             @RequestParam String secondName,
             @RequestParam String firstLastName,
             @RequestParam String secondLastName,
+            @RequestParam String typeId,
+            @RequestParam String dateBirth,
             @RequestParam String gender,
             @RequestParam String poblacion,
             @RequestParam String disability,
@@ -77,7 +79,9 @@ public class UserController {
                 confirmEmail,
                 password,
                 confirmPassword,
-                document);
+                document,
+                typeId,
+                dateBirth);
     }
 
     @GetMapping("")

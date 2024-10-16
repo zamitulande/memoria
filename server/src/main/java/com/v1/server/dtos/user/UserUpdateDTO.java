@@ -25,6 +25,10 @@ public class UserUpdateDTO {
     private String department;
 
     private String municipio;
+
+    private String dateBirth;
+    
+    private String typeId;
    
     private String identification;
 

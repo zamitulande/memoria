@@ -67,7 +67,9 @@ public class UserServiceImpl implements UserService {
             String confirmEmail,
             String password,
             String confirmPassword,
-            MultipartFile document
+            MultipartFile document,
+            String typeId,
+            String dateBirth
             ) throws MessagingException, IOException {
 
         if (!password.equals(confirmPassword)) {
@@ -96,6 +98,8 @@ public class UserServiceImpl implements UserService {
                 .accountLocked(false)
                 .enabled(true)
                 .documentUrl(documentUrl)
+                .typeId(typeId)
+                .dateBirth(dateBirth)
                 .role(Role.USER)
                 .build();
 
@@ -176,6 +180,8 @@ public class UserServiceImpl implements UserService {
                 .department(user.getDepartment())
                 .documentUrl(user.getDocumentUrl())
                 .email(user.getEmail())
+                .typeId(user.getTypeId())
+                .dateBirth(user.getDateBirth())
                 .build());
     }
 
@@ -199,6 +205,8 @@ public class UserServiceImpl implements UserService {
                 .department(user.getDepartment())
                 .documentUrl(user.getDocumentUrl())
                 .email(user.getEmail())
+                .typeId(user.getTypeId())
+                .dateBirth(user.getDateBirth())
                 .build());
     }
 
@@ -223,6 +231,8 @@ public class UserServiceImpl implements UserService {
             user.setMunicipio(userUpdateDTO.getMunicipio());
             user.setIdentification(userUpdateDTO.getIdentification());
             user.setEmail(userUpdateDTO.getEmail());
+            user.setTypeId(userUpdateDTO.getTypeId());
+            user.setDateBirth(userUpdateDTO.getDateBirth());
             userRepository.save(user);
 
             UsersDTO updateDTO = UsersDTO.builder()
@@ -238,6 +248,8 @@ public class UserServiceImpl implements UserService {
                     .municipio(user.getMunicipio())
                     .identification(user.getIdentification())
                     .email(user.getEmail())
+                    .typeId(user.getTypeId())
+                    .dateBirth(user.getDateBirth())
                     .build();
 
             return updateDTO;

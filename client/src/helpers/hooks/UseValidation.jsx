@@ -29,12 +29,27 @@ const UseValidation = () => {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
 
+    // Validar si la persona es mayor de 18 años
+    const isAdult = (birthDate) => {
+        const selectedDate = new Date(birthDate);
+        const currentDate = new Date();
+
+        // Calcular diferencia de años
+        const age = currentDate.getFullYear() - selectedDate.getFullYear();
+        const monthDiff = currentDate.getMonth() - selectedDate.getMonth();
+        const dayDiff = currentDate.getDate() - selectedDate.getDate();
+
+        // Validar si tiene al menos 18 años
+        return age > 18 || (age === 18 && (monthDiff > 0 || (monthDiff === 0 && dayDiff >= 0)));
+    };
+
     return {
         minLength,
         maxLength,
         isCellPhone,
         passwordValid,
-        capitalizeFirstLetter
+        capitalizeFirstLetter,
+        isAdult
     }
 }
 
