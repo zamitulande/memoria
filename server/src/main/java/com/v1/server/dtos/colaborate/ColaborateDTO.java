@@ -14,6 +14,10 @@ public class ColaborateDTO {
     private Long colaborateId;
 
     private String name;
+
+    private String typeId;
+
+    private String identification;
    
     private String siteWeb;
     

@@ -95,6 +95,8 @@ const TableColaborates = () => {
                             <TableHead >
                                 <TableRow sx={{ backgroundColor: 'secondary.main' }}>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Organización o persona natural</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Tipo documento</TableCell>
+                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Identificación</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Sitio web</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Facebook</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Telefono</TableCell>
@@ -120,6 +122,14 @@ const TableColaborates = () => {
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
                                         {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Organización o persona natural:</Box>}
                                         {coloborate.name}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Tipo documento:</Box>}
+                                        {coloborate.typeId.length ? (coloborate.typeId) : "no disponible"}
+                                    </TableCell>
+                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
+                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Identificación:</Box>}
+                                        {coloborate.identification.length ? (coloborate.identification) : "no disponible"}
                                     </TableCell>
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
                                         {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Sitio web:</Box>}

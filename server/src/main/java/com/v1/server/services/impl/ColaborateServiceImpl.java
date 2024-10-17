@@ -27,6 +27,8 @@ public class ColaborateServiceImpl  implements ColaborateService{
         
         var colaborate = Colaborate.builder()
                 .name(requesDto.getName())
+                .typeId(requesDto.getTypeId())
+                .identification(requesDto.getIdentification())
                 .siteWeb(requesDto.getSiteWeb())
                 .facebook(requesDto.getFacebook())
                 .email(requesDto.getEmail())
@@ -45,6 +47,8 @@ public class ColaborateServiceImpl  implements ColaborateService{
         return colaboratePage.map(colaborate-> ColaborateDTO.builder()
                 .colaborateId(colaborate.getColaborateId())
                 .name(colaborate.getName())
+                .typeId(colaborate.getTypeId())
+                .identification(colaborate.getIdentification())
                 .siteWeb(colaborate.getSiteWeb())
                 .facebook(colaborate.getFacebook())
                 .email(colaborate.getEmail())

@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import React, { useEffect, useState } from 'react'
 
-const LoadFiles = ({ onFilesChange, resetTrigger}) => {
+const LoadFiles = ({ onFilesChange, resetTrigger }) => {
 
   const [value, setValue] = useState(0);
   const [files, setFiles] = useState({ audio: [], video: [], image: [] });
@@ -62,6 +62,10 @@ const LoadFiles = ({ onFilesChange, resetTrigger}) => {
         accept = '';
 
     }
+
+    const isAudioLoaded = files.audio.length > 0;
+    const isVideoLoaded = files.video.length > 0;
+
     return (
       <Grid container mt={1} spacing={2} direction="column" alignItems="center">
         <Grid item xs={12}>
@@ -82,15 +86,42 @@ const LoadFiles = ({ onFilesChange, resetTrigger}) => {
             style={{ display: 'none' }}
             id={`file-input-${value}`}
           />
-          <label htmlFor={`file-input-${value}`}>
+          <label
+            htmlFor={`file-input-${value}`}
+            onClick={(e) => {
+              // Evita que el label abra el file input si el botón está deshabilitado
+              if (
+                (fileTypeKey === 'audio' && (isVideoLoaded || isAudioLoaded))  ||
+                (fileTypeKey === 'video' && (isAudioLoaded || isVideoLoaded)) ||
+                (fileTypeKey === 'image' && files.image.length > 0)
+              ) {
+                e.preventDefault();
+              }
+            }}
+          >
             <Button
               variant="contained"
               component="span"
               color="secondary"
-              disabled={fileTypeKey === 'video' && files.video.length > 0 || fileTypeKey === 'image' && files.image.length > 0}>
+              disabled={
+                (fileTypeKey === 'audio' && (isVideoLoaded || isAudioLoaded)) || 
+                (fileTypeKey === 'video' && (isAudioLoaded || isVideoLoaded)) || 
+                (fileTypeKey === 'image' && files.image.length > 0)
+              }
+            >
               Cargar {fileType}
             </Button>
           </label>
+          {fileTypeKey === 'audio' && isVideoLoaded && (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              Ya tiene un archivo video cargado, no puede cargar un archivo de audio.
+            </Alert>
+          )}
+          {fileTypeKey === 'video' && isAudioLoaded && (
+            <Alert severity="warning" sx={{ mt: 2 }}>
+              Ya tiene un archivo audio cargado, no puede cargar un archivo de video.
+            </Alert>
+          )}
         </Grid>
         {files[fileTypeKey].map((file, index) => (
           <Grid item xs={12} key={index}>
@@ -122,7 +153,7 @@ const LoadFiles = ({ onFilesChange, resetTrigger}) => {
       <Tabs
         sx={{ backgroundColor: 'textFiled.main' }}
         variant="fullWidth"
-        value={value}        
+        value={value}
         onChange={handleChange}
         aria-label="icon label tabs example"
       >

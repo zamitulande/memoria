@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, Grid, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import React, { useState } from 'react'
 import UseValidation from '../../helpers/hooks/UseValidation';
@@ -17,6 +17,8 @@ const Collaborate = () => {
   const { capitalizeFirstLetter, maxLength, minLength, isCellPhone } = UseValidation();
 
   const [name, setName] = useState('');
+  const [typeId, setTypeId] = useState('');
+  const [identification, setIdentification] = useState('');
   const [siteWeb, setSiteWeb] = useState('');
   const [facebook, setFacebook] = useState('');
   const [email, setEmail] = useState('');
@@ -42,6 +44,8 @@ const Collaborate = () => {
 
   const resetForm = () => {
     setName('');
+    setTypeId('');
+    setIdentification('');
     setSiteWeb('');
     setFacebook('');
     setEmail('');
@@ -54,6 +58,8 @@ const Collaborate = () => {
     setIsLoading(true);
     const colaborate = {
       name,
+      typeId,
+      identification,
       siteWeb,
       facebook,
       email,
@@ -81,6 +87,14 @@ const Collaborate = () => {
     }
 
   }
+
+  const typeDocument = [
+    'Cédula',
+    'NIT',
+    'Pasaporte',
+    'Cédula extranjeria',
+    'Contraseña'
+];
 
   return (
     <>
@@ -121,6 +135,48 @@ const Collaborate = () => {
                         FormHelperTextProps={{ sx: { color: "error.main" } }}
                       />
                     </Grid>
+                    <Grid item xs={12} md={6} mt={2}>
+                    <FormControl color='grayDark' fullWidth required>
+                        <InputLabel id="demo-simple-select-label">Tipo Documento</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Tipo Documento"
+                            required
+                            value={typeId}
+                            onChange={(e) => {
+                                setTypeId(e.target.value);
+                            }}
+                        >
+                            {typeDocument.map((documentItem, index) => (
+                                <MenuItem key={index} value={documentItem}>
+                                    {documentItem}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={6} mt={2}>
+                    <TextField
+                        label="Número de identificación"
+                        color='grayDark'
+                        variant="outlined"
+                        name="identification"
+                        type='number'
+                        value={identification}
+                        onChange={(e) => {
+                            const value = e.target.value.slice(0, 12);
+                            setIdentification(value)
+                        }}
+                        fullWidth
+                        helperText={
+                            (!minLength(identification, 7) && identification)
+                                ? "Este campo debe tener al menos 7 caracteres"
+                                : ""
+                        }
+                        FormHelperTextProps={{ sx: { color: "error.main" } }}
+                        required />
+                </Grid>
                     <Grid item xs={12} md={6} mt={2}>
                       <TextField
                         label="Sitio Web"
@@ -246,10 +302,10 @@ const Collaborate = () => {
                     <Conditions open={open} setOpen={setOpen} />
                   </Grid>
                   <Grid mt={2}>
-                    <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
+                    {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
                   </Grid>
                   <Grid item xs={12} mt={3}>
-                    <Button variant='contained' onClick={(e) => handleSubmit()} disabled={!recaptchaIsValid || !conditios || isDisable()}>Enviar</Button>
+                    <Button variant='contained' onClick={(e) => handleSubmit()} disabled={!conditios || isDisable()}>Enviar</Button>
                   </Grid>
                 </form>
               </Grid>

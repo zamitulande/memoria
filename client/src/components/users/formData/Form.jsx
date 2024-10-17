@@ -154,12 +154,13 @@ const Form = ({ open,
         <form onSubmit={determineSubmitHandler()}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                 <Grid item xs={4}>
-                    <FormControl color='grayDark' fullWidth>
+                    <FormControl color='grayDark' fullWidth required error={!typeId}>
                         <InputLabel id="demo-simple-select-label">Tipo Documento</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             label="Tipo Documento"
+                            required
                             value={
                                 action === 'register'
                                     ? typeId
@@ -177,11 +178,12 @@ const Form = ({ open,
                                 </MenuItem>
                             ))}
                         </Select>
+                        {!typeId && <FormHelperText>Este campo es obligatorio</FormHelperText>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={4}>
                     <TextField
-                        label="Identificación"
+                        label="Número de identificación"
                         color='grayDark'
                         variant="outlined"
                         name="identification"
@@ -326,6 +328,7 @@ const Form = ({ open,
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             label="Genero"
+                            required
                             value={
                                 action === 'register'
                                     ? gender
@@ -352,6 +355,7 @@ const Form = ({ open,
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             label="Población"
+                            required
                             value={
                                 action === 'register'
                                     ? poblacion
@@ -378,6 +382,7 @@ const Form = ({ open,
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             label="Discapacidad"
+                            required
                             value={
                                 action === 'register'
                                     ? disability
@@ -515,11 +520,11 @@ const Form = ({ open,
                     </Grid> : null
                 }
                 <Grid mt={2}>
-                    <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
+                    {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
                 </Grid>
                 <Grid mt={4}>
                     {action === 'update' ? <Link to="/usuarios"> <Button color='secondary'>Cancelar</Button></Link> : null}
-                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ? !recaptchaIsValid || !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
+                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ?  !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
                 </Grid>
             </Grid>
         </form>

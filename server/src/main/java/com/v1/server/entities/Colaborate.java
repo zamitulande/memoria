@@ -26,6 +26,12 @@ public class Colaborate {
 
     @NotBlank
     private String name;
+
+    private String typeId;
+
+    @NotBlank
+    @Column(unique = true)
+    private String identification;
    
     private String siteWeb;
     
