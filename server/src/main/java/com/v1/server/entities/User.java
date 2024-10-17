@@ -72,9 +72,6 @@ public class User implements UserDetails{
     private String identification;
 
     @NotBlank
-    private String dateBirth;
-
-    @NotBlank
     private String typeId;
 
     @NotBlank

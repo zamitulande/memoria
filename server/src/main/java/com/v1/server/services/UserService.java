@@ -33,8 +33,7 @@ public interface UserService {
             String password,
             String confirmPassword,
             MultipartFile document,
-            String typeId,
-            String dateBirth
+            String typeId
             ) throws MessagingException, IOException;
 
     Page<UsersDTO> findAllUsers(Pageable pageable);

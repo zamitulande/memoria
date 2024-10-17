@@ -80,8 +80,7 @@ public class UserController {
                 password,
                 confirmPassword,
                 document,
-                typeId,
-                dateBirth);
+                typeId);
     }
 
     @GetMapping("")

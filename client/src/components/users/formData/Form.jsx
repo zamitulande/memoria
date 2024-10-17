@@ -9,9 +9,6 @@ import Conditions from '../../../helpers/components/Conditions';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useSelector } from 'react-redux';
 import Recaptcha from '../../../helpers/components/Recaptcha';
-import { useState } from 'react';
-
-
 
 const Form = ({ open,
     setOpen,
@@ -35,8 +32,6 @@ const Form = ({ open,
     setFirstLastName,
     secondLastName,
     setSecondLastName,
-    dateBirth,
-    setDateBirth,
     gender,
     setGender,
     poblacion,
@@ -71,18 +66,15 @@ const Form = ({ open,
     setFileName
 }) => {
 
-    const [error, setError] = useState(false);
-    const [helperText, setHelperText] = useState('');
-
     const login = useSelector((state) => state.user.login)
-    const { isCellPhone, passwordValid, capitalizeFirstLetter, isAdult } = UseValidation();
+    const { isCellPhone, passwordValid, capitalizeFirstLetter } = UseValidation();
 
     let imagen = "";
 
     const typeDocument = [
-        'Cedula',
+        'Cédula',
         'Pasaporte',
-        'Cedula extranjeria',
+        'Cédula extranjeria',
         'Contraseña'
     ];
 
@@ -158,13 +150,6 @@ const Form = ({ open,
         }
     };
 
-    // Fecha máxima permitida (hoy)
-    const today = new Date(); // Fecha actual
-    today.setFullYear(today.getFullYear() - 18); // Restar 1 año
-    const maxDate = today.toISOString().split('T')[0]; // Convertir a formato 'YYYY-MM-DD'
-
-
-
     return (
         <form onSubmit={determineSubmitHandler()}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -196,7 +181,7 @@ const Form = ({ open,
                 </Grid>
                 <Grid item xs={4}>
                     <TextField
-                        label="Identificacion"
+                        label="Identificación"
                         color='grayDark'
                         variant="outlined"
                         name="identification"
@@ -335,33 +320,8 @@ const Form = ({ open,
 
                 </Grid>
                 <Grid item xs={4}>
-                    <FormControl fullWidth>
-                        <TextField
-                            label="Fecha de Nacimiento"
-                            type="date"
-                            color="grayDark"
-                            required
-                            value={action === 'register' ? dateBirth : undefined}
-                            defaultValue={action === 'update' ? getFormEditar.dateBirth : undefined}
-                            onChange={(e) => setDateBirth(e.target.value)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            FormHelperTextProps={{ sx: { color: "error.main" } }}
-                            inputProps={{
-                                max: maxDate
-                            }}
-                            helperText={
-                                (!isAdult(dateBirth) && dateBirth)
-                                    ? 'Debes ser mayor de 18 años.'
-                                    : ""
-                            }
-                        />
-                    </FormControl>
-                </Grid>
-                <Grid item xs={4}>
                     <FormControl color='grayDark' fullWidth>
-                        <InputLabel id="demo-simple-select-label">Genero</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Género</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
@@ -555,11 +515,11 @@ const Form = ({ open,
                     </Grid> : null
                 }
                 <Grid mt={2}>
-                    {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
+                    <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
                 </Grid>
                 <Grid mt={4}>
                     {action === 'update' ? <Link to="/usuarios"> <Button color='secondary'>Cancelar</Button></Link> : null}
-                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ? isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
+                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ? !recaptchaIsValid || !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
                 </Grid>
             </Grid>
         </form>

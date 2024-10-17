@@ -86,7 +86,6 @@ public class AuthServiceImpl implements AuthService {
                 .enabled(false)
                 .role(Role.USER)
                 .typeId(request.getTypeId())
-                .dateBirth(request.getDateBirth())
                 .build();
 
         User savedUser = userRepository.save(user);

@@ -34,7 +34,6 @@ const FormUser = ({ action, role }) => {
     const [secondName, setSecondName] = useState("")
     const [firstLastName, setFirstLastName] = useState("")
     const [secondLastName, setSecondLastName] = useState("")
-    const [dateBirth, setDateBirth] = useState("")
     const [gender, setGender] = useState("");
     const [poblacion, setPoblacion] = useState("");
     const [disability, setDisability] = useState("");
@@ -68,7 +67,6 @@ const FormUser = ({ action, role }) => {
         setSecondName("")
         setFirstLastName("")
         setSecondLastName("")
-        setDateBirth("")
         setGender("")
         setPoblacion("")
         setDisability("")
@@ -83,6 +81,10 @@ const FormUser = ({ action, role }) => {
 
     const isDisable = () => {
         const commonConditions = () => (
+            !typeId ||
+            !disability ||
+            !gender ||
+            !poblacion ||
             !identification ||
             !minLength(identification, 7) ||
             !firstName ||
@@ -91,24 +93,18 @@ const FormUser = ({ action, role }) => {
             !minLength(firstLastName, 3) ||
             !city ||
             !department ||
-            !contactNumber
+            !contactNumber ||
+            !password ||
+            !confirmPassword
         );
+    
         if (action === 'register') {
-            const registerConditions = () => (
-                !password ||
-                !minLength(password, 8) ||
-                !confirmPassword ||
-                !minLength(confirmPassword, 8)
-            );
-
-            if (role === "ADMIN") {
-                return commonConditions() || registerConditions() || !file;
-            }
-
+            return commonConditions() || (role === "ADMIN" && !file);
         } else if (action === 'update') {
             return commonConditions();
         }
-    }
+    };
+    
     const handleSubmitRegisterUser = (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -121,7 +117,6 @@ const FormUser = ({ action, role }) => {
             secondName,
             firstLastName,
             secondLastName,
-            dateBirth,
             gender,
             poblacion,
             disability,
@@ -166,7 +161,6 @@ const FormUser = ({ action, role }) => {
             formData.append('secondName', secondName)
             formData.append('firstLastName', firstLastName)
             formData.append('secondLastName', secondLastName)
-            formData.append('dateBirth', dateBirth)
             formData.append('gender', gender)
             formData.append('poblacion', poblacion)
             formData.append('disability', disability)
@@ -218,7 +212,6 @@ const FormUser = ({ action, role }) => {
         updateUser.secondName = secondName || getFormEditar.secondName;
         updateUser.firstLastName = firstLastName || getFormEditar.firstLastName;
         updateUser.secondLastName = secondLastName || getFormEditar.secondLastName;
-        updateUser.dateBirth = dateBirth || getFormEditar.dateBirth;
         updateUser.gender = gender || getFormEditar.gender;
         updateUser.disability = disability || getFormEditar.disability;
         updateUser.poblacion = poblacion || getFormEditar.poblacion;
@@ -278,8 +271,6 @@ const FormUser = ({ action, role }) => {
                 setFirstLastName={setFirstLastName}
                 secondLastName={secondLastName}
                 setSecondLastName={setSecondLastName}
-                dateBirth={dateBirth}
-                setDateBirth={setDateBirth}
                 gender={gender}
                 setGender={setGender}
                 poblacion={poblacion}

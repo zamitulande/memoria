@@ -68,8 +68,7 @@ public class UserServiceImpl implements UserService {
             String password,
             String confirmPassword,
             MultipartFile document,
-            String typeId,
-            String dateBirth
+            String typeId
             ) throws MessagingException, IOException {
 
         if (!password.equals(confirmPassword)) {
@@ -99,7 +98,6 @@ public class UserServiceImpl implements UserService {
                 .enabled(true)
                 .documentUrl(documentUrl)
                 .typeId(typeId)
-                .dateBirth(dateBirth)
                 .role(Role.USER)
                 .build();
 
@@ -181,7 +179,6 @@ public class UserServiceImpl implements UserService {
                 .documentUrl(user.getDocumentUrl())
                 .email(user.getEmail())
                 .typeId(user.getTypeId())
-                .dateBirth(user.getDateBirth())
                 .build());
     }
 
@@ -206,7 +203,6 @@ public class UserServiceImpl implements UserService {
                 .documentUrl(user.getDocumentUrl())
                 .email(user.getEmail())
                 .typeId(user.getTypeId())
-                .dateBirth(user.getDateBirth())
                 .build());
     }
 
@@ -232,7 +228,6 @@ public class UserServiceImpl implements UserService {
             user.setIdentification(userUpdateDTO.getIdentification());
             user.setEmail(userUpdateDTO.getEmail());
             user.setTypeId(userUpdateDTO.getTypeId());
-            user.setDateBirth(userUpdateDTO.getDateBirth());
             userRepository.save(user);
 
             UsersDTO updateDTO = UsersDTO.builder()
@@ -249,7 +244,6 @@ public class UserServiceImpl implements UserService {
                     .identification(user.getIdentification())
                     .email(user.getEmail())
                     .typeId(user.getTypeId())
-                    .dateBirth(user.getDateBirth())
                     .build();
 
             return updateDTO;
