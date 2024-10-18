@@ -35,8 +35,6 @@ public class Colaborate {
    
     private String siteWeb;
     
-    private String facebook;
-
     @NotBlank
     @Email
     @Column(unique = true)

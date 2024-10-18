@@ -20,8 +20,6 @@ public class ColaborateDTO {
     private String identification;
    
     private String siteWeb;
-    
-    private String facebook;
 
     private String email;
 

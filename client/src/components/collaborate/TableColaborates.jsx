@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axiosClient from '../../config/Axios';
-import { Box, Container, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Container, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SennovaLogo from '../../assets/loading/sennova-logo.png'
 import Swal from 'sweetalert2';
@@ -29,10 +29,10 @@ const TableColaborates = () => {
                         'Authorization': `Bearer${getToken}`
                     }
                 }
-                const response = await axiosClient.get(`/list-colaborate?page=${currentPage}&size=10`, config);
+                const response = await axiosClient.get(`/list-colaborate?page=${currentPage}&size=2`, config);
                 setTimeout(() => {
                     setColaborates(response.data.content);
-                    setTotalPages(response.data.totalPages);                    
+                    setTotalPages(response.data.totalPages);
                     setIsLoading(false);
                 }, 700)
                 setTotalElements(response.data.totalElements)
@@ -43,8 +43,21 @@ const TableColaborates = () => {
         fetchData();
     }, [currentPage])
 
+    const handleNextPage = () => {
+        if (currentPage < totalPages - 1) {
+            setCurrentPage(prevPage => prevPage + 1);
+        }
+    };
+
+    const handlePreviousPage = () => {
+        if (currentPage > 0) {
+            setCurrentPage(prevPage => prevPage - 1);
+        }
+    };
+
+
     const handleDelete = async (coloborate) => {
-        const {colaborateId} = coloborate;
+        const { colaborateId } = coloborate;
         Swal.fire({
             title: "Estas seguro?",
             text: "Esta accion elimina el colaborador, no se puede revertir!",
@@ -54,29 +67,29 @@ const TableColaborates = () => {
             cancelButtonColor: "#d33",
             confirmButtonText: "Si, Eliminar",
             cancelButtonText: "Cancelar"
-          }).then(async (result) => {
+        }).then(async (result) => {
             try {
-              if (result.isConfirmed) {
-                const config = {
-                  headers: {
-                    'Authorization': `Bearer${getToken}`
-                  }
+                if (result.isConfirmed) {
+                    const config = {
+                        headers: {
+                            'Authorization': `Bearer${getToken}`
+                        }
+                    }
+                    const response = await axiosClient.delete(`colaborate/delete/${colaborateId}`, config);
+                    if (response.status === 200) {
+                        const colaborateFilter = colaborates.filter(colaborate => colaborate.colaborateId !== colaborateId);
+                        Swal.fire({
+                            title: "Borrado!",
+                            text: "El colaborador ha sido borrado",
+                            icon: "success"
+                        });
+                        setColaborates(colaborateFilter);
+                    }
                 }
-                const response = await axiosClient.delete(`colaborate/delete/${colaborateId}`, config);
-                if (response.status === 200) {
-                  const colaborateFilter = colaborates.filter(colaborate => colaborate.colaborateId !== colaborateId);
-                  Swal.fire({
-                    title: "Borrado!",
-                    text: "El colaborador ha sido borrado",
-                    icon: "success"
-                  });
-                  setColaborates(colaborateFilter);
-                }
-              }
             } catch (error) {
-              console.log(error)
+                console.log(error)
             }
-          })
+        })
     }
     return (
         <Container maxWidth="xl">
@@ -98,7 +111,6 @@ const TableColaborates = () => {
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Tipo documento</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Identificación</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Sitio web</TableCell>
-                                    <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Facebook</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Telefono</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Correo</TableCell>
                                     <TableCell align='center' sx={{ fontWeight: 'bold', textTransform: 'uppercase', color: 'textField.main' }}>Objeto social</TableCell>
@@ -136,10 +148,6 @@ const TableColaborates = () => {
                                         {coloborate.siteWeb.length ? (coloborate.siteWeb) : "no disponible"}
                                     </TableCell>
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
-                                        {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Facebook:</Box>}
-                                        {coloborate.facebook.length ? (coloborate.facebook) : "no disponible"}
-                                    </TableCell>
-                                    <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
                                         {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Telefono:</Box>}
                                         {coloborate.contactNumber}
                                     </TableCell>
@@ -165,9 +173,19 @@ const TableColaborates = () => {
                     </Table>
                 </TableContainer>
             )}
+            {totalElements > 2 && (
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                    <Button variant="contained" disabled={currentPage === 0} onClick={handlePreviousPage}>
+                        Anterior
+                    </Button>
+                    <Button variant="contained" disabled={currentPage === totalPages - 1} onClick={handleNextPage}>
+                        Siguiente
+                    </Button>
+                </Box>
+            )}
             {totalElements < 1 && (
                 <MessageData action="colaborate" />
-      )}
+            )}
         </Container>
     )
 }

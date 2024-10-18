@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, FormHelperText, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, Checkbox, Container, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import React, { useState } from 'react'
 import UseValidation from '../../helpers/hooks/UseValidation';
@@ -20,7 +20,6 @@ const Collaborate = () => {
   const [typeId, setTypeId] = useState('');
   const [identification, setIdentification] = useState('');
   const [siteWeb, setSiteWeb] = useState('');
-  const [facebook, setFacebook] = useState('');
   const [email, setEmail] = useState('');
   const [contactNumber, setContactNumber] = useState('');
   const [corporatePurpose, setCorporatePurpose] = useState('');
@@ -47,7 +46,6 @@ const Collaborate = () => {
     setTypeId('');
     setIdentification('');
     setSiteWeb('');
-    setFacebook('');
     setEmail('');
     setContactNumber('');
     setCorporatePurpose('');
@@ -61,7 +59,6 @@ const Collaborate = () => {
       typeId,
       identification,
       siteWeb,
-      facebook,
       email,
       contactNumber,
       corporatePurpose
@@ -200,27 +197,6 @@ const Collaborate = () => {
                     </Grid>
                     <Grid item xs={12} md={6} mt={2}>
                       <TextField
-                        label="Facebook"
-                        color='grayDark'
-                        variant="outlined"
-                        name="facebook"
-                        type='text'
-                        value={facebook}
-                        onChange={(e) => setFacebook(e.target.value)}
-                        fullWidth
-                        inputProps={{ maxLength: 41 }}
-                        helperText={
-                          (!minLength(facebook, 10) && facebook)
-                            ? "Este campo debe tener al menos 10 caracteres"
-                            : (!maxLength(facebook, 40) && facebook)
-                              ? "Este campo no puede ser mayor a 40 caracteres"
-                              : ""
-                        }
-                        FormHelperTextProps={{ sx: { color: "error.main" } }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6} mt={2}>
-                      <TextField
                         label="Correo electronico"
                         color='grayDark'
                         variant="outlined"
@@ -302,10 +278,10 @@ const Collaborate = () => {
                     <Conditions open={open} setOpen={setOpen} />
                   </Grid>
                   <Grid mt={2}>
-                    {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
+                    <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
                   </Grid>
                   <Grid item xs={12} mt={3}>
-                    <Button variant='contained' onClick={(e) => handleSubmit()} disabled={!conditios || isDisable()}>Enviar</Button>
+                    <Button variant='contained' onClick={(e) => handleSubmit()} disabled={!recaptchaIsValid || !conditios || isDisable()}>Enviar</Button>
                   </Grid>
                 </form>
               </Grid>
