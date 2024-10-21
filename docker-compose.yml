@@ -25,7 +25,6 @@ services:
     env_file: 
       - ./server/.env
     ports:
-      - "443:443"
       - "6868:8080"
     volumes:
       - ./server:/app
