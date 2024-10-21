@@ -104,7 +104,6 @@ const ViewTestimony = ({
     }
 
     if (dataView) {
-        console.log(dataView)
         return (
             <Modal
                 open={openViewTestimony}

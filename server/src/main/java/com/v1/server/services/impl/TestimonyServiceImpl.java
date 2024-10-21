@@ -1,10 +1,8 @@
 package com.v1.server.services.impl;
 
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -143,58 +141,14 @@ public class TestimonyServiceImpl implements TestimonyService {
         return improvedFileName;
     }
 
-    private String saveUploadedFileVideo(MultipartFile video, String title) throws IOException, InterruptedException {
+    private String saveUploadedFileVideo(MultipartFile video, String title) throws IOException {
         if (video == null || video.isEmpty()) {
             return null;
         }
-    
-        // Nombre del archivo WebM que se va a guardar
-        String webMFileName = title + ".webm";
-        Path uploadPath = Paths.get(VIDEO_DIRECTORY);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-        
-        // Ruta del archivo WebM de salida
-        Path webMFilePath = uploadPath.resolve(webMFileName);
-    
-        // Comando FFmpeg para convertir directamente a WebM sin guardar el archivo original
-        String[] ffmpegCommand = {
-            "ffmpeg",
-            "-i", "-",                           // Input desde stdin (no necesitamos el archivo MP4 en disco)
-            "-c:v", "libvpx",                    // Codec de video VP8 para WebM
-            "-b:v", "500k",                      // Bitrate de video reducido a 500 kbps
-            "-crf", "32",                        // Mayor compresión con calidad moderada
-            "-vf", "scale=854:480",              // Resolución ajustada a 480p
-            "-c:a", "libvorbis",                 // Codec de audio Vorbis para WebM
-            "-b:a", "96k",                       // Bitrate de audio a 96 kbps
-            webMFilePath.toString()              // Archivo de salida WebM
-        };
-    
-        // Ejecutar el comando FFmpeg y leer desde la entrada del archivo MultipartFile
-        ProcessBuilder processBuilder = new ProcessBuilder(ffmpegCommand);
-        processBuilder.redirectErrorStream(true);
-        Process process = processBuilder.start();
-    
-        // Enviar los bytes del archivo subido directamente a FFmpeg a través de su stdin
-        try (OutputStream processStdin = process.getOutputStream()) {
-            processStdin.write(video.getBytes());
-        }
-    
-        // Leer la salida del proceso para capturar los mensajes de FFmpeg
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            System.out.println(line); // Puedes usar un logger en lugar de System.out.println
-        }
-    
-        int exitCode = process.waitFor();
-        if (exitCode != 0) {
-            throw new RuntimeException("Error al convertir el video a WebM. Código de salida: " + exitCode);
-        }
-    
-        // Retorna el nombre del archivo WebM guardado
-        return webMFileName;
+        String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
+        long maxFileSize = 500 * 1024 * 1024; // 50 MB en bytes
+        String uploadDir = VIDEO_DIRECTORY;
+        return saveUploadedFile(video, title, allowedTypes, maxFileSize, uploadDir, "video");
     }
 
     private String saveUploadedFileImage(MultipartFile image, String title) throws IOException {

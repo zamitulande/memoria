@@ -35,9 +35,10 @@ const FormTestimony = ({ userId, action }) => {
     const [files, setFiles] = useState({ audio: [], video: [], image: [] });
     const [path, setPath] = useState("")
     const [resetTrigger, setResetTrigger] = useState(false);
-    const [messageResponse, setMessageResponse] = useState("");
 
-    const [testimony, setTestimony] = useState([])
+    const [uploadPercentage, setUploadPercentage] = useState(0);
+    const [estimatedTime, setEstimatedTime] = useState(0);
+
 
     let municipio;
     if (city) {
@@ -101,24 +102,28 @@ const FormTestimony = ({ userId, action }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
+        const startTime = Date.now();
+        if (files.image == 0) {
+            dispatch(setOpenViewTestimony(false))
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Debe cargar una imagen",
+            });
+            setIsLoading(false);
+            return;
+        }
+        if (files.audio.length === 0 && files.video.length === 0 && descriptionDetail.length < 1000) {
+            dispatch(setOpenViewTestimony(false))
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Debe cargar un audio o video o diligenciar el campo descripción detallada",
+            });
+            setIsLoading(false);
+            return;
+        }            
         const postTestimony = async () => {
-            if (files.image == 0) {
-                dispatch(setOpenViewTestimony(false))
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Debe cargar una imagen",
-                });
-            }
-            if (files.audio.length === 0 && files.video.length === 0 && descriptionDetail.length < 1000) {
-                dispatch(setOpenViewTestimony(false))
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Debe cargar un audio o video o dilenciar el campo descripción detallada",
-                });
-
-            }
             const { audio, video, image } = files;
             const formData = new FormData();
             formData.append("userId", userId);
@@ -137,12 +142,41 @@ const FormTestimony = ({ userId, action }) => {
                 headers: {
                     'Authorization': `Bearer${getToken}`,
                     'content-Type': 'multipart/form-data'
+                }, 
+                onUploadProgress: (progressEvent) => {
+                    const total = progressEvent.total;
+                    const loaded = progressEvent.loaded;
+                
+                    // Calcula el porcentaje
+                    const percentage = Math.floor((loaded / total) * 100);
+                    setUploadPercentage(percentage);
+                
+                    // Asegurarse de que no haya divisiones por 0
+                    if (percentage > 0 && percentage < 100) {
+                        const currentTime = Date.now();
+                        const elapsedTime = (currentTime - startTime) / 1000; // Tiempo transcurrido en segundos
+                
+                        // Estimación del tiempo total basado en el progreso actual
+                        const estimatedTotalTime = (elapsedTime / (loaded / total)); // Tiempo total estimado para el 100%
+                        const estimatedRemainingTime = estimatedTotalTime - elapsedTime; // Tiempo restante en segundos
+                
+                        // Solo actualiza el tiempo restante si es mayor que 0
+                        if (estimatedRemainingTime > 0) {
+                            setEstimatedTime(estimatedRemainingTime); // Actualiza el tiempo restante
+                        }
+                    }
+                
+                    // Cuando llega al 100%, el tiempo restante es 0
+                    if (percentage === 100) {
+                        setEstimatedTime(0);
+                    }
                 }
             }
             try {
                 const res = await axiosClient.post('/repository/register', formData, config);
                 const messageResponse = res.data.message;
                 setIsLoading(false)
+                setUploadPercentage(0);
                 dispatch(setOpenViewTestimony(false))
                 resetForm();
                 Swal.fire({
@@ -173,6 +207,7 @@ const FormTestimony = ({ userId, action }) => {
                     }
                 });
                 setIsLoading(false);
+                setUploadPercentage(0);
             }
         }
         postTestimony();
@@ -468,7 +503,7 @@ const FormTestimony = ({ userId, action }) => {
                         action="preview" />
                 )}
             </Grid>
-            <Loading isLoading={isLoading} />
+            <Loading isLoading={isLoading} uploadPercentage={uploadPercentage} estimatedTime={estimatedTime}/>
         </form>
     )
 }

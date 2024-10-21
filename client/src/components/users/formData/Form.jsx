@@ -154,7 +154,7 @@ const Form = ({ open,
         <form onSubmit={determineSubmitHandler()}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                 <Grid item xs={4}>
-                    <FormControl color='grayDark' fullWidth required error={!typeId}>
+                    <FormControl color='grayDark' fullWidth required>
                         <InputLabel id="demo-simple-select-label">Tipo Documento</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -178,7 +178,6 @@ const Form = ({ open,
                                 </MenuItem>
                             ))}
                         </Select>
-                        {!typeId && <FormHelperText>Este campo es obligatorio</FormHelperText>}
                     </FormControl>
                 </Grid>
                 <Grid item xs={4}>

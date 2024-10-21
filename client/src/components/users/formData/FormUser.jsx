@@ -50,6 +50,8 @@ const FormUser = ({ action, role }) => {
     const [recaptchaIsValid, setRecaptchaIsValid] = useState(false)
     const [conditios, setConditios] = useState(false);
 
+    const [uploadPercentage, setUploadPercentage] = useState(0);
+
     let municipio;
     if (city) {
         const { name } = city;
@@ -97,15 +99,15 @@ const FormUser = ({ action, role }) => {
             !password ||
             !confirmPassword
         );
-    
+
         if (action === 'register') {
             return commonConditions() || (role === "ADMIN" && !file);
         } else if (action === 'update') {
             return commonConditions();
         }
     };
-    
-    const handleSubmitRegisterUser = (e) => {
+
+    const handleSubmitRegisterUser = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         const userData = {
@@ -126,26 +128,33 @@ const FormUser = ({ action, role }) => {
             password,
             confirmPassword
         }
-        axiosClient.post('/auth/register', userData)
-            .then((response) => {
-                const messageResponse = response.data.message;
-                resetForm();
-                setIsLoading(false)
-                Swal.fire({
-                    position: "bottom-end",
-                    icon: "success",
-                    title: messageResponse,
-                });
-            })
-            .catch((error) => {
-                console.log(error)
-                setIsLoading(false);
-                const errorMessage = error.response.data.message
-                Swal.fire({
-                    icon: "error",
-                    text: errorMessage,
-                });
+        const config = {
+            onUploadProgress: (progressEvent) => {
+                const total = progressEvent.total;
+                const current = progressEvent.loaded;
+                const percentage = Math.floor((current / total) * 100);
+                setUploadPercentage(percentage);
+            }
+        };
+        try {
+            const response = await axiosClient.post('/auth/register', userData, config);
+            const messageResponse = response.data.message;
+            resetForm();
+            setIsLoading(false)
+            Swal.fire({
+                position: "bottom-end",
+                icon: "success",
+                title: messageResponse,
             });
+        } catch (error) {
+            setIsLoading(false);
+            setUploadPercentage(0);
+            const errorMessage = error.response.data.message
+            Swal.fire({
+                icon: "error",
+                text: errorMessage,
+            });
+        }
     }
 
     const handleSubmitRegisterAdmin = (e) => {
@@ -174,6 +183,12 @@ const FormUser = ({ action, role }) => {
                 headers: {
                     'Authorization': `Bearer${getToken}`,
                     'content-Type': 'multipart/form-data'
+                }, 
+                onUploadProgress: (progressEvent) => {
+                    const total = progressEvent.total;
+                    const current = progressEvent.loaded;
+                    const percentage = Math.floor((current / total) * 100);
+                    setUploadPercentage(percentage);
                 }
             }
             try {
@@ -231,6 +246,12 @@ const FormUser = ({ action, role }) => {
                     const config = {
                         headers: {
                             'Authorization': `Bearer${getToken}`
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            const total = progressEvent.total;
+                            const current = progressEvent.loaded;
+                            const percentage = Math.floor((current / total) * 100);
+                            setUploadPercentage(percentage);
                         }
                     }
                     const response = await axiosClient.put(`users/update/${getFormEditar.userId}`, updateUser, config);
@@ -306,7 +327,7 @@ const FormUser = ({ action, role }) => {
                 fileName={fileName}
                 setFileName={setFileName}
             />
-            <Loading isLoading={isLoading} />
+            <Loading isLoading={isLoading} uploadPercentage={uploadPercentage}/>
         </Box >
 
     )

@@ -1,4 +1,4 @@
-import { Card, Container, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert, Skeleton } from '@mui/material'
+import { Card, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert, Skeleton } from '@mui/material'
 import LockClockTwoToneIcon from '@mui/icons-material/LockClockTwoTone';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,6 @@ import { animateScroll } from 'react-scroll';
 import { setOpenViewTestimony, setTestimonies } from '../../redux/features/TestimonySlice';
 import ViewTestimony from '../../helpers/components/ViewTestimony';
 import Swal from 'sweetalert2';
-import SennovaLogo from '../../assets/loading/sennova-logo.png'
 
 const Testimony = () => {
 
@@ -103,7 +102,7 @@ const Testimony = () => {
                         dataTestimonies.map((testimony, index) => (
                             <Grid item key={index} xs={12} sm={8} md={6} lg={4}>
                                 {isLoading ? (
-                                    <Skeleton animation="wave" variant="rectangular" width={400} height={200} />
+                                    <Skeleton animation="wave" variant="rectangular" width={290} height={230} />
                                 ) : (
                                     <Card sx={{
                                         boxShadow: 8,
