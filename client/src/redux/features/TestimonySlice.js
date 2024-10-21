@@ -22,7 +22,6 @@ export const TestimonySlice = createSlice({
         },
         setFormEditTestimony: (state, action) => {
             state.formEditTestimony = action.payload;
-            console.log(action.payload)
         },
         setTestimonyId: (state, action) => {
             state.testimonyId = action.payload;
@@ -34,7 +33,7 @@ export const TestimonySlice = createSlice({
             state.testimonies = [];
         },
         setTestimonyIsEnable: (state, action) => {
-            state.testimonyIsEnable = action.payload;
+            state.testimonyIsEnable = !state.testimonyIsEnable;
         }
     }
 });

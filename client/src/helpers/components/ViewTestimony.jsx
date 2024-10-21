@@ -67,11 +67,10 @@ const ViewTestimony = ({
                     'Authorization': `Bearer ${getToken}`
                 }
             };
-            const response = await axiosClient.put(`/repository/${action}/${dataView.testimonyId}`, {}, config);
-            if (response && response.data) {
+            const response = await axiosClient.put(`/repository/${action}/${dataView.testimonyId}`, {}, config);          
                 setEnable(response.data.enabled);
                 dispatch(setTestimonyIsEnable(response.data.enabled))
-            }
+            
             Swal.fire({
                 icon: "success",
                 text: `El testimonio ahora es ${actionText}.`,
@@ -107,9 +106,7 @@ const ViewTestimony = ({
         return (
             <Modal
                 open={openViewTestimony}
-                onClose={handleCloseModal}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description">
+                onClose={handleCloseModal}>
 
                 <Box sx={style}>
                     <IconButton
@@ -213,7 +210,7 @@ const ViewTestimony = ({
                                 </IconButton>
                             </Grid>
                             <Grid item xs={12} sm={2}>
-                                <Tooltip title={enable ? "Hacer Privado" : "Hacer Publico "}>
+                                <Tooltip >
                                     <IconButton onClick={() => handleEnabled(dataView)} color='success'>
                                         {enable ? <LockIcon /> : <LockOpenIcon />}
                                         {enable ? "Privatizar" : "Publicar"}

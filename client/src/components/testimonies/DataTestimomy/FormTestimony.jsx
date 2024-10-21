@@ -45,7 +45,6 @@ const FormTestimony = ({ userId, action }) => {
         const { name } = city;
         municipio = name;
     }
-
     const categories = [
         'Conflicto armado',
         'Pandemia',
@@ -102,6 +101,7 @@ const FormTestimony = ({ userId, action }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         setIsLoading(true);
+        dispatch(setOpenViewTestimony(true))
         const startTime = Date.now();
         if (files.image == 0) {
             dispatch(setOpenViewTestimony(false))
@@ -122,7 +122,7 @@ const FormTestimony = ({ userId, action }) => {
             });
             setIsLoading(false);
             return;
-        }            
+        }
         const postTestimony = async () => {
             const { audio, video, image } = files;
             const formData = new FormData();
@@ -142,35 +142,8 @@ const FormTestimony = ({ userId, action }) => {
                 headers: {
                     'Authorization': `Bearer${getToken}`,
                     'content-Type': 'multipart/form-data'
-                }, 
-                onUploadProgress: (progressEvent) => {
-                    const total = progressEvent.total;
-                    const loaded = progressEvent.loaded;
-                
-                    // Calcula el porcentaje
-                    const percentage = Math.floor((loaded / total) * 100);
-                    setUploadPercentage(percentage);
-                
-                    // Asegurarse de que no haya divisiones por 0
-                    if (percentage > 0 && percentage < 100) {
-                        const currentTime = Date.now();
-                        const elapsedTime = (currentTime - startTime) / 1000; // Tiempo transcurrido en segundos
-                
-                        // Estimación del tiempo total basado en el progreso actual
-                        const estimatedTotalTime = (elapsedTime / (loaded / total)); // Tiempo total estimado para el 100%
-                        const estimatedRemainingTime = estimatedTotalTime - elapsedTime; // Tiempo restante en segundos
-                
-                        // Solo actualiza el tiempo restante si es mayor que 0
-                        if (estimatedRemainingTime > 0) {
-                            setEstimatedTime(estimatedRemainingTime); // Actualiza el tiempo restante
-                        }
-                    }
-                
-                    // Cuando llega al 100%, el tiempo restante es 0
-                    if (percentage === 100) {
-                        setEstimatedTime(0);
-                    }
-                }
+                },
+                onUploadProgress: (progressEvent) => handleUploadProgress(progressEvent)
             }
             try {
                 const res = await axiosClient.post('/repository/register', formData, config);
@@ -190,7 +163,7 @@ const FormTestimony = ({ userId, action }) => {
                 }).then((result) => {
                     if (!result.isConfirmed) {
                         resetForm();
-                        navigate('/repositorio')
+                        navigate(`/repositorio/${path}`)
                     } else {
                         resetForm();
                         animateScroll.scrollToTop()
@@ -220,11 +193,11 @@ const FormTestimony = ({ userId, action }) => {
     const updateTestimony = async (e) => {
         e.preventDefault();
         setIsLoading(true);
-
+        dispatch(setOpenViewTestimony(true))
         const { audio, video, image } = files;
-        
+
         const formData = new FormData();
-        if(path.length === 0){
+        if (path.length === 0) {
             setCategory("")
         }
         formData.append("category", category || getformEditTestimony.category);
@@ -250,18 +223,20 @@ const FormTestimony = ({ userId, action }) => {
             headers: {
                 'Authorization': `Bearer${getToken}`,
                 'content-Type': 'multipart/form-data'
-            }
+            },
+            onUploadProgress: (progressEvent) => handleUploadProgress(progressEvent)
         };
         try {
             const res = await axiosClient.put(`/repository/update/${getformEditTestimony.testimonyId}`, formData, config);
             const messageResponse = res.data.message;
             setIsLoading(false);
             dispatch(setOpenViewTestimony(false));
+            const finalPath = path || getformEditTestimony.path;
             Swal.fire({
                 title: messageResponse,
                 icon: "success",
             }).then(() => {
-                navigate('/repositorio');
+                navigate(`/repositorio/${finalPath}`);
             });
         } catch (error) {
             console.log(error)
@@ -276,6 +251,30 @@ const FormTestimony = ({ userId, action }) => {
         };
     };
 
+    // Función para manejar el progreso de carga
+    const handleUploadProgress = (progressEvent) => {
+        const startTime = Date.now();
+        const total = progressEvent.total;
+        const loaded = progressEvent.loaded;
+
+        const percentage = Math.floor((loaded / total) * 100);
+        setUploadPercentage(percentage);
+
+        if (percentage > 0 && percentage < 100) {
+            const currentTime = Date.now();
+            const elapsedTime = (currentTime - startTime) / 1000; // Tiempo en segundos
+            const estimatedTotalTime = (elapsedTime / (loaded / total)); // Tiempo total estimado
+            const estimatedRemainingTime = estimatedTotalTime - elapsedTime; // Tiempo restante
+
+            if (estimatedRemainingTime > 0) {
+                setEstimatedTime(estimatedRemainingTime); // Actualiza el tiempo restante
+            }
+        }
+        if (percentage === 100) {
+            setEstimatedTime(0);
+        }
+    };
+
     const determineSubmitHandler = () => {
         switch (true) {
             case action === 'register':
@@ -287,22 +286,32 @@ const FormTestimony = ({ userId, action }) => {
         }
     };
 
+    const handleCancel = () => {
+        navigate(-1); // Regresa a la página anterior
+    };
+
     let messageFiles = ""
     if (action === 'update') {
         messageFiles = <Grid item xs={12} container
             direction="row"
             justifyContent="space-around"
             alignItems="center">
-            <Alert severity="info" style={{ marginBottom: 10 }}>A continuacion se listan los archivos (audio, video o imagen) ya cargados, si desea modificar estos archivos puede seleccionar los nuevo archivos.</Alert>
-            <Link to={getformEditTestimony.videoUrl} target="_blank">
-                <Button variant='contained' color='secondary'>video</Button>
-            </Link>
-            <Link to={getformEditTestimony.imageUrl} target="_blank">
-                <Button variant='contained' color='secondary'>imagen</Button>
-            </Link>
-            <Link to={getformEditTestimony.audioUrl} target="_blank">
-                <Button variant='contained' color='secondary'>audio</Button>
-            </Link>
+            <Alert severity="success" style={{ marginBottom: 10 }}>A continuacion se listan los archivos (audio, video o imagen) ya cargados, si desea modificar estos archivos puede seleccionar los nuevo archivos.</Alert>
+            {getformEditTestimony.videoUrl && (
+                <Link to={getformEditTestimony.videoUrl} target="_blank">
+                    <Button variant='contained' color='primary'> ver video</Button>
+                </Link>
+            )}
+            {getformEditTestimony.imageUrl && (
+                <Link to={getformEditTestimony.imageUrl} target="_blank">
+                    <Button variant='contained' color='primary'>ver imagen</Button>
+                </Link>
+            )}
+            {getformEditTestimony.audioUrl && (
+                <Link to={getformEditTestimony.audioUrl} target="_blank">
+                    <Button variant='contained' color='primary'>ver audio</Button>
+                </Link>
+            )}
         </Grid>
     }
     return (
@@ -394,7 +403,7 @@ const FormTestimony = ({ userId, action }) => {
                                 shrink: true,
                             }}
                             inputProps={{
-                                max: new Date().toISOString().split('T')[0], 
+                                max: new Date().toISOString().split('T')[0],
                             }}
                         />
                     </FormControl>
@@ -457,7 +466,7 @@ const FormTestimony = ({ userId, action }) => {
                         name="descripcionDetallada"
                         type='text'
                         value={action === 'register' ? descriptionDetail : undefined}
-                        defaultValue={action === 'update' ? getformEditTestimony.undefined : undefined}
+                        defaultValue={action === 'update' ? getformEditTestimony.descriptionDetail : undefined}
                         onChange={(e) => setDescriptionDetail(capitalizeFirstLetter(e.target.value))}
                         fullWidth
                         inputProps={{ maxLength: 3001 }}
@@ -478,11 +487,10 @@ const FormTestimony = ({ userId, action }) => {
                     alignItems="center"
                     mt={4}>
                     <Grid>
+                        {action === 'update' ? <Button color='secondary' onClick={handleCancel}>Cancelar</Button> : null}
                         {action === "register" ?
-                            <Button onClick={(e) => dispatch(setOpenViewTestimony(true))} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button>
-                            :
-                            <Button onClick={updateTestimony} variant="contained" color='secondary'>Editar</Button>
-                        }
+                            <Button onClick={(e) => dispatch(setOpenViewTestimony(true))} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button>:null}
+                        {action === 'update' ?  <Button onClick={updateTestimony} variant="contained" color='secondary'>Editar</Button>: null}
                     </Grid>
                 </Grid>
                 {openViewTestimony && (
@@ -503,7 +511,7 @@ const FormTestimony = ({ userId, action }) => {
                         action="preview" />
                 )}
             </Grid>
-            <Loading isLoading={isLoading} uploadPercentage={uploadPercentage} estimatedTime={estimatedTime}/>
+            <Loading isLoading={isLoading} uploadPercentage={uploadPercentage} estimatedTime={estimatedTime} />
         </form>
     )
 }

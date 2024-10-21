@@ -1,4 +1,4 @@
-import { Card, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert, Skeleton } from '@mui/material'
+import { Card, Grid, Button, CardActionArea, CardActions, Typography, CardMedia, CardContent, Box, Alert, Skeleton, Stack } from '@mui/material'
 import LockClockTwoToneIcon from '@mui/icons-material/LockClockTwoTone';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,7 +28,7 @@ const Testimony = () => {
     const [selectedTestimony, setSelectedTestimony] = useState({})
 
     let path = category;
-
+    
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
@@ -98,20 +98,29 @@ const Testimony = () => {
             </Grid>
             <Grid item xs={12} sm={8}>
                 <Grid container spacing={2}>
-                    {dataTestimonies.length > 0 ? (
-                        dataTestimonies.map((testimony, index) => (
+                    {isLoading
+                        ? Array.from(new Array(dataTestimonies.length || 6)).map((_, index) => (
                             <Grid item key={index} xs={12} sm={8} md={6} lg={4}>
-                                {isLoading ? (
-                                    <Skeleton animation="wave" variant="rectangular" width={290} height={230} />
-                                ) : (
-                                    <Card sx={{
-                                        boxShadow: 8,
-                                        transition: 'transform 0.3s, box-shadow 0.3s',
-                                        '&:hover': {
-                                            transform: 'scale(1.05)',
-                                            boxShadow: 6
-                                        }
-                                    }}>
+                                <Stack spacing={1}>
+                                    <Skeleton variant="rectangular" width={330} height={90}/>                                    <Skeleton variant="text" width={300} height={40} />
+                                    <Skeleton variant="text" width={210} height={30} />
+                                    <Skeleton variant="rectangular" width={330} height={60} />
+                                </Stack>
+                            </Grid>
+                        ))
+                        : dataTestimonies.length > 0 ? (
+                            dataTestimonies.map((testimony, index) => (
+                                <Grid item key={index} xs={12} sm={8} md={6} lg={4}>
+                                    <Card
+                                        sx={{
+                                            boxShadow: 8,
+                                            transition: 'transform 0.3s, box-shadow 0.3s',
+                                            '&:hover': {
+                                                transform: 'scale(1.05)',
+                                                boxShadow: 6,
+                                            },
+                                        }}
+                                    >
                                         <CardActionArea component="div">
                                             <CardMedia
                                                 component="img"
@@ -120,18 +129,20 @@ const Testimony = () => {
                                                 alt={testimony.category}
                                                 loading="lazy"
                                             />
-                                            <CardContent style={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                width: '100%',
-                                                height: '100%',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'center',
-                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                                color: '#fff',
-                                            }}>
+                                            <CardContent
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                    color: '#fff',
+                                                }}
+                                            >
                                                 <Typography gutterBottom fontSize={25} style={{ padding: '0px 60px 0px 0px' }}>
                                                     {testimony.title}
                                                 </Typography>
@@ -139,14 +150,16 @@ const Testimony = () => {
                                                     {testimony.description}
                                                 </Typography>
                                                 {!testimony.enabled && (
-                                                    <LockClockTwoToneIcon style={{
-                                                        position: 'absolute',
-                                                        top: 5,
-                                                        right: 40,
-                                                        backgroundColor: '#DDC90F',
-                                                        borderRadius: '30%',
-                                                        padding: '5px'
-                                                    }} />
+                                                    <LockClockTwoToneIcon
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: 5,
+                                                            right: 40,
+                                                            backgroundColor: '#DDC90F',
+                                                            borderRadius: '30%',
+                                                            padding: '5px',
+                                                        }}
+                                                    />
                                                 )}
                                             </CardContent>
                                             <CardActions>
@@ -158,16 +171,13 @@ const Testimony = () => {
                                             </CardActions>
                                         </CardActionArea>
                                     </Card>
-                                )}
-
+                                </Grid>
+                            ))
+                        ) : (
+                            <Grid item xs={12}>
+                                <MessageData action="testimony" />
                             </Grid>
-                        ))
-                    ) : (
-                        <Grid item xs={12}>
-                            <MessageData action="testimony" />
-                        </Grid>
-
-                    )}
+                        )}
                 </Grid>
 
                 {/* Navegación de páginas */}

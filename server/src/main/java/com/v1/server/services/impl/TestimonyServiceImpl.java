@@ -325,6 +325,11 @@ public class TestimonyServiceImpl implements TestimonyService {
         existingTestimony.setEnabled(false);
 
         if (audio != null && !audio.isEmpty()) {
+            if (existingTestimony.getVideoUrl() != null) {
+                deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
+                existingTestimony.setVideoUrl(null); // Eliminar la referencia al video
+            }
+            // Si ya hay un audio previo, eliminarlo antes de guardar el nuevo
             if (existingTestimony.getAudioUrl() != null) {
                 deleteFile(AUDIO_DIRECTORY, existingTestimony.getAudioUrl());
             }
@@ -333,6 +338,11 @@ public class TestimonyServiceImpl implements TestimonyService {
         }
 
         if (video != null && !video.isEmpty()) {
+            if (existingTestimony.getAudioUrl() != null) {
+                deleteFile(AUDIO_DIRECTORY, existingTestimony.getAudioUrl());
+                existingTestimony.setAudioUrl(null); // Eliminar la referencia al audio
+            }
+            // Si ya hay un video previo, eliminarlo antes de guardar el nuevo
             if (existingTestimony.getVideoUrl() != null) {
                 deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
             }
