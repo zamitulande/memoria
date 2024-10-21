@@ -25,11 +25,10 @@ services:
     env_file: 
       - ./server/.env
     ports:
+      - "443:443"
       - "6868:8080"
-      - "8443:8443"
     volumes:
       - ./server:/app
-      - ./server/src/main/resources/keystore.p12:/app/src/main/resources/keystore.p12
       - server-cache:/root/.m2
     networks:
       - app-network
