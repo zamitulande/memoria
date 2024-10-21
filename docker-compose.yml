@@ -44,6 +44,16 @@ services:
       networks:
         - app-network
 
+  certbot:
+      image: certbot/certbot
+      container_name: certbot
+      volumes:
+        - ./certs:/etc/letsencrypt
+        - ./certbot/conf:/etc/letsencrypt
+        - ./certbot/www:/var/www/certbot
+      networks:
+        - app-network
+
 volumes:
   client-cache:
   server-cache:
