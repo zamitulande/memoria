@@ -25,7 +25,8 @@ services:
     env_file: 
       - ./server/.env
     ports:
-      - "6868:8080"
+      - "6868:8080"  # HTTP
+      - "8443:8443"  # HTTPS
     volumes:
       - ./server:/app
       - server-cache:/root/.m2
