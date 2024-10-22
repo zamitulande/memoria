@@ -18,8 +18,11 @@ RUN ./mvnw dependency:resolve
 # Copia el resto de los archivos de código fuente
 COPY src/ src/
 
+# Copia el keystore.p12 al contenedor
+COPY src/main/resources/keystore.p12 src/main/resources/keystore.p12
+
 # Expone el puerto en el que la aplicación estará escuchando
-EXPOSE 8080
+EXPOSE 8443
 
 # Comando para ejecutar la aplicación Spring Boot
 CMD ["./mvnw", "spring-boot:run"]
