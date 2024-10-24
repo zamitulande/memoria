@@ -186,7 +186,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         String hlsOutputPath = hlsOutputDir + "/" + title + ".m3u8"; // Nombre del archivo de salida HLS
         String hslFileName = title + ".m3u8";
         String ffmpegCommand = String.format(
-                "ffmpeg -i %s -codec: copy -start_number 0 -hls_time 20 -hls_list_size 0 -f hls %s",
+                "ffmpeg -i %s -codec: copy -start_number 0 -hls_time 5 -hls_list_size 0 -f hls %s",
                 mp4FilePath.toString(), hlsOutputPath);
 
         // Ejecutar el comando de FFmpeg
