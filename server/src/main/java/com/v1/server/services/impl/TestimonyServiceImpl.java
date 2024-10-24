@@ -153,7 +153,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         }
 
         String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
-        long maxFileSize = 500 * 1024 * 1024; // 500 MB en bytes
+        long maxFileSize = 2000 * 1024 * 1024; // 2000 MB en bytes
         String uploadDir = VIDEO_DIRECTORY;
 
         // Validar tipo de archivo
@@ -186,7 +186,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         String hlsOutputPath = hlsOutputDir + "/" + title + ".m3u8"; // Nombre del archivo de salida HLS
         String hslFileName = title + ".m3u8";
         String ffmpegCommand = String.format(
-                "ffmpeg -i %s -b:v 4000k -maxrate 5000k -bufsize 10000k -b:a 128k -start_number 0 -hls_time 5 -hls_list_size 0 -f hls %s",
+                "ffmpeg -i %s -b:v 8000k -maxrate 10000k -bufsize 15000k -b:a 128k -start_number 0 -hls_time 7 -hls_list_size 0 -f hls %s",
                 mp4FilePath.toString(), hlsOutputPath);
 
         // Ejecutar el comando de FFmpeg
