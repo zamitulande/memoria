@@ -8,25 +8,33 @@ const Video = ({video}) => {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [hls, setHls] = useState(null);
+useEffect(() => {
+    const videoElement = videoRef.current;
 
-  useEffect(() => {
-    // Comprobar si el navegador soporta HLS nativo
-    if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-      videoRef.current.src = video;
+    if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+      // Si el navegador soporta nativamente HLS
+      videoElement.src = video;
     } else if (Hls.isSupported()) {
-      const hlsInstance = new Hls();
-      hlsInstance.loadSource(video);
-      hlsInstance.attachMedia(videoRef.current);
-      setHls(hlsInstance);
-    }
+      const hls = new Hls({
+        // Configuración personalizada para aumentar el buffer
+        maxBufferLength: 30,        // 30 segundos de buffer
+        maxMaxBufferLength: 60,     // Máximo de 60 segundos en el buffer
+        initialLiveManifestSize: 3, // Cantidad inicial de fragmentos cargados
+      });
 
-    return () => {
-      // Limpiar Hls.js cuando se desmonte el componente
-      if (hls) {
-        hls.destroy();
-      }
-    };
+      hls.loadSource(video);
+      hls.attachMedia(videoElement);
+      setHls(hls);
+
+      // Limpiar HLS al desmontar el componente
+      return () => {
+        if (hls) {
+          hls.destroy();
+        }
+      };
+    }
   }, [video]);
+
 
   const handleVideoPlayPause = () => {
     if (isPlaying) {
