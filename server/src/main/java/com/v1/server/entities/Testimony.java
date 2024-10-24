@@ -50,6 +50,8 @@ public class Testimony {
 
     private String videoUrl;
 
+    private String hlsPlaylistUrl;
+
     private String imageUrl;
 
     private boolean enabled;

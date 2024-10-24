@@ -1,13 +1,17 @@
 package com.v1.server.services.impl;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,7 +70,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         String audioUrl = null;
-        String videoUrl = null;
+        Map<String, String> videoUrls = null;
         String imageUrl = null;
 
         if (audio != null && !audio.isEmpty()) {
@@ -74,7 +78,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         }
 
         if (video != null && !video.isEmpty()) {
-            videoUrl = saveUploadedFileVideo(video, title);
+            videoUrls = saveUploadedFileVideo(video, title);
         }
 
         if (image != null && !image.isEmpty()) {
@@ -93,7 +97,8 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .path(path)
                 .enabled(false)
                 .audioUrl(audioUrl)
-                .videoUrl(videoUrl)
+                .videoUrl(videoUrls != null ? videoUrls.get("mp4") : null) // Asignar URL MP4
+                .hlsPlaylistUrl(videoUrls != null ? videoUrls.get("m3u8") : null) // Asignar URL HLS
                 .imageUrl(imageUrl)
                 .build();
 
@@ -141,14 +146,71 @@ public class TestimonyServiceImpl implements TestimonyService {
         return improvedFileName;
     }
 
-    private String saveUploadedFileVideo(MultipartFile video, String title) throws IOException {
+    private Map<String, String> saveUploadedFileVideo(MultipartFile video, String title)
+            throws IOException, InterruptedException {
         if (video == null || video.isEmpty()) {
             return null;
         }
+
         String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
-        long maxFileSize = 500 * 1024 * 1024; // 50 MB en bytes
+        long maxFileSize = 500 * 1024 * 1024; // 500 MB en bytes
         String uploadDir = VIDEO_DIRECTORY;
-        return saveUploadedFile(video, title, allowedTypes, maxFileSize, uploadDir, "video");
+
+        // Validar tipo de archivo
+        boolean isValidType = Arrays.stream(allowedTypes).anyMatch(type -> type.equals(video.getContentType()));
+        if (!isValidType) {
+            throw new IllegalArgumentException("Tipo de archivo no permitido.");
+        }
+
+        // Validar tamaño del archivo
+        if (video.getSize() > maxFileSize) {
+            throw new IOException("El archivo excede el tamaño máximo permitido de 500 MB.");
+        }
+
+        // Crear el directorio si no existe
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // Guardar el archivo en formato MP4
+        String mp4FileName = title + ".mp4";
+        Path mp4FilePath = uploadPath.resolve(mp4FileName);
+
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(mp4FilePath.toFile()), 8192)) {
+            os.write(video.getBytes());
+        }
+
+        // Convertir a HLS usando FFmpeg
+        String hlsOutputDir = uploadDir; // Directorio donde se guardará el HLS
+        String hlsOutputPath = hlsOutputDir + "/" + title + ".m3u8"; // Nombre del archivo de salida HLS
+        String hslFileName = title + ".m3u8";
+        String ffmpegCommand = String.format(
+                "ffmpeg -i %s -codec: copy -start_number 0 -hls_time 20 -hls_list_size 0 -f hls %s",
+                mp4FilePath.toString(), hlsOutputPath);
+
+        // Ejecutar el comando de FFmpeg
+        Process process = Runtime.getRuntime().exec(ffmpegCommand);
+        StringBuilder errorOutput = new StringBuilder();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                errorOutput.append(line).append("\n");
+            }
+        }
+
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException("Error durante la conversión a HLS: " + errorOutput.toString());
+        }
+
+        // Guardar las URLs de los archivos generados
+        Map<String, String> videoUrls = new HashMap<>();
+        videoUrls.put("mp4",  mp4FileName);
+        videoUrls.put("m3u8", hslFileName);
+
+        return videoUrls;
     }
 
     private String saveUploadedFileImage(MultipartFile image, String title) throws IOException {
@@ -243,6 +305,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
                 .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
+                .hlsPlaylistUrl(testimony.getHlsPlaylistUrl() != null ? pathFile + "/video/" + testimony.getHlsPlaylistUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 // Mapeando la información del usuario
                 .userId(testimony.getUser().getUserId())
@@ -271,6 +334,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
                 .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
+                .hlsPlaylistUrl(testimony.getHlsPlaylistUrl() != null ? pathFile + "/video/" + testimony.getHlsPlaylistUrl() : null)
                 .build());
     }
 
@@ -292,6 +356,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
                 .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
+                .hlsPlaylistUrl(testimony.getHlsPlaylistUrl() != null ? pathFile + "/video/" + testimony.getHlsPlaylistUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 .build());
     }
@@ -325,29 +390,29 @@ public class TestimonyServiceImpl implements TestimonyService {
         existingTestimony.setEnabled(false);
 
         if (audio != null && !audio.isEmpty()) {
-            if (existingTestimony.getVideoUrl() != null) {
-                deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
-                existingTestimony.setVideoUrl(null); // Eliminar la referencia al video
-            }
-            // Si ya hay un audio previo, eliminarlo antes de guardar el nuevo
-            if (existingTestimony.getAudioUrl() != null) {
-                deleteFile(AUDIO_DIRECTORY, existingTestimony.getAudioUrl());
-            }
-            String newAudioUrl = saveUploadedFileAudio(audio, title);
-            existingTestimony.setAudioUrl(newAudioUrl);
+        if (existingTestimony.getVideoUrl() != null) {
+        deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
+        existingTestimony.setVideoUrl(null); // Eliminar la referencia al video
+        }
+        // Si ya hay un audio previo, eliminarlo antes de guardar el nuevo
+        if (existingTestimony.getAudioUrl() != null) {
+        deleteFile(AUDIO_DIRECTORY, existingTestimony.getAudioUrl());
+        }
+        String newAudioUrl = saveUploadedFileAudio(audio, title);
+        existingTestimony.setAudioUrl(newAudioUrl);
         }
 
         if (video != null && !video.isEmpty()) {
-            if (existingTestimony.getAudioUrl() != null) {
-                deleteFile(AUDIO_DIRECTORY, existingTestimony.getAudioUrl());
-                existingTestimony.setAudioUrl(null); // Eliminar la referencia al audio
-            }
-            // Si ya hay un video previo, eliminarlo antes de guardar el nuevo
-            if (existingTestimony.getVideoUrl() != null) {
-                deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
-            }
-            String newVideoUrl = saveUploadedFileVideo(video, title);
-            existingTestimony.setVideoUrl(newVideoUrl);
+        if (existingTestimony.getAudioUrl() != null) {
+        deleteFile(AUDIO_DIRECTORY, existingTestimony.getAudioUrl());
+        existingTestimony.setAudioUrl(null); // Eliminar la referencia al audio
+        }
+        // // Si ya hay un video previo, eliminarlo antes de guardar el nuevo
+        // if (existingTestimony.getVideoUrl() != null) {
+        // deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
+        // }
+        // String newVideoUrl = saveUploadedFileVideo(video, title);
+        // existingTestimony.setVideoUrl(newVideoUrl);
         }
 
         if (image != null && !image.isEmpty()) {

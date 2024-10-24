@@ -35,6 +35,8 @@ public class TestimonysDTO {
 
     private String videoUrl;
 
+    private String hlsPlaylistUrl;
+
     private String imageUrl;
 
     // Información del usuario relacionado

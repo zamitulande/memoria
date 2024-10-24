@@ -1,58 +1,75 @@
 import { Box } from '@mui/material';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import Hls from 'hls.js';
 
 const Video = ({video}) => {
+  
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [hls, setHls] = useState(null);
 
-    const [isPlaying, setIsPlaying] = useState(false);
+  useEffect(() => {
+    // Comprobar si el navegador soporta HLS nativo
+    if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+      videoRef.current.src = video;
+    } else if (Hls.isSupported()) {
+      const hlsInstance = new Hls();
+      hlsInstance.loadSource(video);
+      hlsInstance.attachMedia(videoRef.current);
+      setHls(hlsInstance);
+    }
 
-    const handleVideoPlayPause = (e) => {
-        const video = e.target;
-        if (!video.pause) {
-            video.play();
-            setIsPlaying(true);
-        } else if (video.pause) {
-            video.pause;
-            setIsPlaying(false);
-        }
+    return () => {
+      // Limpiar Hls.js cuando se desmonte el componente
+      if (hls) {
+        hls.destroy();
+      }
     };
-    return (
+  }, [video]);
+
+  const handleVideoPlayPause = () => {
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        width: '100%', // Ajusta el ancho del video
+        height: '100%', // Ajusta el alto del video
+        cursor: 'pointer',
+      }}
+      onClick={handleVideoPlayPause}
+    >
+      <video
+        ref={videoRef}
+        controls
+        style={{ width: '100%', height: '100%' }}
+      />
+
+      {!isPlaying && (
         <Box
-            sx={{
-                position: 'relative',
-                width: '100%',
-                cursor: 'pointer'
-            }}
-            onClick={handleVideoPlayPause}
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            color: 'white',
+            fontSize: '32px', // Tamaño del ícono
+            pointerEvents: 'none',
+          }}
         >
-            <video
-                width="100%"
-                controls
-                controlsList="nodownload"
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onError={() => alert('No se pudo cargar el video')}
-            >
-                <source src={video} type="video/mp4" />
-                Tu navegador no soporta la etiqueta de video.
-            </video>
-            {!isPlaying && (
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        color: 'white',
-                        fontSize: '64px',
-                        pointerEvents: 'none', // allows the click to go through to the video
-                    }}
-                >
-                    <PlayCircleOutlineIcon fontSize="inherit" />
-                </Box>
-            )}
+          <PlayCircleOutlineIcon fontSize="inherit" />
         </Box>
-    )
+      )}
+    </Box>
+  );
 }
 
 export default Video
