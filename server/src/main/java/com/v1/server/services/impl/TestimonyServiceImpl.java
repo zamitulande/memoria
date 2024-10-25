@@ -10,8 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,7 +68,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         String audioUrl = null;
-        Map<String, String> videoUrls = null;
+        String videoUrl = null;
         String imageUrl = null;
 
         if (audio != null && !audio.isEmpty()) {
@@ -78,7 +76,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         }
 
         if (video != null && !video.isEmpty()) {
-            videoUrls = saveUploadedFileVideo(video, title);
+            videoUrl = saveUploadedFileVideo(video, title);
         }
 
         if (image != null && !image.isEmpty()) {
@@ -97,8 +95,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .path(path)
                 .enabled(false)
                 .audioUrl(audioUrl)
-                .videoUrl(videoUrls != null ? videoUrls.get("mp4") : null) // Asignar URL MP4
-                .hlsPlaylistUrl(videoUrls != null ? videoUrls.get("m3u8") : null) // Asignar URL HLS
+                .videoUrl(videoUrl) // Asignar URL HLS
                 .imageUrl(imageUrl)
                 .build();
 
@@ -146,7 +143,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         return improvedFileName;
     }
 
-    private Map<String, String> saveUploadedFileVideo(MultipartFile video, String title)
+    private String saveUploadedFileVideo(MultipartFile video, String title)
             throws IOException, InterruptedException {
         if (video == null || video.isEmpty()) {
             return null;
@@ -208,12 +205,9 @@ public class TestimonyServiceImpl implements TestimonyService {
             throw new IOException("Error durante la conversión a HLS: " + errorOutput.toString());
         }
 
-        // Guardar las URLs de los archivos generados
-        Map<String, String> videoUrls = new HashMap<>();
-        videoUrls.put("mp4", mp4FileName);
-        videoUrls.put("m3u8", hslFileName);
+        Files.deleteIfExists(mp4FilePath);
 
-        return videoUrls;
+        return hslFileName;
     }
 
     private String saveUploadedFileImage(MultipartFile image, String title) throws IOException {
@@ -308,9 +302,6 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
                 .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
-                .hlsPlaylistUrl(
-                        testimony.getHlsPlaylistUrl() != null ? pathFile + "/video/" + testimony.getHlsPlaylistUrl()
-                                : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 // Mapeando la información del usuario
                 .userId(testimony.getUser().getUserId())
@@ -339,9 +330,6 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
                 .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
-                .hlsPlaylistUrl(
-                        testimony.getHlsPlaylistUrl() != null ? pathFile + "/video/" + testimony.getHlsPlaylistUrl()
-                                : null)
                 .build());
     }
 
@@ -363,9 +351,6 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
                 .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
-                .hlsPlaylistUrl(
-                        testimony.getHlsPlaylistUrl() != null ? pathFile + "/video/" + testimony.getHlsPlaylistUrl()
-                                : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 .build());
     }
