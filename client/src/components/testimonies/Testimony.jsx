@@ -41,7 +41,6 @@ const Testimony = () => {
                 let response;
                 if (getRole === "ADMIN" || getRole === "USER") {
                     response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`, config)
-                    console.log(response)
                 } else {
                     response = await axiosClient.get(`/repository/show/${path}?page=${currentPage}&size=6`)
                 }

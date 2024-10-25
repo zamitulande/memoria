@@ -102,7 +102,6 @@ const FormTestimony = ({ userId, action }) => {
         e.preventDefault();
         setIsLoading(true);
         dispatch(setOpenViewTestimony(true))
-        const startTime = Date.now();
         if (files.image == 0) {
             dispatch(setOpenViewTestimony(false))
             Swal.fire({
@@ -162,8 +161,8 @@ const FormTestimony = ({ userId, action }) => {
                     showCloseButton: true
                 }).then((result) => {
                     if (!result.isConfirmed) {
-                        resetForm();
                         navigate(`/repositorio/${path}`)
+                        resetForm();                         
                     } else {
                         resetForm();
                         animateScroll.scrollToTop()
