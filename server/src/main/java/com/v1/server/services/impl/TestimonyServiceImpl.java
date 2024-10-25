@@ -152,7 +152,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         }
 
         String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
-        long maxFileSize = 1000 * 1024 * 1024; // 1000 MB en bytes
+        long maxFileSize = 1000 * 1024 * 1024; // 1000 MB
         String uploadDir = VIDEO_DIRECTORY;
 
         // Validar tipo de archivo
