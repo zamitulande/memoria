@@ -122,7 +122,7 @@ const ViewTestimony = ({
                     <Grid container spacing={2}>
                         {dataView.videoUrl ? (
                             <Grid item xs={12} sm={12} md={12} lg={8}>
-                                <Video video={dataView.hlsPlaylistUrl} />
+                                <Video video={dataView.videoUrl} />
                             </Grid>
                         ) : null}
                         {dataView.audioUrl ? (

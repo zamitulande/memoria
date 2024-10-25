@@ -7,6 +7,7 @@ import LoadFiles from './LoadFiles';
 import Swal from 'sweetalert2';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosClient from '../../../config/Axios';
+import axiosRetry from 'axios-retry';
 import { Link, useNavigate } from 'react-router-dom';
 import { animateScroll } from 'react-scroll';
 import ViewTestimony from '../../../helpers/components/ViewTestimony';
@@ -14,6 +15,20 @@ import { setOpenViewTestimony } from '../../../redux/features/TestimonySlice';
 import Loading from '../../../helpers/components/Loading';
 
 const FormTestimony = ({ userId, action }) => {
+
+    axiosRetry(axiosClient, {
+        retries: 5, // Número de reintentos
+        retryDelay: (retryCount) => {
+            console.log(`Intento de reintento: ${retryCount}`);
+            console.log("intentando 1")
+            return retryCount * 2000; // Esperar 1 segundo entre intentos
+        },
+        retryCondition: (error) => {
+            // Solo reintentar en errores de red
+            console.log("intentando 2")
+            return axiosRetry.isNetworkOrIdempotentRequestError(error);
+        },
+    });
 
     const getToken = useSelector((state) => state.user.token)
     const openViewTestimony = useSelector((state) => state.testimony.openViewTestimony)
@@ -122,6 +137,26 @@ const FormTestimony = ({ userId, action }) => {
             setIsLoading(false);
             return;
         }
+
+        const handleOnline = () => {
+            console.log('Conexión restaurada');
+            postTestimony(); // Intenta enviar el testimonio nuevamente
+            window.removeEventListener('online', handleOnline); // Elimina el listener después de ejecutarlo
+        };
+
+        const handleOffline = () => {
+            console.log('Conexión perdida');
+            Swal.fire({
+                icon: "warning",
+                title: "Conexión perdida",
+                text: "Por favor, verifica tu conexión a Internet.",
+            });
+        };
+
+        // Añadir listeners para detectar cambios de conexión
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
         const postTestimony = async () => {
             const { audio, video, image } = files;
             const formData = new FormData();
@@ -162,21 +197,27 @@ const FormTestimony = ({ userId, action }) => {
                 }).then((result) => {
                     if (!result.isConfirmed) {
                         navigate(`/repositorio/${path}`)
-                        resetForm();                         
+                        resetForm();
                     } else {
                         resetForm();
                         animateScroll.scrollToTop()
                     }
                 })
             } catch (error) {
-                console.log(error)
-                const messageError = error.response.data.message;
+                console.log(error);
+                let messageError = "Error desconocido";
+                if (error.message === "Network Error") {
+                    messageError = "Por favor, verifica tu conexión a Internet."; // Mensaje para errores de red
+                } else if (error.response) {
+                    messageError = error.response.data.message; // Mensaje desde la respuesta
+                }
+
                 Swal.fire({
                     icon: "error",
                     title: messageError,
                     customClass: {
-                        container: 'my-swal'
-                    }
+                        container: 'my-swal',
+                    },
                 });
                 setIsLoading(false);
                 setUploadPercentage(0);
@@ -488,8 +529,8 @@ const FormTestimony = ({ userId, action }) => {
                     <Grid>
                         {action === 'update' ? <Button color='secondary' onClick={handleCancel}>Cancelar</Button> : null}
                         {action === "register" ?
-                            <Button onClick={(e) => dispatch(setOpenViewTestimony(true))} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button>:null}
-                        {action === 'update' ?  <Button onClick={updateTestimony} variant="contained" color='secondary'>Editar</Button>: null}
+                            <Button onClick={(e) => dispatch(setOpenViewTestimony(true))} variant="contained" disabled={isDisable()} color='secondary'>Enviar</Button> : null}
+                        {action === 'update' ? <Button onClick={updateTestimony} variant="contained" color='secondary'>Editar</Button> : null}
                     </Grid>
                 </Grid>
                 {openViewTestimony && (

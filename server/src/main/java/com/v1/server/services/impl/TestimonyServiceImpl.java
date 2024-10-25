@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.v1.server.dtos.testimony.TestimonysDTO;
@@ -49,6 +50,7 @@ public class TestimonyServiceImpl implements TestimonyService {
     private String pathFile;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ApiResponse register(
             Long userId,
             String category,
@@ -150,7 +152,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         }
 
         String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
-        long maxFileSize = 2000 * 1024 * 1024; // 2000 MB en bytes
+        long maxFileSize = 1000 * 1024 * 1024; // 1000 MB en bytes
         String uploadDir = VIDEO_DIRECTORY;
 
         // Validar tipo de archivo
@@ -161,7 +163,7 @@ public class TestimonyServiceImpl implements TestimonyService {
 
         // Validar tamaño del archivo
         if (video.getSize() > maxFileSize) {
-            throw new IOException("El archivo excede el tamaño máximo permitido de 500 MB.");
+            throw new IOException("El archivo excede el tamaño máximo permitido de 1 GB.");
         }
 
         // Crear el directorio si no existe
