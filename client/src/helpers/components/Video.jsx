@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import React, { useEffect, useRef, useState } from 'react'
 import Hls from 'hls.js';
@@ -6,8 +6,8 @@ import Hls from 'hls.js';
 const Video = ({video}) => {
   
   const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [hls, setHls] = useState(null);
+  const [loading, setLoading] = useState(true);
 useEffect(() => {
     const videoElement = videoRef.current;
 
@@ -17,9 +17,9 @@ useEffect(() => {
     } else if (Hls.isSupported()) {
       const hls = new Hls({
         // Configuración personalizada para aumentar el buffer
-        maxBufferLength: 30,        // 30 segundos de buffer
+        maxBufferLength: 60,        // 30 segundos de buffer
         maxMaxBufferLength: 60,     // Máximo de 60 segundos en el buffer
-        initialLiveManifestSize: 3, // Cantidad inicial de fragmentos cargados
+        initialLiveManifestSize: 4, // Cantidad inicial de fragmentos cargados
       });
 
       hls.loadSource(video);
@@ -33,17 +33,24 @@ useEffect(() => {
         }
       };
     }
+    
+   
   }, [video]);
 
+   // Mostrar mensaje de "Cargando" por 20 segundos
+   setTimeout(() => {
+    setLoading(false);
+  }, 15000);
 
-  const handleVideoPlayPause = () => {
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
+
+  const handleVideoPlayPause = (e) => {
+    const video = e.target;
+    if (!video.pause) {
+        video.play();
+    } else if (video.pause) {
+        video.pause;
     }
-    setIsPlaying(!isPlaying);
-  };
+};
 
   return (
     <Box
@@ -55,13 +62,7 @@ useEffect(() => {
       }}
       onClick={handleVideoPlayPause}
     >
-      <video
-        ref={videoRef}
-        controls
-        style={{ width: '100%', height: '100%' }}
-      />
-
-      {!isPlaying && (
+      {loading ? (
         <Box
           sx={{
             position: 'absolute',
@@ -69,13 +70,21 @@ useEffect(() => {
             left: '50%',
             transform: 'translate(-50%, -50%)',
             color: 'white',
-            fontSize: '32px', // Tamaño del ícono
-            pointerEvents: 'none',
+            zIndex: 10,
+            backgroundColor: 'rgba(0, 0, 0, 1)',
+            padding: '24% 40%',
+            borderRadius: '8px',
           }}
         >
-          <PlayCircleOutlineIcon fontSize="inherit" />
+          <Typography variant="h6">Cargando...</Typography>
         </Box>
-      )}
+      ) : null}
+      <video
+        ref={videoRef}
+        controls
+        style={{ width: '100%', height: '100%' }}
+      />
+
     </Box>
   );
 }

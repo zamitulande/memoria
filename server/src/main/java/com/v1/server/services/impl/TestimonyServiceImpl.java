@@ -185,7 +185,7 @@ public class TestimonyServiceImpl implements TestimonyService {
 
         // Convertir a HLS usando FFmpeg
         String hlsOutputDir = uploadDir; // Directorio donde se guardará el HLS
-        String hlsOutputPath = hlsOutputDir + "/" + uuid + ".m3u8"; // Nombre del archivo de salida HLS
+        String hlsOutputPath = hlsOutputDir + "/" + title + ".m3u8"; // Nombre del archivo de salida HLS
         String hslFileName = uuid + ".m3u8";
         String ffmpegCommand = String.format(
                 "ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s",
