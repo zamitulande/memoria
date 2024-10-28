@@ -175,7 +175,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         String uuid = title.replace(" ", "_") + ".mp4";
 
         // Guardar el archivo en formato MP4
-        String mp4FileName = uuid + ".mp4";
+        String mp4FileName = uuid;
         Path mp4FilePath = uploadPath.resolve(mp4FileName);
 
         try (OutputStream os = new BufferedOutputStream(new FileOutputStream(mp4FilePath.toFile()), 8192)) {
