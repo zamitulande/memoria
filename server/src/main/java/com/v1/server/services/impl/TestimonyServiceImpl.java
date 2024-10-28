@@ -164,13 +164,14 @@ public class TestimonyServiceImpl implements TestimonyService {
         if (video.getSize() > maxFileSize) {
             throw new IOException("El archivo excede el tamaño máximo permitido de 1 GB.");
         }
+        String newTitle = title.replace(" ", "_");
 
         // Crear el directorio si no existe
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(uploadDir + "/" + newTitle);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
-        String newTitle = title.replace(" ", "_");
+        
 
         //factorizar title como unico sin espacios
         String uuid = newTitle + ".mp4";
