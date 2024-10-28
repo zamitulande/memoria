@@ -170,9 +170,10 @@ public class TestimonyServiceImpl implements TestimonyService {
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
+        String newTitle = title.replace(" ", "_");
 
         //factorizar title como unico sin espacios
-        String uuid = title.replace(" ", "_") + ".mp4";
+        String uuid = newTitle + ".mp4";
 
         // Guardar el archivo en formato MP4
         String mp4FileName = uuid;
@@ -185,8 +186,8 @@ public class TestimonyServiceImpl implements TestimonyService {
 
         // Convertir a HLS usando FFmpeg
         String hlsOutputDir = uploadDir; // Directorio donde se guardará el HLS
-        String hlsOutputPath = hlsOutputDir + "/" + title.replace(" ", "_") + ".m3u8"; // Nombre del archivo de salida HLS
-        String hslFileName = title + ".m3u8";
+        String hlsOutputPath = hlsOutputDir + "/" + newTitle + ".m3u8"; // Nombre del archivo de salida HLS
+        String hslFileName = newTitle + ".m3u8";
         String ffmpegCommand = String.format(
                 "ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s",
                 mp4FilePath.toString(), hlsOutputPath);
