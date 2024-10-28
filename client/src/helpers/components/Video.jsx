@@ -1,5 +1,4 @@
-import { Box, Typography } from '@mui/material';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import { Box } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import Hls from 'hls.js';
 
@@ -7,7 +6,6 @@ const Video = ({video}) => {
   
   const videoRef = useRef(null);
   const [hls, setHls] = useState(null);
-  const [loading, setLoading] = useState(true);
 useEffect(() => {
     const videoElement = videoRef.current;
 
@@ -37,11 +35,6 @@ useEffect(() => {
    
   }, [video]);
 
-   // Mostrar mensaje de "Cargando" por 20 segundos
-   setTimeout(() => {
-    setLoading(false);
-  }, 15000);
-
 
   const handleVideoPlayPause = (e) => {
     const video = e.target;
@@ -62,23 +55,6 @@ useEffect(() => {
       }}
       onClick={handleVideoPlayPause}
     >
-      {loading ? (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            color: 'white',
-            zIndex: 10,
-            backgroundColor: 'rgba(0, 0, 0, 1)',
-            padding: '24% 40%',
-            borderRadius: '8px',
-          }}
-        >
-          <Typography variant="h6">Cargando...</Typography>
-        </Box>
-      ) : null}
       <video
         ref={videoRef}
         controls
