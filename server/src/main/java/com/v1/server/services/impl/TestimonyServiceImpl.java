@@ -150,7 +150,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         if (video == null || video.isEmpty()) {
             return null;
         }
-
+        System.out.println(("linae 153 "+ title));
         String[] allowedTypes = { "video/mp4", "video/x-msvideo", "video/x-ms-wmv", "video/webm" };
         long maxFileSize = 1000 * 1024 * 1024; // 1000 MB
         String uploadDir = VIDEO_DIRECTORY;
@@ -173,6 +173,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         }
         //factorizar title como unico sin espacios
         String uuid = title.replace(" ", "_") + ".mp4";
+        System.out.println(("linae 176 "+ uuid));
 
         // Guardar el archivo en formato MP4
         String mp4FileName = uuid;
@@ -185,8 +186,10 @@ public class TestimonyServiceImpl implements TestimonyService {
 
         // Convertir a HLS usando FFmpeg
         String hlsOutputDir = uploadDir; // Directorio donde se guardará el HLS
+        System.out.println(("linae 189 "+ title));
         String hlsOutputPath = hlsOutputDir + "/" + title + ".m3u8"; // Nombre del archivo de salida HLS
         String hslFileName = title + ".m3u8";
+        System.out.println(("linae 192 "+ hslFileName));
         String ffmpegCommand = String.format(
                 "ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s",
                 mp4FilePath.toString(), hlsOutputPath);
