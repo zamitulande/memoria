@@ -167,7 +167,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         String newTitle = title.replace(" ", "_");
 
         // Crear el directorio si no existe
-        Path uploadPath = Paths.get(uploadDir + "/" + newTitle);
+        Path uploadPath = Paths.get(uploadDir+ "/" + newTitle);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -304,7 +304,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
-                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getTitle().replace(" ", "_")+ "/" + testimony.getVideoUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 // Mapeando la información del usuario
                 .userId(testimony.getUser().getUserId())
@@ -332,7 +332,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
-                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getTitle().replace(" ", "_") + "/" +  testimony.getVideoUrl() : null)
                 .build());
     }
 
@@ -353,7 +353,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
-                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getTitle().replace(" ", "_")+ "/" +  testimony.getVideoUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 .build());
     }
