@@ -52,7 +52,6 @@ const FormTestimony = ({ userId, action }) => {
     const [resetTrigger, setResetTrigger] = useState(false);
 
     const [uploadPercentage, setUploadPercentage] = useState(0);
-    const [estimatedTime, setEstimatedTime] = useState(0);
 
 
     let municipio;
@@ -299,20 +298,6 @@ const FormTestimony = ({ userId, action }) => {
 
         const percentage = Math.floor((loaded / total) * 100);
         setUploadPercentage(percentage);
-
-        if (percentage > 0 && percentage < 100) {
-            const currentTime = Date.now();
-            const elapsedTime = (currentTime - startTime) / 1000; // Tiempo en segundos
-            const estimatedTotalTime = (elapsedTime / (loaded / total)); // Tiempo total estimado
-            const estimatedRemainingTime = estimatedTotalTime - elapsedTime; // Tiempo restante
-
-            if (estimatedRemainingTime > 0) {
-                setEstimatedTime(estimatedRemainingTime); // Actualiza el tiempo restante
-            }
-        }
-        if (percentage === 100) {
-            setEstimatedTime(0);
-        }
     };
 
     const determineSubmitHandler = () => {
@@ -551,7 +536,7 @@ const FormTestimony = ({ userId, action }) => {
                         action="preview" />
                 )}
             </Grid>
-            <Loading isLoading={isLoading} uploadPercentage={uploadPercentage} estimatedTime={estimatedTime} />
+            <Loading isLoading={isLoading} uploadPercentage={uploadPercentage}/>
         </form>
     )
 }

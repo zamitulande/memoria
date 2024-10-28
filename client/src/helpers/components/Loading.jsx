@@ -1,23 +1,7 @@
 import { Box, LinearProgress, Typography } from '@mui/material';
 
 
-const formatTime = (seconds) => {
-    if (seconds >= 3600) {
-        // Si es más de 1 hora, muestra horas y minutos
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        return `${hours}horas ${minutes}minutos restantes`;
-    } else if (seconds >= 60) {
-        // Si es más de 1 minuto, muestra minutos
-        const minutes = Math.floor(seconds / 60);
-        return `${minutes}minutos restantes`;
-    } else {
-        // Si es menos de un minuto, muestra segundos
-        return `${Math.floor(seconds)}segundos restantes`;
-    }
-};
-
-const Loading = ({ isLoading, uploadPercentage, estimatedTime }) => {
+const Loading = ({ isLoading, uploadPercentage }) => {
     return (
         isLoading && (
             <Box
@@ -41,13 +25,6 @@ const Loading = ({ isLoading, uploadPercentage, estimatedTime }) => {
                     sx={{ color: '#fff', marginBottom: 2 }}
                 >
                     Subiendo testimonio... {uploadPercentage}%
-                </Typography>
-                <Typography
-                    variant="body2"
-                    align="center"
-                    sx={{ color: '#fff', marginBottom: 2 }}
-                >
-                    {formatTime(estimatedTime)}
                 </Typography>
                 <Box
                     sx={{
