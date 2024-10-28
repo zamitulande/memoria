@@ -333,7 +333,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
-                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoDirectory() + "/" +testimony.getVideoUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/" + testimony.getVideoDirectory()  + "/video/" +  testimony.getVideoUrl() : null)
                 .build());
     }
 
