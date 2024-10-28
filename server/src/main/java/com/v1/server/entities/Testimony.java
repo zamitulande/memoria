@@ -54,6 +54,8 @@ public class Testimony {
 
     private boolean enabled;
 
+    private String videoDirectory;
+
     @ManyToOne
     @JoinColumn(name = "user_Id")
     private User user;

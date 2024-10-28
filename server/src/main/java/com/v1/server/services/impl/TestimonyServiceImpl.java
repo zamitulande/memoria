@@ -99,6 +99,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .audioUrl(audioUrl)
                 .videoUrl(videoUrl) // Asignar URL HLS
                 .imageUrl(imageUrl)
+                .videoDirectory(title.trim().replaceAll("[^a-zA-Z0-9_-]", "_"))
                 .build();
 
         testimonyRepository.save(testimony);
@@ -164,7 +165,7 @@ public class TestimonyServiceImpl implements TestimonyService {
         if (video.getSize() > maxFileSize) {
             throw new IOException("El archivo excede el tamaño máximo permitido de 1 GB.");
         }
-        String newTitle = title.replace(" ", "_");
+        String newTitle = title.trim().replaceAll("[^a-zA-Z0-9_-]", "_");
 
         // Crear el directorio si no existe
         Path uploadPath = Paths.get(uploadDir+ "/" + newTitle);
@@ -186,7 +187,7 @@ public class TestimonyServiceImpl implements TestimonyService {
        
 
         // Convertir a HLS usando FFmpeg
-        String hlsOutputPath = uploadDir + "/" + newTitle + "/"+ newTitle + ".m3u8"; // Nombre del archivo de salida HLS
+        String hlsOutputPath = uploadPath.resolve(newTitle + ".m3u8").toString(); // Nombre del archivo de salida HLS
         String hslFileName = newTitle + ".m3u8";
         String ffmpegCommand = String.format(
                 "ffmpeg -i %s -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls %s",
@@ -304,7 +305,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
-                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getTitle().replace(" ", "_")+ "/" + testimony.getVideoUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 // Mapeando la información del usuario
                 .userId(testimony.getUser().getUserId())
@@ -332,7 +333,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
-                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getTitle().replace(" ", "_") + "/" +  testimony.getVideoUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
                 .build());
     }
 
@@ -353,7 +354,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
-                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getTitle().replace(" ", "_")+ "/" +  testimony.getVideoUrl() : null)
+                .videoUrl(testimony.getVideoUrl() != null ? pathFile + "/video/" + testimony.getVideoUrl() : null)
                 .imageUrl(pathFile + "/image/" + testimony.getImageUrl())
                 .build());
     }
