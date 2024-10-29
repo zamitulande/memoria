@@ -1,10 +1,10 @@
 import { useMediaQuery, Container, Grid, Button, Typography, Box, Alert } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
-import slider1 from '../../assets/slider/slider1.jpg'
-import slider2 from '../../assets/slider/slider2.jpg'
-import slider3 from '../../assets/slider/slider3.jpg'
-import slider4 from '../../assets/slider/slider4.jpg'
-import slider5 from '../../assets/slider/slider5.jpg'
+import slider1 from '../../assets/slider/slider1.webp'
+import slider2 from '../../assets/slider/slider2.webp'
+import slider3 from '../../assets/slider/slider3.webp'
+import slider4 from '../../assets/slider/slider4.webp'
+import slider5 from '../../assets/slider/slider5.webp'
 import { animateScroll } from 'react-scroll';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCategories } from '../../redux/features/TestimonySlice';

@@ -302,6 +302,7 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .descriptionDetail(testimony.getDescriptionDetail())
                 .path(testimony.getPath())
                 .enabled(testimony.isEnabled())
+                .videoDirectory(testimony.getVideoDirectory())
                 // Si el audioUrl, videoUrl es null, retornar null, de lo contrario, construir
                 // la URL
                 .audioUrl(testimony.getAudioUrl() != null ? pathFile + "/audio/" + testimony.getAudioUrl() : null)
@@ -405,12 +406,12 @@ public class TestimonyServiceImpl implements TestimonyService {
                 deleteFile(AUDIO_DIRECTORY, existingTestimony.getAudioUrl());
                 existingTestimony.setAudioUrl(null); // Eliminar la referencia al audio
             }
-            // // Si ya hay un video previo, eliminarlo antes de guardar el nuevo
-            // if (existingTestimony.getVideoUrl() != null) {
-            // deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
-            // }
-            // String newVideoUrl = saveUploadedFileVideo(video, title);
-            // existingTestimony.setVideoUrl(newVideoUrl);
+            // Si ya hay un video previo, eliminarlo antes de guardar el nuevo
+            if (existingTestimony.getVideoUrl() != null) {
+            deleteFile(VIDEO_DIRECTORY, existingTestimony.getVideoUrl());
+            }
+            String newVideoUrl = saveUploadedFileVideo(video, title);
+            existingTestimony.setVideoUrl(newVideoUrl);
         }
 
         if (image != null && !image.isEmpty()) {

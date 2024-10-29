@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Swal from 'sweetalert2';
 import axiosClient from '../../config/Axios';
-import { Box, Button, Container, Drawer, Grid, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery } from '@mui/material';
+import { Box, Button, Container, Drawer, Grid, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import SennovaLogo from '../../assets/loading/sennova-logo.png'
 import FilterOpenData from '../../helpers/components/FilterOpenData';
@@ -10,6 +10,21 @@ import ApiIcon from '@mui/icons-material/Api';
 import FilterAltOffTwoToneIcon from '@mui/icons-material/FilterAltOffTwoTone';
 import FilterAltTwoToneIcon from '@mui/icons-material/FilterAltTwoTone';
 import DocumentatioAPI from '../../helpers/components/DocumentatioAPI';
+import Video from '../../helpers/components/Video';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '50%',
+    maxHeight: '70%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    overflowY: 'auto'
+};
 
 const Information = () => {
 
@@ -22,6 +37,9 @@ const Information = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
     const [showFullText, setShowFullText] = useState(false);
+
+
+    const [openVideo, setOpenVideo] = useState(false);
 
     // New state for filters
     const [open, setOpen] = useState(false);
@@ -224,19 +242,43 @@ const Information = () => {
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
                                         {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Video:</Box>}
                                         {data.videoUrl ? (
-                                            <a href={data.videoUrl} target="_blank" rel="noopener noreferrer">Ver Video</a>
+                                            <>
+                                                <Button onClick={(e) => setOpenVideo(!openVideo)} variant='contained' color='primary'> ver</Button>
+                                                <Modal
+                                                    open={openVideo}
+                                                    onClose={(e) => setOpenVideo(!openVideo)}
+                                                    aria-labelledby="modal-modal-title"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <Box sx={style} >
+                                                        <Video video={data.videoUrl} />
+                                                    </Box>
+                                                </Modal>
+                                            </>
                                         ) : 'Video no disponible'}
                                     </TableCell>
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
                                         {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Imagen:</Box>}
                                         {data.imageUrl ? (
-                                            <a href={data.imageUrl} target="_blank" rel="noopener noreferrer">Ver Imagen</a>
+                                            <Button
+                                                onClick={() => window.open(data.imageUrl, "_blank", "noopener,noreferrer")}
+                                                variant="contained"
+                                                color="primary"
+                                            >
+                                                Ver
+                                            </Button>
                                         ) : 'Imagen no disponible'}
                                     </TableCell>
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>
                                         {isMobile && <Box component="span" sx={{ fontWeight: 'bold', textTransform: 'uppercase', float: 'left' }}>Audio:</Box>}
                                         {data.audioUrl ? (
-                                            <a href={data.audioUrl} target="_blank" rel="noopener noreferrer">Escuchar Audio</a>
+                                            <Button
+                                                onClick={() => window.open(data.audioUrl, "_blank", "noopener,noreferrer")}
+                                                variant="contained"
+                                                color="primary"
+                                            >
+                                                Escuchar
+                                            </Button>
                                         ) : 'Audio no disponible'}
                                     </TableCell>
                                     <TableCell align={isMobile ? 'right' : 'center'} sx={{ display: isMobile ? 'block' : 'table-cell' }}>

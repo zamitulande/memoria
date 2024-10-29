@@ -1,4 +1,4 @@
-import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, FormControl, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import UseValidation from '../../../helpers/hooks/UseValidation';
 import SelectCity from '../../../helpers/components/SelectCity';
@@ -13,6 +13,21 @@ import { animateScroll } from 'react-scroll';
 import ViewTestimony from '../../../helpers/components/ViewTestimony';
 import { setOpenViewTestimony } from '../../../redux/features/TestimonySlice';
 import Loading from '../../../helpers/components/Loading';
+import Video from '../../../helpers/components/Video';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '50%',
+    maxHeight: '70%',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    overflowY: 'auto'
+};
 
 const FormTestimony = ({ userId, action }) => {
 
@@ -36,7 +51,7 @@ const FormTestimony = ({ userId, action }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { capitalizeFirstLetter, maxLength, minLength } = UseValidation();
+    const { capitalizeFirstLetter, removeTrailingNumbers, maxLength, minLength } = UseValidation();
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -52,6 +67,8 @@ const FormTestimony = ({ userId, action }) => {
     const [resetTrigger, setResetTrigger] = useState(false);
 
     const [uploadPercentage, setUploadPercentage] = useState(0);
+
+    const [open, setOpen]= useState(false);
 
 
     let municipio;
@@ -323,9 +340,20 @@ const FormTestimony = ({ userId, action }) => {
             alignItems="center">
             <Alert severity="success" style={{ marginBottom: 10 }}>A continuacion se listan los archivos (audio, video o imagen) ya cargados, si desea modificar estos archivos puede seleccionar los nuevo archivos.</Alert>
             {getformEditTestimony.videoUrl && (
-                <Link to={getformEditTestimony.videoUrl} target="_blank">
-                    <Button variant='contained' color='primary'> ver video</Button>
-                </Link>
+                   <>
+                     <Button onClick={(e)=>setOpen(!open)} variant='contained' color='primary'> ver video</Button>
+                     <Modal
+                       open={open}
+                       onClose={(e)=>setOpen(!open)}
+                       aria-labelledby="modal-modal-title"
+                       aria-describedby="modal-modal-description"
+                     >
+                        <Box sx={style} >
+                        <Video video={getformEditTestimony.videoUrl}/>
+                        </Box>
+                     </Modal>
+                   </>
+
             )}
             {getformEditTestimony.imageUrl && (
                 <Link to={getformEditTestimony.imageUrl} target="_blank">
@@ -378,7 +406,7 @@ const FormTestimony = ({ userId, action }) => {
                         required
                         value={action === 'register' ? title : undefined}
                         defaultValue={action === 'update' ? getformEditTestimony.title : undefined}
-                        onChange={(e) => setTitle(capitalizeFirstLetter(e.target.value))}
+                        onChange={(e) => setTitle(removeTrailingNumbers(capitalizeFirstLetter(e.target.value)))}
                         fullWidth
                         inputProps={{ maxLength: 41 }}
                         helperText={
