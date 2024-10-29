@@ -45,13 +45,27 @@ public class FileController {
 
     @GetMapping("/show/video/{filename}")
     public ResponseEntity<Resource> getVideo(@PathVariable String filename) {
-        Path file = Paths.get(FILE_DIRECTORY).resolve("video").resolve(filename);
+
+        //se formatea filename para obtener el nombre de la carpeta donde se aloja
+        //los archivos .m3u8 y .ts
+        String folderVideo;
+        if (filename.endsWith(".m3u8")) {
+            folderVideo = filename.substring(0, filename.lastIndexOf(".m3u8"));
+        } else if (filename.endsWith(".ts")) {
+            String baseName = filename.substring(0, filename.lastIndexOf(".ts"));
+            folderVideo = baseName.replaceAll("\\d+$", "");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Path file = Paths.get(FILE_DIRECTORY).resolve("video").resolve(folderVideo).resolve(filename);
+        System.out.println(file);
         if (!Files.exists(file)) {
             return ResponseEntity.notFound().build();
         }
         Resource resource = new FileSystemResource(file.toFile());
         return ResponseEntity.ok()
-                .contentType(MediaType.valueOf("video/mp4"))
+                .contentType(MediaType.valueOf("application/vnd.apple.mpegurl"))
                 .body(resource);
     }
 }
