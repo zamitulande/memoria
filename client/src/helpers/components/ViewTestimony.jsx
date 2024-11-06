@@ -7,7 +7,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { setFormEditTestimony, setOpenViewTestimony, setTestimonyId, setTestimonyIsEnable } from '../../redux/features/TestimonySlice';
+import { setFormEditTestimony, setIsDelete, setOpenViewTestimony, setTestimonyId, setTestimonyIsEnable } from '../../redux/features/TestimonySlice';
 import Video from './Video';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../../config/Axios';
@@ -128,13 +128,14 @@ const ViewTestimony = ({
                 if (response.status === 200) {
                   Swal.fire({
                     title: "Borrado!",
-                    text: "El usuario ha sido borrado",
+                    text: "El testimonio ha sido borrado",
                     icon: "success",
                     customClass: {
                         container: 'my-swal',
                     },
                   });
                   handleCloseModal();
+                  dispatch(setIsDelete(true));
                 }
               }
             } catch (error) {
