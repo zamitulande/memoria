@@ -519,11 +519,11 @@ const Form = ({ open,
                     </Grid> : null
                 }
                 <Grid mt={2}>
-                    {/* <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} /> */}
+                    <Recaptcha onChange={() => setRecaptchaIsValid(!recaptchaIsValid)} />
                 </Grid>
                 <Grid mt={4}>
                     {action === 'update' ? <Link to="/usuarios"> <Button color='secondary'>Cancelar</Button></Link> : null}
-                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ?  !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
+                    <Button variant='contained' type="submit" color='secondary' disabled={action === 'register' ? !recaptchaIsValid || !conditios || isDisable() : null}>{action === 'register' ? 'Registrar' : 'Actualizar'}</Button>
                 </Grid>
             </Grid>
         </form>

@@ -37,12 +37,16 @@ const Login = ({ open, setOpen }) => {
         const postLogin = async () => {
             try {
                 const response = await axiosClient.post('/auth/authenticate', user);
-
                 if (response.data.token && response.data.role && response.status == "200") {
                     dispatch(setLogin(true));
                     dispatch(setToken(response.data.token));
                     dispatch(setRole(response.data.role));
                     dispatch(setUserId(response.data.userId));
+                    // Guardar los datos en localStorage
+                    localStorage.setItem('jwtToken', response.data.token);
+                    localStorage.setItem('userRole', response.data.role);
+                    localStorage.setItem('userId', response.data.userId);
+                    localStorage.setItem('userName', response.data.userName);
                     setUser({
                         email: '',
                         password: ''
