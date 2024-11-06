@@ -30,7 +30,7 @@ const UseValidation = () => {
     };
 
     const removeTrailingNumbers = (text) => {
-        return text.replace(/[\d\s]+$/, '');
+       return text.replace(/\d+$/, '');
     };
 
     return {
