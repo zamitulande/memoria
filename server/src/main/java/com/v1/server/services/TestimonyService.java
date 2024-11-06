@@ -54,4 +54,6 @@ public interface TestimonyService {
         TestimonysDTO privateTestimony(Long testimonyId);
 
         TestimonysDTO publicTestimony(Long testimonyId);
+
+        void deleteById(Long testimonyId);
 }

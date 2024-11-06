@@ -61,7 +61,7 @@ const Testimony = () => {
             }
         }
         fetchData();
-    }, [currentPage, path, getRole, testimonyIsEnable])
+    }, [currentPage, path, getRole, testimonyIsEnable, openViewTestimony])
 
     useEffect(() => {
         setCurrentPage(0)

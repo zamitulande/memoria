@@ -5,7 +5,6 @@ import CloseIcon from '@mui/icons-material/Cancel';
 import logo from '../../assets/header/logo.png'
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import DoneIcon from '@mui/icons-material/Done';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { setFormEditTestimony, setOpenViewTestimony, setTestimonyId, setTestimonyIsEnable } from '../../redux/features/TestimonySlice';
@@ -59,6 +58,7 @@ const ViewTestimony = ({
     }
 
     const handleEnabled = async (dataView) => {
+        const {testimonyId} = dataView;
         const action = enable ? 'private' : 'public';
         const actionText = enable ? 'privado' : 'publico';
         try {
@@ -67,7 +67,7 @@ const ViewTestimony = ({
                     'Authorization': `Bearer ${getToken}`
                 }
             };
-            const response = await axiosClient.put(`/repository/${action}/${dataView.testimonyId}`, {}, config);          
+            const response = await axiosClient.put(`/repository/${action}/${testimonyId}`, {}, config);          
                 setEnable(response.data.enabled);
                 dispatch(setTestimonyIsEnable(response.data.enabled))
             
@@ -100,6 +100,47 @@ const ViewTestimony = ({
         dispatch(setFormEditTestimony(dataView))
         dispatch(setTestimonyId(dataView))
         dispatch(setOpenViewTestimony(false))
+    }
+
+    const handleDelete = async (dataView)=>{
+        const {testimonyId, path} = dataView;
+        Swal.fire({
+            title: "Estas seguro?",
+            text: "Esta accion elimina los archivos audio, video o imagen asociados a este testimonio y no se puede revertir!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, Eliminar",
+            cancelButtonText: "Cancelar",
+            customClass: {
+                container: 'my-swal',
+            },
+          }).then(async (result) => {
+            try {
+              if (result.isConfirmed) {
+                const config = {
+                  headers: {
+                    'Authorization': `Bearer${getToken}`
+                  }
+                }
+                const response = await axiosClient.delete(`repository/delete/${testimonyId}`, config);
+                if (response.status === 200) {
+                  Swal.fire({
+                    title: "Borrado!",
+                    text: "El usuario ha sido borrado",
+                    icon: "success",
+                    customClass: {
+                        container: 'my-swal',
+                    },
+                  });
+                  handleCloseModal();
+                }
+              }
+            } catch (error) {
+              console.log(error)
+            }
+          })
     }
 
     if (dataView) {
@@ -203,6 +244,12 @@ const ViewTestimony = ({
                     </Grid>
                     {login && role === 'ADMIN' && (
                         <Grid container justifyContent="end" mt={3}>
+                            <Grid item xs={12} sm={2}>
+                                <IconButton onClick={() => handleDelete(dataView)} color='error'>
+                                    <EditIcon />
+                                    Eliminar
+                                </IconButton>
+                            </Grid>
                             <Grid item xs={12} sm={2}>
                                 <IconButton onClick={() => handleUpdate(dataView)} color='primary'>
                                     <EditIcon />

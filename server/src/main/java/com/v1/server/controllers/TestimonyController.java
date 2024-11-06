@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -146,5 +147,11 @@ public class TestimonyController {
     public ResponseEntity<TestimonysDTO> unblockUser(@PathVariable Long testimonyId) {
         TestimonysDTO publicTestimony = testimonyService.publicTestimony(testimonyId);
         return ResponseEntity.ok(publicTestimony);
+    }
+
+     @DeleteMapping("/delete/{testimonyId}")
+    public ResponseEntity<?> deleteById(@PathVariable Long testimonyId) {
+        testimonyService.deleteById(testimonyId);
+        return ResponseEntity.ok("Usuario eliminado");
     }
 }

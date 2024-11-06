@@ -460,5 +460,12 @@ public class TestimonyServiceImpl implements TestimonyService {
                 .build();
         return testimonysDTO;
     }
+    
+    @Override
+    public void deleteById(Long testimonyId) {
+        Testimony testimony = testimonyRepository.findById(testimonyId)
+                .orElseThrow(() -> new NotFoundException("Testimonio no encontrado."));
+        testimonyRepository.delete(testimony);
+    }
 
 }
