@@ -2,17 +2,19 @@ aplicativo Memoria Oral, para la recuperacion del patrimonio inmaterial del depa
 
 java - Spring boot
 javascript - React
+JWT
+Docker
+MySql
+Materia ui
 
-aplicacion dockerizada docker compose, con entorno de desarrollo y produccion.
+Funcionalidades:
 
-para levantar proyecto tener intalado docker y docker compose en tu equipo.
-
-correr los siguientes comando para levantar contenedores.
-
-(para entorno desarrollo)
-export PROFILE=dev
-docker compose --profile dev up -d --build
-
-(para entorno de produccion)
-export PROFILE=prod
-docker compose --profile prod up -d --build 
+-registro de usuarios y activación de cuenta mediante correo electronico
+-login con token JWT
+-manejo de roles ADMIN - USER
+-gestion de usuarios (CRUD)
+-cargue de testimonios en formato video y audio
+-cargue de archivos mp4, mp3, png/jpeg, pdf
+-gestion de testimonios (CRUD)
+-reprucción de contenido multimedia
+-sistema API para consumo de testimonios (video, audio, imagenes) desde otro sistemas.
