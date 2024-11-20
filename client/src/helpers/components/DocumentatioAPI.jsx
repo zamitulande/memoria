@@ -68,7 +68,7 @@ const DocumentatioAPI = ({ openApi, setOpenApi }) => {
                                 {`
 const fetchData = async () => {
   try {
-    const response = await axios.get('http://memoriaoral.com/api/v1/open-data', {
+    const response = await axios.get('http://memoriaoral.com:8443/api/v1/open-data', {
       params: {
         page: 0,
         size: 5,
