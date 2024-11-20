@@ -10,7 +10,8 @@ export const TestimonySlice = createSlice({
         formEditTestimony: [],
         testimonyId: null,
         testimonies: [],
-        testimonyIsEnable: null
+        testimonyIsEnable: null,
+        isDelete : false
     },
     reducers: {
         setCategories: (state, action) => {
@@ -34,7 +35,10 @@ export const TestimonySlice = createSlice({
         },
         setTestimonyIsEnable: (state, action) => {
             state.testimonyIsEnable = !state.testimonyIsEnable;
-        }
+        },
+        setIsDelete: (state, action) =>{
+            state.isDelete = action.payload;
+        },
     }
 });
 
@@ -44,6 +48,7 @@ export const { setCategories,
     setTestimonyId,
     setTestimonies,
     clearTestimonies,
-    setTestimonyIsEnable } = TestimonySlice.actions;
+    setTestimonyIsEnable,
+    setIsDelete } = TestimonySlice.actions;
 
 export default TestimonySlice.reducer;

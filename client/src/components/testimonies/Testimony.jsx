@@ -20,6 +20,7 @@ const Testimony = () => {
     const testimonyIsEnable = useSelector((state) => state.testimony.testimonyIsEnable)
     const getToken = useSelector((state) => state.user.token)
     const getRole = useSelector((state) => state.user.role)
+    const isDelete = useSelector((state)=> state.testimony.isDelete)
 
     const [isLoading, setIsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(0);
@@ -61,7 +62,7 @@ const Testimony = () => {
             }
         }
         fetchData();
-    }, [currentPage, path, getRole, testimonyIsEnable])
+    }, [currentPage, path, getRole, testimonyIsEnable, isDelete])
 
     useEffect(() => {
         setCurrentPage(0)

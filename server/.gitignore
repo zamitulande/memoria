@@ -7,6 +7,10 @@ target/
 storage/
 =======
 storage/user/consentimiento-informado/**
+src/main/resources/application.properties
+src/main/resources/keystore.p12
+.env
+
 
 ### STS ###
 .apt_generated
