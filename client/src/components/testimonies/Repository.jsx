@@ -122,7 +122,6 @@ const Repository = () => {
             zIndex: 0, // para que esté detrás del contenido
           }}
         />
-        <Container maxWidth="md">
           {message}
           <Grid container spacing={0.5} mb={6}>
             {images.map((image, index) => (
@@ -156,7 +155,7 @@ const Repository = () => {
                     src={image.src}
                     alt={image.title}
                     style={{
-                      height: 395,
+                      height: 460,
                       width: '100%',
                       objectFit: 'contain'
                     }}
@@ -186,7 +185,6 @@ const Repository = () => {
               </Grid>
             ))}
           </Grid>
-        </Container>
       </Container>
     </>
   )

@@ -3,8 +3,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import chivaWebp from '../../assets/header/Chiva.webp';
-import logoWebp from '../../assets/header/logo.webp';
-import logoPng from '../../assets/header/logo.png';
+import logoPngD from '../../assets/header/logoD.png'
+import logoWebpD from '../../assets/header/logoD.webp'
+import logoPngM from '../../assets/header/logo.png'
+import logoWebpM from '../../assets/header/logo.webp'
 import {
     BottomNavigation,
     BottomNavigationAction,
@@ -92,7 +94,7 @@ const Header = () => {
         <>
             <AppBar position="fixed" color='lightWhite'
                 style={{
-                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url(${chivaWebp})`,
+                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url(${chivaWebp})`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'right',
@@ -103,13 +105,13 @@ const Header = () => {
                     {login ? <Typography sx={{ color: 'lightWhite.main', fontWeight: 'bold', display: 'flex', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: 1 }}><AccountCircleIcon />{userName}</Typography> : null}
                 </Toolbar>
                 <Container maxWidth="xl">
-                    <Toolbar disableGutters>
-                        <Box sx={{ display: { xs: 'none', md: 'flex' }, mr: 4 }}>
-                            <Image
-                                src={logoPng}
-                                webp={logoWebp}
-                                width="100px"
-                            />
+                    <Toolbar disableGutters sx={{mt:0}}>
+                        <Box sx={{ display: { xs: 'none', md: 'flex' }, mt:-8 }}>
+                        <Image
+                            src={logoPngD}
+                            webp={logoWebpD}
+                            height="100px"
+                        />
                         </Box>
 
                         {/* :::START MOVIL FIRST NAVBAR:: */}
@@ -168,8 +170,8 @@ const Header = () => {
                         </Box>
                         <Box sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}>
                             <Image
-                                src={logoPng}
-                                webp={logoWebp}
+                                src={logoPngM}
+                                webp={logoWebpM}
                                 width="25px"
                             />
                         </Box>
@@ -196,9 +198,7 @@ const Header = () => {
 
                         <Box pb={3} sx={{ flexGrow: 1, display: { xs: 'none', md: 'block' } }}>
                             <Grid container direction="column" alignItems="center" spacing={2}>
-                                <Grid item>
-                                    <Typography variant='h2' color='lightWhite.main' fontWeight='bold'>Memoria Oral</Typography>
-                                </Grid>
+                                
                                 <Grid item sx={{ width: '100%' }}>
                                     <BottomNavigation
                                         style={{ backgroundColor: "transparent" }}
@@ -211,15 +211,15 @@ const Header = () => {
                                             <BottomNavigationAction
 
                                                 sx={{
-                                                    fontWeight: '600',
+                                                    fontWeight: '400',
                                                     color: 'lightWhite.main',
                                                     '&.Mui-selected': {
-                                                        fontWeight: '900',
+                                                        fontWeight: '700',
                                                         color: 'lightWhite.main',
                                                         borderBottom: 'solid 2px white'
                                                     },
                                                     '.MuiBottomNavigationAction-label': {
-                                                        fontSize: '1rem',
+                                                        fontSize: '0.9rem',
                                                     },
                                                 }}
                                                 key={page.id}
@@ -331,7 +331,7 @@ const Header = () => {
                     </Toolbar>
                 </Container>
             </AppBar>
-            {isMobile ? <Box sx={{ height: '50px' }} /> : <Box sx={{ height: '260px', }} />}
+            {isMobile ? <Box sx={{ height: '50px' }} /> : <Box sx={{ height: '160px', }} />}
         </>
     )
 }

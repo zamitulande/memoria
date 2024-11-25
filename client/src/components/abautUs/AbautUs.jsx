@@ -1,6 +1,5 @@
 import { Box, Container, Grid, Typography } from '@mui/material'
-import image1Webp from "../../assets/cards/1.webp";
-import image1Jpeg from "../../assets/cards/1.jpeg";
+import image1Webp from "../../assets/home/us.webp";
 import image4Webp from "../../assets/cards/4.webp";
 import image4Jpeg from "../../assets/cards/4.jpeg";
 import Image from 'react-image-webp';
@@ -9,7 +8,7 @@ import React from 'react'
 const Nosotros = () => {
   return (
     <Container>
-      <Box mt={5} sx={{ position: 'relative', overflow: 'hidden' }}>
+      <Box sx={{ position: 'relative', overflow: 'hidden' }}>
         <Box
           sx={{
             position: 'absolute',
@@ -40,7 +39,6 @@ const Nosotros = () => {
           </Grid>
           <Grid item xs={12} sm={12} md={6} justifyContent="center">
             <Image
-              src={image1Jpeg}
               webp={image1Webp}
               width="100%"
             />
